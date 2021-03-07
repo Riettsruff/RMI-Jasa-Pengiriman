@@ -13,9 +13,11 @@ import java.sql.Timestamp;
  * @author Riett
  */
 public class Pengguna implements Serializable {
-  int idPengguna, idCabang, idPeran;
-  String email, password;
-  Timestamp terakhirLogin;
+  private int idPengguna;
+  private Cabang cabang;
+  private Peran peran;
+  private String email, password;
+  private Timestamp terakhirLogin;
   
   public int getIdPengguna() {
     return idPengguna;
@@ -25,20 +27,20 @@ public class Pengguna implements Serializable {
     this.idPengguna = idPengguna;
   }
   
-  public int getIdCabang() {
-    return idCabang;
+  public Cabang getCabang() {
+    return cabang;
   }
   
-  public void setIdCabang(int idCabang) {
-    this.idCabang = idCabang;
+  public void setCabang(Cabang cabang) {
+    this.cabang = cabang;
   }
   
-  public int getIdPeran() {
-    return idPeran;
+  public Peran getPeran() {
+    return peran;
   }
   
-  public void setIdPeran(int idPeran) {
-    this.idPeran = idPeran;
+  public void setPeran(Peran peran) {
+    this.peran = peran;
   }
   
   public String getEmail() {
