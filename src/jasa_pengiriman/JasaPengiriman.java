@@ -8,10 +8,14 @@ package jasa_pengiriman;
 import jasa_pengiriman.client.view.TesterView;
 import jasa_pengiriman.server.service.PenggunaServiceImpl;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,7 +32,15 @@ public class JasaPengiriman {
     
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new TesterView().setVisible(true);
+        try {
+          new TesterView().setVisible(true);
+        } catch (NotBoundException ex) {
+          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     });
   }
