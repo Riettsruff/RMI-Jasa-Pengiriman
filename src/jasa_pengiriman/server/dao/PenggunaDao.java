@@ -33,8 +33,8 @@ public class PenggunaDao {
         Pengguna pengguna = new Pengguna();
         
         pengguna.setIdPengguna(rs.getInt("id_pengguna"));
-//        pengguna.setIdCabang(rs.getInt("id_cabang"));
-//        pengguna.setIdPeran(rs.getInt("id_peran"));
+//        pengguna.setCabang(null);
+//        pengguna.setPeran(null);
         pengguna.setEmail(rs.getString("email"));
         pengguna.setPassword(rs.getString("password"));
         pengguna.setTerakhirLogin(rs.getTimestamp("terakhir_login"));

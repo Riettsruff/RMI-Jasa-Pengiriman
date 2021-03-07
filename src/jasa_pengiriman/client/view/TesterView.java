@@ -33,8 +33,8 @@ public class TesterView extends javax.swing.JFrame {
     List<Pengguna> listPengguna = penggunaService.getAll();
     String penggunaText = "";
     
-    for(Pengguna pengguna : listPengguna) penggunaText += pengguna.getEmail() + "\n";
-   
+    for(Pengguna pengguna : listPengguna) penggunaText += (pengguna.getEmail() + "\n");
+    
     penggunaLabel.setText(penggunaText); 
   }
 
@@ -67,18 +67,18 @@ public class TesterView extends javax.swing.JFrame {
             .addGap(133, 133, 133)
             .addComponent(jLabel1))
           .addGroup(layout.createSequentialGroup()
-            .addGap(118, 118, 118)
-            .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        .addContainerGap(135, Short.MAX_VALUE))
+            .addGap(103, 103, 103)
+            .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addContainerGap(112, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addGap(57, 57, 57)
         .addComponent(jLabel1)
-        .addGap(65, 65, 65)
-        .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(151, Short.MAX_VALUE))
+        .addGap(43, 43, 43)
+        .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(162, Short.MAX_VALUE))
     );
 
     pack();
