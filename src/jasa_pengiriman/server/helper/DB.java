@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jasa_pengiriman.server.dao.helper;
+package jasa_pengiriman.server.helper;
 
 import static jasa_pengiriman.server.service.Conn.Conn;
 import java.sql.PreparedStatement;
