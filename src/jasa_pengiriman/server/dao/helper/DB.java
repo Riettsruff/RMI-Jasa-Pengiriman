@@ -9,6 +9,8 @@ import static jasa_pengiriman.server.service.Conn.Conn;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,16 +22,13 @@ public class DB {
     ResultSet rs = null;
     
     try {
-      String query = "SELECT * FROM ?";
+      String query = "SELECT * FROM " + table;
 
       PreparedStatement ps = Conn().prepareStatement(query);
-      ps.setString(1, table);
       rs = ps.executeQuery();
       
     } catch (SQLException se) {
-      se.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
+      Logger.getLogger(DB.class.getName()).log(Level.SEVERE, null, se);
     }
 
     return rs;
