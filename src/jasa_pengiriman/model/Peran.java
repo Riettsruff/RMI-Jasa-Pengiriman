@@ -5,11 +5,13 @@
  */
 package jasa_pengiriman.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Riett
  */
-public class Peran {
+public class Peran implements Serializable {
   private int idPeran;
   private String namaPeran;
   

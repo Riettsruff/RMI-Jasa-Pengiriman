@@ -5,11 +5,13 @@
  */
 package jasa_pengiriman.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Riett
  */
-public class Cabang {
+public class Cabang implements Serializable {
   private int idCabang;
   private String namaCabang, alamat, noHp;
   
