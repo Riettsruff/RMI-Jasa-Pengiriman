@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2021 at 10:44 AM
+-- Generation Time: Mar 08, 2021 at 06:34 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -41,7 +41,8 @@ CREATE TABLE `akses` (
 
 CREATE TABLE `biaya` (
   `id_biaya` int(11) NOT NULL,
-  `id_kota` int(11) NOT NULL,
+  `id_kota_asal` int(11) NOT NULL,
+  `id_kota_tujuan` int(11) NOT NULL,
   `harga` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -53,17 +54,11 @@ CREATE TABLE `biaya` (
 
 CREATE TABLE `cabang` (
   `id_cabang` int(11) NOT NULL,
+  `id_kota` int(11) NOT NULL,
   `nama_cabang` varchar(100) NOT NULL,
   `alamat` varchar(100) NOT NULL,
   `no_hp` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cabang`
---
-
-INSERT INTO `cabang` (`id_cabang`, `nama_cabang`, `alamat`, `no_hp`) VALUES
-(1, 'Cabang X', 'Jl. Jambu ', '082283947281');
 
 -- --------------------------------------------------------
 
@@ -115,17 +110,11 @@ CREATE TABLE `pengguna` (
   `id_pengguna` int(11) NOT NULL,
   `id_cabang` int(11) NOT NULL,
   `id_peran` int(11) DEFAULT NULL,
+  `nama` varchar(100) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(200) NOT NULL,
   `terakhir_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `pengguna`
---
-
-INSERT INTO `pengguna` (`id_pengguna`, `id_cabang`, `id_peran`, `email`, `password`, `terakhir_login`) VALUES
-(2, 1, 1, 'admin@jasapengiriman.com', 'test', '2021-03-07 09:34:50');
 
 -- --------------------------------------------------------
 
@@ -135,12 +124,13 @@ INSERT INTO `pengguna` (`id_pengguna`, `id_cabang`, `id_peran`, `email`, `passwo
 
 CREATE TABLE `pengiriman` (
   `no_resi` char(16) NOT NULL,
+  `id_cabang_pengirim` int(11) DEFAULT NULL,
+  `id_kota_penerima` int(11) DEFAULT NULL,
   `isi_barang` text NOT NULL,
   `berat` double NOT NULL,
   `waktu_kirim` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `nama_penerima` varchar(100) NOT NULL,
   `alamat_penerima` varchar(100) NOT NULL,
-  `kota_penerima` int(11) DEFAULT NULL,
   `no_hp_penerima` varchar(15) NOT NULL,
   `biaya` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -189,13 +179,15 @@ ALTER TABLE `akses`
 --
 ALTER TABLE `biaya`
   ADD PRIMARY KEY (`id_biaya`),
-  ADD KEY `id_kota` (`id_kota`);
+  ADD KEY `id_kota_asal` (`id_kota_asal`),
+  ADD KEY `id_kota_tujuan` (`id_kota_tujuan`);
 
 --
 -- Indexes for table `cabang`
 --
 ALTER TABLE `cabang`
-  ADD PRIMARY KEY (`id_cabang`);
+  ADD PRIMARY KEY (`id_cabang`),
+  ADD KEY `id_kota` (`id_kota`);
 
 --
 -- Indexes for table `detail_akses`
@@ -233,7 +225,8 @@ ALTER TABLE `pengguna`
 --
 ALTER TABLE `pengiriman`
   ADD PRIMARY KEY (`no_resi`),
-  ADD KEY `kota_penerima` (`kota_penerima`);
+  ADD KEY `id_kota_penerima` (`id_kota_penerima`),
+  ADD KEY `id_cabang_pengirim` (`id_cabang_pengirim`);
 
 --
 -- Indexes for table `peran`
@@ -314,7 +307,14 @@ ALTER TABLE `provinsi`
 -- Constraints for table `biaya`
 --
 ALTER TABLE `biaya`
-  ADD CONSTRAINT `CST-kota-biaya` FOREIGN KEY (`id_kota`) REFERENCES `kota` (`id_kota`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `CST-kota_asal-biaya` FOREIGN KEY (`id_kota_asal`) REFERENCES `kota` (`id_kota`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `CST-kota_tujuan-biaya` FOREIGN KEY (`id_kota_tujuan`) REFERENCES `kota` (`id_kota`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `cabang`
+--
+ALTER TABLE `cabang`
+  ADD CONSTRAINT `CST-kota-cabang` FOREIGN KEY (`id_kota`) REFERENCES `kota` (`id_kota`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_akses`
@@ -347,7 +347,8 @@ ALTER TABLE `pengguna`
 -- Constraints for table `pengiriman`
 --
 ALTER TABLE `pengiriman`
-  ADD CONSTRAINT `CST-kota-pengiriman` FOREIGN KEY (`kota_penerima`) REFERENCES `kota` (`id_kota`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `CST-cabang-pengiriman` FOREIGN KEY (`id_cabang_pengirim`) REFERENCES `cabang` (`id_cabang`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `CST-kota-pengiriman` FOREIGN KEY (`id_kota_penerima`) REFERENCES `kota` (`id_kota`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
