@@ -6,6 +6,7 @@
 package jasa_pengiriman;
 
 import jasa_pengiriman.client.view.TesterView;
+import jasa_pengiriman.server.service.AuthServiceImpl;
 import jasa_pengiriman.server.service.PenggunaServiceImpl;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -26,6 +27,7 @@ public class JasaPengiriman {
   public static void main(String[] args) throws RemoteException {
     Registry registry = LocateRegistry.createRegistry(3001);
     
+    registry.rebind("AuthService", new AuthServiceImpl());
     registry.rebind("PenggunaService", new PenggunaServiceImpl());
     
     System.out.println("App server started...");

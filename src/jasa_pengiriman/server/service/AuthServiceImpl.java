@@ -6,24 +6,22 @@
 package jasa_pengiriman.server.service;
 
 import jasa_pengiriman.model.Pengguna;
-import jasa_pengiriman.server.dao.PenggunaDao;
+import jasa_pengiriman.server.dao.AuthDao;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Riett
  */
-public class PenggunaServiceImpl extends UnicastRemoteObject implements PenggunaService, Serializable {
-  
-  public PenggunaServiceImpl() throws RemoteException {}
+public class AuthServiceImpl extends UnicastRemoteObject implements AuthService, Serializable {
+
+  public AuthServiceImpl() throws RemoteException {}
   
   @Override
-  public List<Pengguna> getAll() throws RemoteException {
-    return PenggunaDao.getAll();
+  public Pengguna login(String email, String password) throws RemoteException {
+    return AuthDao.login(email, password);
   }
+  
 }

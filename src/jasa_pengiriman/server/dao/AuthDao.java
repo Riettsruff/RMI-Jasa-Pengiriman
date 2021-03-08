@@ -7,12 +7,7 @@ package jasa_pengiriman.server.dao;
 
 import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.server.helper.DB;
-import static jasa_pengiriman.server.service.Conn.Conn;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,28 +15,31 @@ import java.util.logging.Logger;
  *
  * @author Riett
  */
-public class PenggunaDao {
+public class AuthDao {
   
-  public static List<Pengguna> getAll() {
-    List<Pengguna> listPengguna = new ArrayList<Pengguna>();
-    
+  public static Pengguna login(String email, String password) {
     try {
-      ResultSet rs = DB.get("pengguna");
+      String[] fields = {"id_pengguna", "nama", "email", "id_peran", "terakhir_login"};
+      String[] whereStatement = {"email=?", "password=?"};
+      String[] whereStatementOperator = {"AND"};
+      String[] ps = {email, password};
+      ResultSet rs = DB.get("pengguna", fields, whereStatement, whereStatementOperator, ps);
       
-      while(rs.next()) {
+      if(rs.next()) {
         Pengguna pengguna = new Pengguna();
         
         pengguna.setIdPengguna(rs.getInt("id_pengguna"));
+        pengguna.setNama(rs.getString("nama"));
         pengguna.setEmail(rs.getString("email"));
-        pengguna.setPassword(rs.getString("password"));
+        pengguna.setPeran(PeranDao.getByIdPeran(rs.getString("id_peran")));
         pengguna.setTerakhirLogin(rs.getTimestamp("terakhir_login"));
         
-        listPengguna.add(pengguna);
+        return pengguna;
       }
     } catch (Exception e) { 
-      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(AuthDao.class.getName()).log(Level.SEVERE, null, e);
     }
     
-    return listPengguna;
+    return null;
   }
 }

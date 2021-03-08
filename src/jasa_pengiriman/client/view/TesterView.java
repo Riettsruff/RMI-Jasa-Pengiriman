@@ -5,12 +5,18 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.model.Pengguna;
+import jasa_pengiriman.server.helper.DB;
+import jasa_pengiriman.server.service.AuthService;
 import jasa_pengiriman.server.service.PenggunaService;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,14 +34,16 @@ public class TesterView extends javax.swing.JFrame {
     initComponents();
     
     // UJI COBA
-    PenggunaService penggunaService = (PenggunaService) Naming.lookup("rmi://localhost:3001/PenggunaService");
-    
-    List<Pengguna> listPengguna = penggunaService.getAll();
-    String penggunaText = "";
-    
-    for(Pengguna pengguna : listPengguna) penggunaText += (pengguna.getEmail() + "\n");
-    
-    penggunaLabel.setText(penggunaText); 
+    AuthService authService = (AuthService) Naming.lookup("rmi://localhost:3001/AuthService");
+    Pengguna pengguna = authService.login("admin@jasapengiriman.com", "admin123");
+
+    if(pengguna == null) {
+      System.out.println("Tidak Sesuai");
+    } else {
+      System.out.println("Sesuai");
+      ActiveUser.set(pengguna);
+      System.out.println(ActiveUser.get().getNama());
+    }
   }
 
   /**
@@ -53,7 +61,7 @@ public class TesterView extends javax.swing.JFrame {
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
     jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-    jLabel1.setText("SELURUH PENGGUNA");
+    jLabel1.setText("TESTER");
 
     penggunaLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -62,21 +70,20 @@ public class TesterView extends javax.swing.JFrame {
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addGap(133, 133, 133)
-            .addComponent(jLabel1))
-          .addGroup(layout.createSequentialGroup()
-            .addGap(103, 103, 103)
-            .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        .addGap(103, 103, 103)
+        .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(112, Short.MAX_VALUE))
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jLabel1)
+        .addGap(174, 174, 174))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addGap(57, 57, 57)
+        .addGap(56, 56, 56)
         .addComponent(jLabel1)
-        .addGap(43, 43, 43)
+        .addGap(44, 44, 44)
         .addComponent(penggunaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(162, Short.MAX_VALUE))
     );
