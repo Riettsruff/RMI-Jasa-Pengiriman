@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class Cabang implements Serializable {
   private int idCabang;
+  private Kota kota;
   private String namaCabang, alamat, noHp;
   
   public void setIdCabang(int idCabang) {
@@ -21,6 +22,14 @@ public class Cabang implements Serializable {
   
   public int getIdCabang() {
     return idCabang;
+  }
+  
+  public void setKota(Kota kota) {
+    this.kota = kota;
+  }
+  
+  public Kota getKota() {
+    return kota;
   }
   
   public void setNamaCabang(String namaCabang) {

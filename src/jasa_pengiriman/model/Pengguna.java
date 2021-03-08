@@ -16,7 +16,7 @@ public class Pengguna implements Serializable {
   private int idPengguna;
   private Cabang cabang;
   private Peran peran;
-  private String email, password;
+  private String nama, email, password;
   private Timestamp terakhirLogin;
   
   public int getIdPengguna() {
@@ -41,6 +41,14 @@ public class Pengguna implements Serializable {
   
   public void setPeran(Peran peran) {
     this.peran = peran;
+  }
+  
+  public String getNama() {
+    return nama;
+  }
+  
+  public void setNama(String nama) {
+    this.nama = nama;
   }
   
   public String getEmail() {
