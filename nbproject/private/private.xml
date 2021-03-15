@@ -3,19 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/JasaPengiriman.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/helper/DB.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/service/PenggunaService.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/dao/PeranDao.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/model/Akses.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/service/AuthServiceImpl.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/client/store/ActiveUser.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/model/Biaya.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/model/Cabang.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/dao/AuthDao.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/service/AuthService.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/service/PenggunaServiceImpl.java</file>
-            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/model/Pelacakan.java</file>
+            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/client/view/TesterView.java</file>
+            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/client/view/AksesView.java</file>
+            <file>file:/C:/Users/Riett/NetbeansProjects/Jasa%20Pengiriman/src/jasa_pengiriman/server/service/Conn.java</file>
         </group>
     </open-files>
 </project-private>

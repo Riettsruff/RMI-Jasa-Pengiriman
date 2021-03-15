@@ -5,6 +5,7 @@
  */
 package jasa_pengiriman;
 
+import jasa_pengiriman.client.view.LoginView;
 import jasa_pengiriman.client.view.TesterView;
 import jasa_pengiriman.server.service.AuthServiceImpl;
 import jasa_pengiriman.server.service.PenggunaServiceImpl;
@@ -34,15 +35,7 @@ public class JasaPengiriman {
     
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        try {
-          new TesterView().setVisible(true);
-        } catch (NotBoundException ex) {
-          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-          Logger.getLogger(JasaPengiriman.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new LoginView().setVisible(true);
       }
     });
   }

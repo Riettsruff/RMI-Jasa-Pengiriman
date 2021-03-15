@@ -5,7 +5,9 @@
  */
 package jasa_pengiriman.server.dao;
 
+import jasa_pengiriman.model.Cabang;
 import jasa_pengiriman.model.Pengguna;
+import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
 import java.util.logging.Level;
@@ -19,19 +21,24 @@ public class AuthDao {
   
   public static Pengguna login(String email, String password) {
     try {
-      String[] fields = {"id_pengguna", "nama", "email", "id_peran", "terakhir_login"};
+      String[] fields = null;
       String[] whereStatement = {"email=?", "password=?"};
-      String[] whereStatementOperator = {"AND"};
+      String[] whereStatementSeparator = {"AND"};
       String[] ps = {email, password};
-      ResultSet rs = DB.get("pengguna", fields, whereStatement, whereStatementOperator, ps);
+      ResultSet rs = DB.get("pengguna", fields, whereStatement, whereStatementSeparator, ps);
       
       if(rs.next()) {
         Pengguna pengguna = new Pengguna();
+        Cabang cabang = new Cabang();
+        Peran peran = new Peran();
         
+        cabang.setIdCabang(rs.getInt("id_cabang"));
+        peran.setIdPeran(rs.getInt("id_peran")); 
+        pengguna.setCabang(cabang);
+        pengguna.setPeran(peran);
         pengguna.setIdPengguna(rs.getInt("id_pengguna"));
         pengguna.setNama(rs.getString("nama"));
         pengguna.setEmail(rs.getString("email"));
-        pengguna.setPeran(PeranDao.getByIdPeran(rs.getString("id_peran")));
         pengguna.setTerakhirLogin(rs.getTimestamp("terakhir_login"));
         
         return pengguna;
