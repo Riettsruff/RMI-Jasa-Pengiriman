@@ -121,7 +121,7 @@ public class PenggunaView extends javax.swing.JFrame {
       }
     });
 
-    jLabel2.setText("Riwayat Pengguna");
+    jLabel2.setText("Riwayat Peran");
 
     jTable2.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {

@@ -5,7 +5,7 @@
  */
 package jasa_pengiriman.server.dao;
 
-import jasa_pengiriman.model.Peran;
+import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,26 +17,25 @@ import java.util.logging.Logger;
  *
  * @author Riett
  */
-public class PeranDao {
-  
-  public static List<Peran> getAll() {
-    List<Peran> peranList = new ArrayList<Peran>();
+public class ProvinsiDao {
+  public static List<Provinsi> getAll() {
+    List<Provinsi> provinsiList = new ArrayList<Provinsi>();
     
     try {
-      ResultSet rs = DB.get("peran");
+      ResultSet rs = DB.get("provinsi");
       
       while(rs.next()) {
-        Peran peran = new Peran();
+        Provinsi provinsi = new Provinsi();
         
-        peran.setIdPeran(rs.getInt("id_peran"));
-        peran.setNamaPeran(rs.getString("nama_peran"));
+        provinsi.setIdProvinsi(rs.getInt("id_provinsi"));
+        provinsi.setNamaProvinsi(rs.getString("nama_provinsi"));
         
-        peranList.add(peran);
+        provinsiList.add(provinsi);
       }
     } catch (Exception e) { 
-      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, e);
+      Logger.getLogger(ProvinsiDao.class.getName()).log(Level.SEVERE, null, e);
     }
     
-    return peranList;
+    return provinsiList;
   }
 }

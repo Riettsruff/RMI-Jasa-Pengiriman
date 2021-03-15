@@ -26,4 +26,15 @@ public class PenggunaServiceImpl extends UnicastRemoteObject implements Pengguna
   public List<Pengguna> getAll() throws RemoteException {
     return PenggunaDao.getAll();
   }
+
+  @Override
+  public List<Pengguna> getByIdCabang(int idCabang) throws RemoteException {
+    return PenggunaDao.getByIdCabang(idCabang);
+  }
+
+  @Override
+  public List<Pengguna> getByIdPeran(int idPeran) throws RemoteException {
+    return PenggunaDao.getByIdPeran(idPeran);
+  }
+  
 }

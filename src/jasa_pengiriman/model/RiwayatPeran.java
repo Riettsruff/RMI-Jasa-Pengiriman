@@ -5,13 +5,14 @@
  */
 package jasa_pengiriman.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  *
  * @author Riett
  */
-public class RiwayatPeran {
+public class RiwayatPeran implements Serializable {
   private int idRiwayatPeran;
   private Pengguna pengguna;
   private Peran peran;

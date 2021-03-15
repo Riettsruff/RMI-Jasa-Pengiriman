@@ -5,7 +5,7 @@
  */
 package jasa_pengiriman.server.service;
 
-import jasa_pengiriman.model.Pengguna;
+import jasa_pengiriman.model.RiwayatPeran;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -14,8 +14,6 @@ import java.util.List;
  *
  * @author Riett
  */
-public interface PenggunaService extends Remote {
-  public List<Pengguna> getAll() throws RemoteException;
-  public List<Pengguna> getByIdCabang(int idCabang) throws RemoteException;
-  public List<Pengguna> getByIdPeran(int idPeran) throws RemoteException;
+public interface RiwayatPeranService extends Remote {
+  public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException; 
 }
