@@ -1,5 +1,7 @@
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.store.ActiveUser;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -43,8 +45,8 @@ public class PenggunaView extends javax.swing.JFrame {
     jTextField5 = new javax.swing.JTextField();
     jComboBox1 = new javax.swing.JComboBox<>();
     jComboBox2 = new javax.swing.JComboBox<>();
-    jButton5 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
+    menuUtamaButton = new javax.swing.JButton();
+    exitButton = new javax.swing.JButton();
     jLabel2 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTable2 = new javax.swing.JTable();
@@ -104,10 +106,20 @@ public class PenggunaView extends javax.swing.JFrame {
     jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
     jComboBox2.setName("cmbPeran"); // NOI18N
 
-    jButton5.setText("Menu Utama");
-    jButton5.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.setText("Menu Utama");
+    menuUtamaButton.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        menuUtamaButtonActionPerformed(evt);
+      }
+    });
 
-    jButton6.setText("Keluar");
+    exitButton.setText("Keluar");
+    exitButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exitButtonActionPerformed(evt);
+      }
+    });
 
     jLabel2.setText("Riwayat Pengguna");
 
@@ -142,11 +154,11 @@ public class PenggunaView extends javax.swing.JFrame {
             .addComponent(jButton4))
           .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jButton5)
+            .addComponent(menuUtamaButton)
             .addGap(148, 148, 148)
             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton6))
+            .addComponent(exitButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -176,8 +188,8 @@ public class PenggunaView extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
-          .addComponent(jButton5)
-          .addComponent(jButton6))
+          .addComponent(menuUtamaButton)
+          .addComponent(exitButton))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
@@ -220,6 +232,17 @@ public class PenggunaView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
+  private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
+    new MenuUtamaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_menuUtamaButtonActionPerformed
+
+  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+    ActiveUser.remove();
+    new MenuUtamaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_exitButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -257,12 +280,11 @@ public class PenggunaView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton exitButton;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
-  private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
   private javax.swing.JComboBox<String> jComboBox1;
   private javax.swing.JComboBox<String> jComboBox2;
   private javax.swing.JLabel jLabel1;
@@ -277,5 +299,6 @@ public class PenggunaView extends javax.swing.JFrame {
   private javax.swing.JTable jTable2;
   private javax.swing.JTextField jTextField4;
   private javax.swing.JTextField jTextField5;
+  private javax.swing.JButton menuUtamaButton;
   // End of variables declaration//GEN-END:variables
 }

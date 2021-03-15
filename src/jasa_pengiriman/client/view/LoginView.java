@@ -39,7 +39,6 @@ public class LoginView extends javax.swing.JFrame {
   private void initComponents() {
 
     jLabel1 = new javax.swing.JLabel();
-    exitButton = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     emailTextField = new javax.swing.JTextField();
     jLabel4 = new javax.swing.JLabel();
@@ -51,18 +50,16 @@ public class LoginView extends javax.swing.JFrame {
     jLabel1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel1.setText("Login");
 
-    exitButton.setText("Keluar");
-    exitButton.setName("btnKeluar"); // NOI18N
-    exitButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        exitButtonActionPerformed(evt);
-      }
-    });
-
     jLabel3.setText("Email");
 
     emailTextField.setText(" ");
+    emailTextField.setCaretPosition(0);
     emailTextField.setName("txtKota"); // NOI18N
+    emailTextField.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        emailTextFieldActionPerformed(evt);
+      }
+    });
 
     jLabel4.setText("Password");
 
@@ -79,12 +76,6 @@ public class LoginView extends javax.swing.JFrame {
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jLabel1)
-        .addGap(119, 119, 119)
-        .addComponent(exitButton)
-        .addContainerGap())
-      .addGroup(layout.createSequentialGroup()
         .addGap(77, 77, 77)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jLabel4)
@@ -92,21 +83,23 @@ public class LoginView extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGap(87, 87, 87))
           .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(emailTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-              .addComponent(passwordPasswordField))
-            .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(passwordPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 87, Short.MAX_VALUE))))
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addComponent(jLabel1)
+        .addGap(178, 178, 178))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(exitButton)
-          .addComponent(jLabel1))
+        .addComponent(jLabel1)
         .addGap(37, 37, 37)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
@@ -135,8 +128,7 @@ public class LoginView extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Email/Password tidak sesuai", "Oops!", JOptionPane.ERROR_MESSAGE);
       } else {
         ActiveUser.set(pengguna);
-        MenuUtamaView menuUtamaView = new MenuUtamaView();
-        menuUtamaView.setVisible(true);
+        new MenuUtamaView().setVisible(true);
         dispose();
       }
     } catch (RemoteException ex) {
@@ -148,10 +140,9 @@ public class LoginView extends javax.swing.JFrame {
     }
   }//GEN-LAST:event_loginButtonActionPerformed
 
-  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-    dispose();
-    System.exit(0);
-  }//GEN-LAST:event_exitButtonActionPerformed
+  private void emailTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailTextFieldActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_emailTextFieldActionPerformed
 
   /**
    * @param args the command line arguments
@@ -190,7 +181,6 @@ public class LoginView extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JTextField emailTextField;
-  private javax.swing.JButton exitButton;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;

@@ -5,6 +5,8 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.store.ActiveUser;
+
 /**
  *
  * @author admin
@@ -27,8 +29,8 @@ public class ProvinsiView extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jButton1 = new javax.swing.JButton();
-    jButton2 = new javax.swing.JButton();
+    menuUtamaButton = new javax.swing.JButton();
+    exitButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jTextField1 = new javax.swing.JTextField();
@@ -44,11 +46,21 @@ public class ProvinsiView extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-    jButton1.setText("Menu Utama");
-    jButton1.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.setText("Menu Utama");
+    menuUtamaButton.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        menuUtamaButtonActionPerformed(evt);
+      }
+    });
 
-    jButton2.setText("Keluar");
-    jButton2.setName("btnKeluar"); // NOI18N
+    exitButton.setText("Keluar");
+    exitButton.setName("btnKeluar"); // NOI18N
+    exitButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exitButtonActionPerformed(evt);
+      }
+    });
 
     jLabel1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel1.setText("Provinsi");
@@ -109,11 +121,11 @@ public class ProvinsiView extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jScrollPane2)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jButton1)
+            .addComponent(menuUtamaButton)
             .addGap(158, 158, 158)
             .addComponent(jLabel1)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton2))
+            .addComponent(exitButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
@@ -140,8 +152,8 @@ public class ProvinsiView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton1)
-          .addComponent(jButton2)
+          .addComponent(menuUtamaButton)
+          .addComponent(exitButton)
           .addComponent(jLabel1))
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
@@ -168,6 +180,17 @@ public class ProvinsiView extends javax.swing.JFrame {
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
+
+  private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
+    new MenuUtamaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_menuUtamaButtonActionPerformed
+
+  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+    ActiveUser.remove();
+    new LoginView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_exitButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,8 +229,7 @@ public class ProvinsiView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton2;
+  private javax.swing.JButton exitButton;
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
@@ -220,5 +242,6 @@ public class ProvinsiView extends javax.swing.JFrame {
   private javax.swing.JTable jTable1;
   private javax.swing.JTable jTable2;
   private javax.swing.JTextField jTextField1;
+  private javax.swing.JButton menuUtamaButton;
   // End of variables declaration//GEN-END:variables
 }

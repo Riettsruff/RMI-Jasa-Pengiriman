@@ -33,13 +33,13 @@ public class MenuUtamaView extends javax.swing.JFrame {
     exitButton = new javax.swing.JButton();
     jButton2 = new javax.swing.JButton();
     jButton3 = new javax.swing.JButton();
-    jButton4 = new javax.swing.JButton();
-    jButton5 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
-    jButton7 = new javax.swing.JButton();
-    jButton8 = new javax.swing.JButton();
-    jButton9 = new javax.swing.JButton();
-    jButton10 = new javax.swing.JButton();
+    penggunaButton = new javax.swing.JButton();
+    cabangButton = new javax.swing.JButton();
+    provinsiButton = new javax.swing.JButton();
+    kotaButton = new javax.swing.JButton();
+    biayaButton = new javax.swing.JButton();
+    peranButton = new javax.swing.JButton();
+    aksesButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
@@ -62,36 +62,61 @@ public class MenuUtamaView extends javax.swing.JFrame {
     jButton3.setText("Pelacakan");
     jButton3.setName("btnPelacakan"); // NOI18N
 
-    jButton4.setText("Pengguna");
-    jButton4.setName("btnPengguna"); // NOI18N
-
-    jButton5.setText("Cabang");
-    jButton5.setName("btnCabang"); // NOI18N
-    jButton5.addActionListener(new java.awt.event.ActionListener() {
+    penggunaButton.setText("Pengguna");
+    penggunaButton.setName("btnPengguna"); // NOI18N
+    penggunaButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton5ActionPerformed(evt);
+        penggunaButtonActionPerformed(evt);
       }
     });
 
-    jButton6.setText("Provinsi");
-    jButton6.setName("btnProvinsi"); // NOI18N
-
-    jButton7.setText("Kota");
-    jButton7.setName("btnKota"); // NOI18N
-    jButton7.addActionListener(new java.awt.event.ActionListener() {
+    cabangButton.setText("Cabang");
+    cabangButton.setName("btnCabang"); // NOI18N
+    cabangButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton7ActionPerformed(evt);
+        cabangButtonActionPerformed(evt);
       }
     });
 
-    jButton8.setText("Biaya");
-    jButton8.setName("btnBiaya"); // NOI18N
+    provinsiButton.setText("Provinsi");
+    provinsiButton.setName("btnProvinsi"); // NOI18N
+    provinsiButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        provinsiButtonActionPerformed(evt);
+      }
+    });
 
-    jButton9.setText("Peran");
-    jButton9.setName("btnPerson"); // NOI18N
+    kotaButton.setText("Kota");
+    kotaButton.setName("btnKota"); // NOI18N
+    kotaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        kotaButtonActionPerformed(evt);
+      }
+    });
 
-    jButton10.setText("Akses");
-    jButton10.setName("btnAkses"); // NOI18N
+    biayaButton.setText("Biaya");
+    biayaButton.setName("btnBiaya"); // NOI18N
+    biayaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        biayaButtonActionPerformed(evt);
+      }
+    });
+
+    peranButton.setText("Peran");
+    peranButton.setName("btnPerson"); // NOI18N
+    peranButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        peranButtonActionPerformed(evt);
+      }
+    });
+
+    aksesButton.setText("Akses");
+    aksesButton.setName("btnAkses"); // NOI18N
+    aksesButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        aksesButtonActionPerformed(evt);
+      }
+    });
 
     jLabel1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel1.setText("LAYANAN");
@@ -120,19 +145,19 @@ public class MenuUtamaView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3))
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton4)
+                .addComponent(penggunaButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(cabangButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
+                .addComponent(provinsiButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7))
+                .addComponent(kotaButton))
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton8)
+                .addComponent(biayaButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton9)
+                .addComponent(peranButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton10))
+                .addComponent(aksesButton))
               .addComponent(jLabel1)
               .addComponent(jLabel2))
             .addGap(0, 59, Short.MAX_VALUE)))
@@ -155,35 +180,61 @@ public class MenuUtamaView extends javax.swing.JFrame {
         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton4)
-          .addComponent(jButton5)
-          .addComponent(jButton6)
-          .addComponent(jButton7))
+          .addComponent(penggunaButton)
+          .addComponent(cabangButton)
+          .addComponent(provinsiButton)
+          .addComponent(kotaButton))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton8)
-          .addComponent(jButton9)
-          .addComponent(jButton10))
+          .addComponent(biayaButton)
+          .addComponent(peranButton)
+          .addComponent(aksesButton))
         .addGap(0, 12, Short.MAX_VALUE))
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void cabangButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cabangButtonActionPerformed
+      new CabangView().setVisible(true);
+      dispose();
+    }//GEN-LAST:event_cabangButtonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
+    private void kotaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kotaButtonActionPerformed
+      new KotaView().setVisible(true);
+      dispose();
+    }//GEN-LAST:event_kotaButtonActionPerformed
 
   private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
     ActiveUser.remove();
-    LoginView loginView = new LoginView();
-    loginView.setVisible(true);
+    new LoginView().setVisible(true);
     dispose();
   }//GEN-LAST:event_exitButtonActionPerformed
+
+  private void penggunaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_penggunaButtonActionPerformed
+    new PenggunaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_penggunaButtonActionPerformed
+
+  private void provinsiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_provinsiButtonActionPerformed
+    new ProvinsiView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_provinsiButtonActionPerformed
+
+  private void biayaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biayaButtonActionPerformed
+    new BiayaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_biayaButtonActionPerformed
+
+  private void peranButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peranButtonActionPerformed
+    new PeranView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_peranButtonActionPerformed
+
+  private void aksesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aksesButtonActionPerformed
+    new AksesView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_aksesButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -224,19 +275,19 @@ public class MenuUtamaView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton aksesButton;
+  private javax.swing.JButton biayaButton;
+  private javax.swing.JButton cabangButton;
   private javax.swing.JButton exitButton;
-  private javax.swing.JButton jButton10;
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
-  private javax.swing.JButton jButton4;
-  private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
-  private javax.swing.JButton jButton7;
-  private javax.swing.JButton jButton8;
-  private javax.swing.JButton jButton9;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
+  private javax.swing.JButton kotaButton;
+  private javax.swing.JButton penggunaButton;
+  private javax.swing.JButton peranButton;
+  private javax.swing.JButton provinsiButton;
   // End of variables declaration//GEN-END:variables
 }
