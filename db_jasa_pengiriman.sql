@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2021 at 06:34 AM
+-- Generation Time: Mar 15, 2021 at 11:24 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -60,6 +60,13 @@ CREATE TABLE `cabang` (
   `no_hp` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cabang`
+--
+
+INSERT INTO `cabang` (`id_cabang`, `id_kota`, `nama_cabang`, `alamat`, `no_hp`) VALUES
+(4, 1, 'Cab. Salatiga', 'Jl. Diponegoro', '082283947281');
+
 -- --------------------------------------------------------
 
 --
@@ -85,6 +92,13 @@ CREATE TABLE `kota` (
   `nama_kota` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `kota`
+--
+
+INSERT INTO `kota` (`id_kota`, `id_provinsi`, `nama_kota`) VALUES
+(1, 1, 'Salatiga');
+
 -- --------------------------------------------------------
 
 --
@@ -108,13 +122,20 @@ CREATE TABLE `pelacakan` (
 
 CREATE TABLE `pengguna` (
   `id_pengguna` int(11) NOT NULL,
-  `id_cabang` int(11) NOT NULL,
+  `id_cabang` int(11) DEFAULT NULL,
   `id_peran` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(200) NOT NULL,
   `terakhir_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pengguna`
+--
+
+INSERT INTO `pengguna` (`id_pengguna`, `id_cabang`, `id_peran`, `nama`, `email`, `password`, `terakhir_login`) VALUES
+(4, 4, 4, 'Admin Cab. Salatiga', 'admin.salatiga@jasakirim.com', 'admin123', '2021-03-15 22:23:40');
 
 -- --------------------------------------------------------
 
@@ -151,7 +172,7 @@ CREATE TABLE `peran` (
 --
 
 INSERT INTO `peran` (`id_peran`, `nama_peran`) VALUES
-(1, 'Admin');
+(4, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -162,6 +183,26 @@ INSERT INTO `peran` (`id_peran`, `nama_peran`) VALUES
 CREATE TABLE `provinsi` (
   `id_provinsi` int(11) NOT NULL,
   `nama_provinsi` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `provinsi`
+--
+
+INSERT INTO `provinsi` (`id_provinsi`, `nama_provinsi`) VALUES
+(1, 'Jawa Tengah');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `riwayat_peran`
+--
+
+CREATE TABLE `riwayat_peran` (
+  `id_riwayat_peran` int(11) NOT NULL,
+  `id_pengguna` int(11) NOT NULL,
+  `id_peran` int(11) DEFAULT NULL,
+  `tanggal_dibuat` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -242,6 +283,14 @@ ALTER TABLE `provinsi`
   ADD PRIMARY KEY (`id_provinsi`);
 
 --
+-- Indexes for table `riwayat_peran`
+--
+ALTER TABLE `riwayat_peran`
+  ADD PRIMARY KEY (`id_riwayat_peran`),
+  ADD KEY `id_pengguna` (`id_pengguna`),
+  ADD KEY `id_peran` (`id_peran`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -261,7 +310,7 @@ ALTER TABLE `biaya`
 -- AUTO_INCREMENT for table `cabang`
 --
 ALTER TABLE `cabang`
-  MODIFY `id_cabang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_cabang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `detail_akses`
@@ -273,7 +322,7 @@ ALTER TABLE `detail_akses`
 -- AUTO_INCREMENT for table `kota`
 --
 ALTER TABLE `kota`
-  MODIFY `id_kota` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_kota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pelacakan`
@@ -285,19 +334,25 @@ ALTER TABLE `pelacakan`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `peran`
 --
 ALTER TABLE `peran`
-  MODIFY `id_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `provinsi`
 --
 ALTER TABLE `provinsi`
-  MODIFY `id_provinsi` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_provinsi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `riwayat_peran`
+--
+ALTER TABLE `riwayat_peran`
+  MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
@@ -340,7 +395,7 @@ ALTER TABLE `pelacakan`
 -- Constraints for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  ADD CONSTRAINT `CST-cabang-pengguna` FOREIGN KEY (`id_cabang`) REFERENCES `cabang` (`id_cabang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `CST-cabang-pengguna` FOREIGN KEY (`id_cabang`) REFERENCES `cabang` (`id_cabang`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `CST-peran-pengguna` FOREIGN KEY (`id_peran`) REFERENCES `peran` (`id_peran`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
@@ -349,6 +404,13 @@ ALTER TABLE `pengguna`
 ALTER TABLE `pengiriman`
   ADD CONSTRAINT `CST-cabang-pengiriman` FOREIGN KEY (`id_cabang_pengirim`) REFERENCES `cabang` (`id_cabang`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `CST-kota-pengiriman` FOREIGN KEY (`id_kota_penerima`) REFERENCES `kota` (`id_kota`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `riwayat_peran`
+--
+ALTER TABLE `riwayat_peran`
+  ADD CONSTRAINT `CST-pengguna-riwayat_peran` FOREIGN KEY (`id_pengguna`) REFERENCES `pengguna` (`id_pengguna`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `CST-peran-riwayat_peran` FOREIGN KEY (`id_peran`) REFERENCES `peran` (`id_peran`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
