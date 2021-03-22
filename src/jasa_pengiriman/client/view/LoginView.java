@@ -6,6 +6,7 @@
 package jasa_pengiriman.client.view;
 
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.server.service.AuthService;
 import java.net.MalformedURLException;
@@ -21,12 +22,22 @@ import javax.swing.JOptionPane;
  * @author Riett
  */
 public class LoginView extends javax.swing.JFrame {
-
+  private AuthService authService;
   /**
    * Creates new form LoginView
    */
   public LoginView() {
+    initRMIServices();
     initComponents();
+  }
+  
+  private void initRMIServices() {
+    try {
+      this.authService = (AuthService) RMI.getService("AuthService");
+    } catch (Exception ex) {
+      JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+      System.exit(1);
+    }
   }
 
   /**
@@ -117,11 +128,10 @@ public class LoginView extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+    String email = emailTextField.getText();
+    String password = String.valueOf(passwordPasswordField.getPassword());
+
     try {
-      String email = emailTextField.getText();
-      String password = String.valueOf(passwordPasswordField.getPassword());
-      
-      AuthService authService = (AuthService) Naming.lookup("rmi://localhost:3001/AuthService");
       Pengguna pengguna = authService.login(email, password);
       
       if(pengguna == null) {
@@ -132,10 +142,6 @@ public class LoginView extends javax.swing.JFrame {
         dispose();
       }
     } catch (RemoteException ex) {
-      Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (NotBoundException ex) {
-      Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (MalformedURLException ex) {
       Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
     }
   }//GEN-LAST:event_loginButtonActionPerformed

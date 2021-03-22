@@ -5,19 +5,52 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.ProvinsiService;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author admin
  */
 public class KotaView extends javax.swing.JFrame {
-
+    private ProvinsiService provinsiService;
     /**
      * Creates new form KotaView
      */
     public KotaView() {
-        initComponents();
+      initRMIServices();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initRMIServices() {
+      try {
+        this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      provinsiComboBox.removeAllItems();
+      provinsiComboBox.addItem("- Pilih -");
+      provinsiComboBox.setSelectedIndex(0);
+      
+      try {
+        List<Provinsi> provinsiList = provinsiService.getAll();
+        
+        for(Provinsi provinsi : provinsiList) provinsiComboBox.addItem(provinsi);
+      } catch (RemoteException ex) {
+        Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     /**
@@ -36,7 +69,7 @@ public class KotaView extends javax.swing.JFrame {
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
-    jComboBox1 = new javax.swing.JComboBox<>();
+    provinsiComboBox = new javax.swing.JComboBox<>();
     jTextField1 = new javax.swing.JTextField();
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
@@ -86,8 +119,7 @@ public class KotaView extends javax.swing.JFrame {
 
     jLabel3.setText("Nama Kota");
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox1.setName("cmbProvinsi"); // NOI18N
+    provinsiComboBox.setName("cmbProvinsi"); // NOI18N
 
     jTextField1.setText(" ");
     jTextField1.setName("txtKota"); // NOI18N
@@ -159,7 +191,7 @@ public class KotaView extends javax.swing.JFrame {
                   .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                  .addComponent(provinsiComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                   .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)))
               .addComponent(menuUtamaButton))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
@@ -189,7 +221,7 @@ public class KotaView extends javax.swing.JFrame {
             .addGap(5, 5, 5)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel2)
-              .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel3)
@@ -263,7 +295,6 @@ public class KotaView extends javax.swing.JFrame {
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
-  private javax.swing.JComboBox<String> jComboBox1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -276,5 +307,6 @@ public class KotaView extends javax.swing.JFrame {
   private javax.swing.JTable jTable3;
   private javax.swing.JTextField jTextField1;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JComboBox<Object> provinsiComboBox;
   // End of variables declaration//GEN-END:variables
 }

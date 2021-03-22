@@ -1,5 +1,16 @@
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.model.Kota;
+import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.KotaService;
+import jasa_pengiriman.server.service.ProvinsiService;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,13 +21,46 @@ package jasa_pengiriman.client.view;
  *
  * @author USER
  */
-public class Pengiriman extends javax.swing.JFrame {
-
+public class PengirimanView extends javax.swing.JFrame {
+    ProvinsiService provinsiService;
+    KotaService kotaService;
     /**
      * Creates new form Pengiriman
      */
-    public Pengiriman() {
-        initComponents();
+    public PengirimanView() {
+      initRMIServices();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initRMIServices() {
+      try {
+        this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
+        this.kotaService = (KotaService) RMI.getService("KotaService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      provinsiComboBox.removeAllItems();
+      provinsiComboBox.addItem("- Pilih -");
+      provinsiComboBox.setSelectedIndex(0);
+      
+      kotaComboBox.removeAllItems();
+      kotaComboBox.addItem("- Pilih -");
+      kotaComboBox.setSelectedIndex(0);
+      
+      try {
+        List<Provinsi> provinsiList = provinsiService.getAll();
+        List<Kota> kotaList = kotaService.getAll();
+        
+        for(Provinsi provinsi : provinsiList) provinsiComboBox.addItem(provinsi);
+        for(Kota kota : kotaList) kotaComboBox.addItem(kota);
+      } catch (RemoteException ex) {
+        Logger.getLogger(PengirimanView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     /**
@@ -50,8 +94,8 @@ public class Pengiriman extends javax.swing.JFrame {
     jTextField8 = new javax.swing.JTextField();
     jButton4 = new javax.swing.JButton();
     jLabel13 = new javax.swing.JLabel();
-    jComboBox1 = new javax.swing.JComboBox<>();
-    jComboBox2 = new javax.swing.JComboBox<>();
+    provinsiComboBox = new javax.swing.JComboBox<>();
+    kotaComboBox = new javax.swing.JComboBox<>();
     jButton5 = new javax.swing.JButton();
     jButton6 = new javax.swing.JButton();
     jLabel7 = new javax.swing.JLabel();
@@ -90,17 +134,17 @@ public class Pengiriman extends javax.swing.JFrame {
 
     jLabel3.setText("Provinsi");
 
-    jLabel4.setText("Kota Penerima");
+    jLabel4.setText("Kota");
 
     jLabel5.setText("Isi Barang");
 
     jLabel6.setText("Berat");
 
-    jLabel8.setText("Nama Penerima");
+    jLabel8.setText("Nama");
 
-    jLabel9.setText("Alamat Penerima");
+    jLabel9.setText("Alamat");
 
-    jLabel10.setText("No. HP Penerima");
+    jLabel10.setText("No. HP");
 
     jLabel11.setText("Biaya");
 
@@ -108,10 +152,6 @@ public class Pengiriman extends javax.swing.JFrame {
     jButton4.setName("txtRefresh"); // NOI18N
 
     jLabel13.setText("kg");
-
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-    jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
     jButton5.setText("Menu Utama");
     jButton5.setName("btnMenuUtama"); // NOI18N
@@ -160,28 +200,26 @@ public class Pengiriman extends javax.swing.JFrame {
               .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(jLabel14))
             .addGap(48, 48, 48)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel7)
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel4)
+                .addComponent(jLabel10)
                 .addGap(18, 18, 18)
-                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel9)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
               .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addComponent(jLabel8)
-                  .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                  .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                  .addComponent(jLabel3)
+                  .addComponent(jLabel4))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGap(0, 0, Short.MAX_VALUE))
           .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 601, Short.MAX_VALUE)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -213,12 +251,12 @@ public class Pengiriman extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel3)
-              .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+              .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel4)
-              .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(4, 4, 4)
+              .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(14, 14, 14)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel9)
               .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -257,7 +295,7 @@ public class Pengiriman extends javax.swing.JFrame {
               .addComponent(jButton2)
               .addComponent(jButton3))
             .addGap(24, 24, 24)))
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -281,20 +319,21 @@ public class Pengiriman extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Pengiriman.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PengirimanView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Pengiriman.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PengirimanView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Pengiriman.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PengirimanView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Pengiriman.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PengirimanView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Pengiriman().setVisible(true);
+                new PengirimanView().setVisible(true);
             }
         });
     }
@@ -306,8 +345,6 @@ public class Pengiriman extends javax.swing.JFrame {
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
-  private javax.swing.JComboBox<String> jComboBox1;
-  private javax.swing.JComboBox<String> jComboBox2;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
@@ -330,5 +367,7 @@ public class Pengiriman extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField5;
   private javax.swing.JTextField jTextField6;
   private javax.swing.JTextField jTextField8;
+  private javax.swing.JComboBox<Object> kotaComboBox;
+  private javax.swing.JComboBox<Object> provinsiComboBox;
   // End of variables declaration//GEN-END:variables
 }

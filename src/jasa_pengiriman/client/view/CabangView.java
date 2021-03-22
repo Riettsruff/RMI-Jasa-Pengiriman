@@ -5,21 +5,62 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Kota;
+import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.KotaService;
+import jasa_pengiriman.server.service.ProvinsiService;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author admin
  */
 public class CabangView extends javax.swing.JFrame {
-
+    private ProvinsiService provinsiService;
+    private KotaService kotaService;
     /**
      * Creates new form CabangView
      */
     public CabangView() {
-        initComponents();
+      initRMIServices();
+      initComponents();
+      initDataView();
     }
-
+    
+    private void initRMIServices() {
+      try {
+        this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
+        this.kotaService = (KotaService) RMI.getService("KotaService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      provinsiComboBox.removeAllItems();
+      provinsiComboBox.addItem("- Pilih -");
+      
+      kotaComboBox.removeAllItems();
+      kotaComboBox.addItem("- Pilih -");
+      
+      try {
+        List<Provinsi> provinsiList = provinsiService.getAll();
+        List<Kota> kotaList = kotaService.getAll();
+        
+        for(Provinsi provinsi : provinsiList) provinsiComboBox.addItem(provinsi);
+        for(Kota kota : kotaList) kotaComboBox.addItem(kota);
+      } catch (RemoteException ex) {
+        Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,8 +84,8 @@ public class CabangView extends javax.swing.JFrame {
     jTextField1 = new javax.swing.JTextField();
     jTextField3 = new javax.swing.JTextField();
     jTextField4 = new javax.swing.JTextField();
-    jComboBox1 = new javax.swing.JComboBox<>();
-    jComboBox2 = new javax.swing.JComboBox<>();
+    provinsiComboBox = new javax.swing.JComboBox<>();
+    kotaComboBox = new javax.swing.JComboBox<>();
     jButton3 = new javax.swing.JButton();
     jButton4 = new javax.swing.JButton();
     jButton5 = new javax.swing.JButton();
@@ -110,11 +151,9 @@ public class CabangView extends javax.swing.JFrame {
     jTextField4.setText(" ");
     jTextField4.setName("txtNoHP"); // NOI18N
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox1.setName("cmbProvinsi"); // NOI18N
+    provinsiComboBox.setName("cmbProvinsi"); // NOI18N
 
-    jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox2.setName("cmbKota"); // NOI18N
+    kotaComboBox.setName("cmbKota"); // NOI18N
 
     jButton3.setText("Simpan");
     jButton3.setName("btnSimpan"); // NOI18N
@@ -182,8 +221,8 @@ public class CabangView extends javax.swing.JFrame {
               .addComponent(jTextField1)
               .addComponent(jTextField3)
               .addComponent(jTextField4)
-              .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(provinsiComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(0, 412, Short.MAX_VALUE))
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
             .addGap(0, 0, Short.MAX_VALUE)
@@ -234,11 +273,11 @@ public class CabangView extends javax.swing.JFrame {
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                   .addComponent(jLabel5))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                   .addComponent(jLabel6))))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -306,8 +345,6 @@ public class CabangView extends javax.swing.JFrame {
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
-  private javax.swing.JComboBox<String> jComboBox1;
-  private javax.swing.JComboBox<String> jComboBox2;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -325,6 +362,8 @@ public class CabangView extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField2;
   private javax.swing.JTextField jTextField3;
   private javax.swing.JTextField jTextField4;
+  private javax.swing.JComboBox<Object> kotaComboBox;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JComboBox<Object> provinsiComboBox;
   // End of variables declaration//GEN-END:variables
 }

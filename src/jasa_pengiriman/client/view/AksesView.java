@@ -6,18 +6,54 @@
 package jasa_pengiriman.client.view;
 
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.model.Peran;
+import jasa_pengiriman.server.service.PeranService;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author admin
  */
 public class AksesView extends javax.swing.JFrame {
-
+    private PeranService peranService;
     /**
      * Creates new form AksesView
      */
     public AksesView() {
-        initComponents();
+      initRMIServices();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initRMIServices() {
+      try {
+        this.peranService = (PeranService) RMI.getService("PeranService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      peranComboBox.removeAllItems();
+      peranComboBox.addItem("- Pilih -");
+      peranComboBox.setSelectedIndex(0);
+      
+      try {
+        List<Peran> peranList = peranService.getAll();
+        
+        for(Peran peran : peranList) peranComboBox.addItem(peran);
+      } catch (RemoteException ex) {
+        Logger.getLogger(AksesView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     /**
@@ -39,7 +75,7 @@ public class AksesView extends javax.swing.JFrame {
     jLabel4 = new javax.swing.JLabel();
     jTextField1 = new javax.swing.JTextField();
     jTextField2 = new javax.swing.JTextField();
-    jComboBox1 = new javax.swing.JComboBox<>();
+    peranComboBox = new javax.swing.JComboBox<>();
     jTextField3 = new javax.swing.JTextField();
     jLabel5 = new javax.swing.JLabel();
     jLabel6 = new javax.swing.JLabel();
@@ -100,8 +136,12 @@ public class AksesView extends javax.swing.JFrame {
     jTextField2.setEnabled(false);
     jTextField2.setName("txtOperasi"); // NOI18N
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox1.setName("cmbPeran"); // NOI18N
+    peranComboBox.setName("cmbPeran"); // NOI18N
+    peranComboBox.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        peranComboBoxActionPerformed(evt);
+      }
+    });
 
     jTextField3.setText(" ");
     jTextField3.setName("txtBatasanOperasi"); // NOI18N
@@ -181,7 +221,7 @@ public class AksesView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addComponent(jTextField3)
-                  .addComponent(jComboBox1, 0, 152, Short.MAX_VALUE))))
+                  .addComponent(peranComboBox, 0, 152, Short.MAX_VALUE))))
             .addGap(31, 31, 31)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
@@ -232,7 +272,7 @@ public class AksesView extends javax.swing.JFrame {
             .addGap(52, 52, 52)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel3)
-              .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(peranComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(9, 9, 9)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel4)
@@ -260,6 +300,10 @@ public class AksesView extends javax.swing.JFrame {
     new LoginView().setVisible(true);
     dispose();
   }//GEN-LAST:event_exitButtonActionPerformed
+
+  private void peranComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peranComboBoxActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_peranComboBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -303,7 +347,6 @@ public class AksesView extends javax.swing.JFrame {
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
-  private javax.swing.JComboBox<String> jComboBox1;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -320,5 +363,6 @@ public class AksesView extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField2;
   private javax.swing.JTextField jTextField3;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JComboBox<Object> peranComboBox;
   // End of variables declaration//GEN-END:variables
 }

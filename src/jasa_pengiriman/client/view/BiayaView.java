@@ -1,6 +1,19 @@
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Kota;
+import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.KotaService;
+import jasa_pengiriman.server.service.ProvinsiService;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,12 +26,60 @@ import jasa_pengiriman.client.store.ActiveUser;
  * @author USER
  */
 public class BiayaView extends javax.swing.JFrame {
-
+    private ProvinsiService provinsiService;
+    private KotaService kotaService;
     /**
      * Creates new form Biaya
      */
     public BiayaView() {
-        initComponents();
+      initRMIServices();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initRMIServices() {
+      try {
+        this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
+        this.kotaService = (KotaService) RMI.getService("KotaService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      provinsiAsalComboBox.removeAllItems();
+      provinsiAsalComboBox.addItem("- Pilih -");
+      provinsiAsalComboBox.setSelectedIndex(0);
+      
+      kotaAsalComboBox.removeAllItems();
+      kotaAsalComboBox.addItem("- Pilih -");
+      kotaAsalComboBox.setSelectedIndex(0);
+      
+      provinsiTujuanComboBox.removeAllItems();
+      provinsiTujuanComboBox.addItem("- Pilih -");
+      provinsiTujuanComboBox.setSelectedIndex(0);
+      
+      kotaTujuanComboBox.removeAllItems();
+      kotaTujuanComboBox.addItem("- Pilih -");
+      kotaTujuanComboBox.setSelectedIndex(0);
+      
+      try {
+        List<Provinsi> provinsiList = provinsiService.getAll();
+        List<Kota> kotaList = kotaService.getAll();
+        
+        for(Provinsi provinsi : provinsiList) {
+          provinsiAsalComboBox.addItem(provinsi);
+          provinsiTujuanComboBox.addItem(provinsi);
+        }
+        
+        for(Kota kota : kotaList) {
+          kotaAsalComboBox.addItem(kota);
+          kotaTujuanComboBox.addItem(kota);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(BiayaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     /**
@@ -34,9 +95,9 @@ public class BiayaView extends javax.swing.JFrame {
     jTable1 = new javax.swing.JTable();
     jLabel1 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
-    jComboBox1 = new javax.swing.JComboBox<>();
+    provinsiAsalComboBox = new javax.swing.JComboBox<>();
     jLabel5 = new javax.swing.JLabel();
-    jComboBox2 = new javax.swing.JComboBox<>();
+    kotaAsalComboBox = new javax.swing.JComboBox<>();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTable2 = new javax.swing.JTable();
     jButton1 = new javax.swing.JButton();
@@ -48,8 +109,8 @@ public class BiayaView extends javax.swing.JFrame {
     jLabel3 = new javax.swing.JLabel();
     jLabel6 = new javax.swing.JLabel();
     jLabel8 = new javax.swing.JLabel();
-    jComboBox3 = new javax.swing.JComboBox<>();
-    jComboBox4 = new javax.swing.JComboBox<>();
+    provinsiTujuanComboBox = new javax.swing.JComboBox<>();
+    kotaTujuanComboBox = new javax.swing.JComboBox<>();
     jButton4 = new javax.swing.JButton();
     jButton5 = new javax.swing.JButton();
     jButton6 = new javax.swing.JButton();
@@ -74,18 +135,16 @@ public class BiayaView extends javax.swing.JFrame {
 
     jLabel4.setText("Provinsi");
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox1.setName("cmbProvinsiAsal"); // NOI18N
-    jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+    provinsiAsalComboBox.setName("cmbProvinsiAsal"); // NOI18N
+    provinsiAsalComboBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jComboBox1ActionPerformed(evt);
+        provinsiAsalComboBoxActionPerformed(evt);
       }
     });
 
     jLabel5.setText("Kota");
 
-    jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox2.setName("cmbKotaAsal"); // NOI18N
+    kotaAsalComboBox.setName("cmbKotaAsal"); // NOI18N
 
     jTable2.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -134,11 +193,9 @@ public class BiayaView extends javax.swing.JFrame {
 
     jLabel8.setText("Kota");
 
-    jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox3.setName("cmbProvinsiTujuan"); // NOI18N
+    provinsiTujuanComboBox.setName("cmbProvinsiTujuan"); // NOI18N
 
-    jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox4.setName("cmbKotaTujuan"); // NOI18N
+    kotaTujuanComboBox.setName("cmbKotaTujuan"); // NOI18N
 
     jButton4.setText("Update");
     jButton4.setName("btnUpdate"); // NOI18N
@@ -174,8 +231,8 @@ public class BiayaView extends javax.swing.JFrame {
                     .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(jComboBox3, 0, 123, Short.MAX_VALUE)
-                  .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                  .addComponent(provinsiTujuanComboBox, 0, 123, Short.MAX_VALUE)
+                  .addComponent(kotaTujuanComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))))
           .addGroup(layout.createSequentialGroup()
             .addComponent(jButton1)
@@ -193,8 +250,8 @@ public class BiayaView extends javax.swing.JFrame {
                   .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                  .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                  .addComponent(provinsiAsalComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
               .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(jLabel2)
               .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -220,19 +277,19 @@ public class BiayaView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel4)
-                  .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                  .addComponent(provinsiAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
               .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel6)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(provinsiTujuanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
               .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel5)
-                  .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                  .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
               .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(kotaTujuanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
           .addComponent(jLabel8))
         .addGap(18, 18, 18)
         .addComponent(jLabel2)
@@ -252,9 +309,9 @@ public class BiayaView extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void provinsiAsalComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_provinsiAsalComboBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_provinsiAsalComboBoxActionPerformed
 
   private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
     new MenuUtamaView().setVisible(true);
@@ -309,10 +366,6 @@ public class BiayaView extends javax.swing.JFrame {
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
   private javax.swing.JButton jButton6;
-  private javax.swing.JComboBox<String> jComboBox1;
-  private javax.swing.JComboBox<String> jComboBox2;
-  private javax.swing.JComboBox<String> jComboBox3;
-  private javax.swing.JComboBox<String> jComboBox4;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -326,6 +379,10 @@ public class BiayaView extends javax.swing.JFrame {
   private javax.swing.JTable jTable1;
   private javax.swing.JTable jTable2;
   private javax.swing.JTextField jTextField1;
+  private javax.swing.JComboBox<Object> kotaAsalComboBox;
+  private javax.swing.JComboBox<Object> kotaTujuanComboBox;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JComboBox<Object> provinsiAsalComboBox;
+  private javax.swing.JComboBox<Object> provinsiTujuanComboBox;
   // End of variables declaration//GEN-END:variables
 }

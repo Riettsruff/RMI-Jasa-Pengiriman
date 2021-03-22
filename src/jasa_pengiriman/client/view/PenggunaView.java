@@ -1,6 +1,16 @@
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Cabang;
+import jasa_pengiriman.model.Peran;
+import jasa_pengiriman.server.service.CabangService;
+import jasa_pengiriman.server.service.PeranService;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,12 +23,45 @@ import jasa_pengiriman.client.store.ActiveUser;
  * @author USER
  */
 public class PenggunaView extends javax.swing.JFrame {
-
+    private PeranService peranService;
+    private CabangService cabangService;
     /**
      * Creates new form Pengguna
      */
     public PenggunaView() {
-        initComponents();
+      initRMIServices();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initRMIServices() {
+      try {
+        this.peranService = (PeranService) RMI.getService("PeranService");
+        this.cabangService = (CabangService) RMI.getService("CabangService");
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
+        System.exit(1);
+      }
+    }
+    
+    private void initDataView() {
+      peranComboBox.removeAllItems();
+      peranComboBox.addItem("- Pilih -");
+      peranComboBox.setSelectedIndex(0);
+      
+      cabangComboBox.removeAllItems();
+      cabangComboBox.addItem("- Pilih -");
+      cabangComboBox.setSelectedIndex(0);
+      
+      try {
+        List<Peran> peranList = peranService.getAll();
+        List<Cabang> cabangList = cabangService.getAll();
+        
+        for(Peran peran : peranList) peranComboBox.addItem(peran);
+        for(Cabang cabang : cabangList) cabangComboBox.addItem(cabang);
+      } catch (RemoteException ex) {
+        Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     /**
@@ -43,8 +86,8 @@ public class PenggunaView extends javax.swing.JFrame {
     jTextField4 = new javax.swing.JTextField();
     jLabel6 = new javax.swing.JLabel();
     jTextField5 = new javax.swing.JTextField();
-    jComboBox1 = new javax.swing.JComboBox<>();
-    jComboBox2 = new javax.swing.JComboBox<>();
+    cabangComboBox = new javax.swing.JComboBox<>();
+    peranComboBox = new javax.swing.JComboBox<>();
     menuUtamaButton = new javax.swing.JButton();
     exitButton = new javax.swing.JButton();
     jLabel2 = new javax.swing.JLabel();
@@ -100,11 +143,9 @@ public class PenggunaView extends javax.swing.JFrame {
 
     jTextField5.setName("txtEmail"); // NOI18N
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox1.setName("cmbCabang"); // NOI18N
+    cabangComboBox.setName("cmbCabang"); // NOI18N
 
-    jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-    jComboBox2.setName("cmbPeran"); // NOI18N
+    peranComboBox.setName("cmbPeran"); // NOI18N
 
     menuUtamaButton.setText("Menu Utama");
     menuUtamaButton.setName("btnMenuUtama"); // NOI18N
@@ -167,13 +208,13 @@ public class PenggunaView extends javax.swing.JFrame {
                   .addGroup(layout.createSequentialGroup()
                     .addComponent(jLabel3)
                     .addGap(18, 18, 18)
-                    .addComponent(jComboBox1, 0, 142, Short.MAX_VALUE))
+                    .addComponent(cabangComboBox, 0, 142, Short.MAX_VALUE))
                   .addGroup(layout.createSequentialGroup()
                     .addComponent(jLabel4)
                     .addGap(27, 27, 27)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                       .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                      .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                      .addComponent(peranComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
               .addComponent(jLabel6)
               .addComponent(jLabel5))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
@@ -208,11 +249,11 @@ public class PenggunaView extends javax.swing.JFrame {
             .addGap(10, 10, 10)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel4)
-              .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(peranComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel3)
-              .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+              .addComponent(cabangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
           .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -280,13 +321,12 @@ public class PenggunaView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JComboBox<Object> cabangComboBox;
   private javax.swing.JButton exitButton;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
-  private javax.swing.JComboBox<String> jComboBox1;
-  private javax.swing.JComboBox<String> jComboBox2;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -300,5 +340,6 @@ public class PenggunaView extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField4;
   private javax.swing.JTextField jTextField5;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JComboBox<Object> peranComboBox;
   // End of variables declaration//GEN-END:variables
 }
