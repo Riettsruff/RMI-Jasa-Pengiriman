@@ -18,4 +18,7 @@ public interface DetailAksesService extends Remote {
   public List<DetailAkses> getByIdAkses(int idAkses) throws RemoteException;
   public List<DetailAkses> getByIdPeran(int idPeran) throws RemoteException;
   public List<DetailAkses> getAll() throws RemoteException;
+  public boolean insert(DetailAkses detailAkses) throws RemoteException;
+  public boolean update(DetailAkses detailAkses) throws RemoteException;
+  public boolean deleteByIdDetailAkses(int idDetailAkses) throws RemoteException;
 }

@@ -34,5 +34,20 @@ public class DetailAksesServiceImpl extends UnicastRemoteObject implements Detai
   public List<DetailAkses> getAll() throws RemoteException {
     return DetailAksesDao.getAll();
   }
+
+  @Override
+  public boolean insert(DetailAkses detailAkses) throws RemoteException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean update(DetailAkses detailAkses) throws RemoteException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean deleteByIdDetailAkses(int idDetailAkses) throws RemoteException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
   
 }
