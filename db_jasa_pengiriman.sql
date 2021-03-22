@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2021 at 11:24 PM
+-- Generation Time: Mar 23, 2021 at 12:20 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -109,8 +109,8 @@ CREATE TABLE `pelacakan` (
   `id_pelacakan` int(11) NOT NULL,
   `no_resi` char(16) NOT NULL,
   `id_cabang` int(11) DEFAULT NULL,
+  `id_status_pelacakan` int(11) DEFAULT NULL,
   `waktu_lapor` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `status` enum('HOLD','HAND OVER','REDELIVER','BAD ADDRESS','BOX UNDELIVERED','DELIVERED','RECEIVED ON DESTINATION','ON PROCESS') NOT NULL,
   `keterangan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -205,6 +205,17 @@ CREATE TABLE `riwayat_peran` (
   `tanggal_dibuat` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `status_pelacakan`
+--
+
+CREATE TABLE `status_pelacakan` (
+  `id_status_pelacakan` int(11) NOT NULL,
+  `nama_status` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -251,7 +262,8 @@ ALTER TABLE `kota`
 ALTER TABLE `pelacakan`
   ADD PRIMARY KEY (`id_pelacakan`),
   ADD KEY `no_resi` (`no_resi`),
-  ADD KEY `id_cabang` (`id_cabang`);
+  ADD KEY `id_cabang` (`id_cabang`),
+  ADD KEY `id_status_pelacakan` (`id_status_pelacakan`);
 
 --
 -- Indexes for table `pengguna`
@@ -289,6 +301,12 @@ ALTER TABLE `riwayat_peran`
   ADD PRIMARY KEY (`id_riwayat_peran`),
   ADD KEY `id_pengguna` (`id_pengguna`),
   ADD KEY `id_peran` (`id_peran`);
+
+--
+-- Indexes for table `status_pelacakan`
+--
+ALTER TABLE `status_pelacakan`
+  ADD PRIMARY KEY (`id_status_pelacakan`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -355,6 +373,12 @@ ALTER TABLE `riwayat_peran`
   MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `status_pelacakan`
+--
+ALTER TABLE `status_pelacakan`
+  MODIFY `id_status_pelacakan` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -389,7 +413,8 @@ ALTER TABLE `kota`
 --
 ALTER TABLE `pelacakan`
   ADD CONSTRAINT `CST-cabang-pelacakan` FOREIGN KEY (`id_cabang`) REFERENCES `cabang` (`id_cabang`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `CST-pengiriman-pelacakan` FOREIGN KEY (`no_resi`) REFERENCES `pengiriman` (`no_resi`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `CST-pengiriman-pelacakan` FOREIGN KEY (`no_resi`) REFERENCES `pengiriman` (`no_resi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `CST-status_pelacakan-pelacakan` FOREIGN KEY (`id_status_pelacakan`) REFERENCES `status_pelacakan` (`id_status_pelacakan`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pengguna`
