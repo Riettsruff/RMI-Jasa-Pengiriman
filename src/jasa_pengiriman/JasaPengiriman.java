@@ -10,11 +10,13 @@ import jasa_pengiriman.client.view.TesterView;
 import jasa_pengiriman.server.service.AksesServiceImpl;
 import jasa_pengiriman.server.service.AuthServiceImpl;
 import jasa_pengiriman.server.service.CabangServiceImpl;
+import jasa_pengiriman.server.service.DetailAksesServiceImpl;
 import jasa_pengiriman.server.service.KotaServiceImpl;
 import jasa_pengiriman.server.service.PenggunaServiceImpl;
 import jasa_pengiriman.server.service.PeranServiceImpl;
 import jasa_pengiriman.server.service.ProvinsiServiceImpl;
 import jasa_pengiriman.server.service.RiwayatPeranServiceImpl;
+import jasa_pengiriman.server.service.StatusPelacakanServiceImpl;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
@@ -40,8 +42,10 @@ public class JasaPengiriman {
     registry.rebind("KotaService", new KotaServiceImpl());
     registry.rebind("PenggunaService", new PenggunaServiceImpl());
     registry.rebind("PeranService", new PeranServiceImpl());
+    registry.rebind("DetailAksesService", new DetailAksesServiceImpl());
     registry.rebind("ProvinsiService", new ProvinsiServiceImpl());
     registry.rebind("RiwayatPeranService", new RiwayatPeranServiceImpl());
+    registry.rebind("StatusPelacakanService", new StatusPelacakanServiceImpl());
     
     System.out.println("App server started...");
     
