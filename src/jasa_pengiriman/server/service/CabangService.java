@@ -16,4 +16,5 @@ import java.util.List;
  */
 public interface CabangService extends Remote {
   public List<Cabang> getAll() throws RemoteException;
+  public List<Cabang> getByIdKota(int idKota) throws RemoteException;
 }

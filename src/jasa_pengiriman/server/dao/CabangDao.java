@@ -21,11 +21,22 @@ import java.util.logging.Logger;
  */
 public class CabangDao {
   
-  public static List<Cabang> getAll() {
+  private static List<Cabang> get(String type, String[] psSet) {
     List<Cabang> cabangList = new ArrayList<Cabang>();
     
     try {
-      ResultSet rs = DB.query("SELECT a.id_cabang, a.nama_cabang, a.alamat, a.no_hp, b.id_kota, b.nama_kota, c.id_provinsi, c.nama_provinsi FROM cabang a INNER JOIN kota b ON a.id_kota = b.id_kota INNER JOIN provinsi c ON b.id_provinsi = c.id_provinsi");
+      String query = "SELECT a.id_cabang, a.nama_cabang, a.alamat, a.no_hp, b.id_kota, b.nama_kota, c.id_provinsi, c.nama_provinsi FROM cabang a INNER JOIN kota b ON a.id_kota = b.id_kota INNER JOIN provinsi c ON b.id_provinsi = c.id_provinsi";
+      ResultSet rs = null;
+      
+      switch(type) {
+        case "BY_ID_KOTA":
+          query += " WHERE b.id_kota = ?";
+          rs = DB.query(query, psSet);
+        break;
+        case "ALL":
+        default:
+          rs = DB.query(query);
+      }
       
       while(rs.next()) {
         Cabang cabang = new Cabang();
@@ -50,5 +61,14 @@ public class CabangDao {
     }
     
     return cabangList;
+  }
+  
+  public static List<Cabang> getAll() {
+    return get("ALL", null);
+  }
+  
+  public static List<Cabang> getByIdKota(int idKota) {
+    String[] psSet = {Integer.toString(idKota)};
+    return get("BY_ID_KOTA", psSet);
   }
 }
