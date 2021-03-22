@@ -109,7 +109,7 @@ public class AksesView extends javax.swing.JFrame {
     jLabel5.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel5.setText("Akses");
 
-    jLabel6.setText("Informasi Peran");
+    jLabel6.setText("Detail Akses");
 
     jButton3.setText("Simpan");
     jButton3.setName("btnSimpan"); // NOI18N
@@ -183,12 +183,12 @@ public class AksesView extends javax.swing.JFrame {
                   .addComponent(jTextField3)
                   .addComponent(jComboBox1, 0, 152, Short.MAX_VALUE))))
             .addGap(31, 31, 31)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel6)
                 .addGap(239, 239, 239))
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addContainerGap())))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
