@@ -30,4 +30,9 @@ public class Peran implements Serializable {
   public String getNamaPeran() {
     return namaPeran;
   }
+  
+  @Override
+  public String toString() {
+    return namaPeran;
+  }
 }

@@ -30,4 +30,9 @@ public class Provinsi implements Serializable {
   public String getNamaProvinsi() {
     return namaProvinsi;
   }
+  
+  @Override
+  public String toString() {
+    return namaProvinsi;
+  }
 }

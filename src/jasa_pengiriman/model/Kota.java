@@ -39,4 +39,9 @@ public class Kota implements Serializable {
   public String getNamaKota() {
     return namaKota;
   }
+  
+  @Override
+  public String toString() {
+    return namaKota;
+  }
 }
