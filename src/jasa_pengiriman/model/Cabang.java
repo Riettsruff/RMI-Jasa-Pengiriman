@@ -55,6 +55,11 @@ public class Cabang implements Serializable {
   public String getNoHp() {
     return noHp;
   }
+  
+  @Override
+  public String toString() {
+    return namaCabang;
+  }
 }
   
 
