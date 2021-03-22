@@ -31,8 +31,8 @@ public class MenuUtamaView extends javax.swing.JFrame {
 
     jLabel3 = new javax.swing.JLabel();
     exitButton = new javax.swing.JButton();
-    jButton2 = new javax.swing.JButton();
-    jButton3 = new javax.swing.JButton();
+    pengirimanButton = new javax.swing.JButton();
+    pelacakanButton = new javax.swing.JButton();
     penggunaButton = new javax.swing.JButton();
     cabangButton = new javax.swing.JButton();
     provinsiButton = new javax.swing.JButton();
@@ -56,11 +56,21 @@ public class MenuUtamaView extends javax.swing.JFrame {
       }
     });
 
-    jButton2.setText("Pengiriman");
-    jButton2.setName("btnPengiriman"); // NOI18N
+    pengirimanButton.setText("Pengiriman");
+    pengirimanButton.setName("btnPengiriman"); // NOI18N
+    pengirimanButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        pengirimanButtonActionPerformed(evt);
+      }
+    });
 
-    jButton3.setText("Pelacakan");
-    jButton3.setName("btnPelacakan"); // NOI18N
+    pelacakanButton.setText("Pelacakan");
+    pelacakanButton.setName("btnPelacakan"); // NOI18N
+    pelacakanButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        pelacakanButtonActionPerformed(evt);
+      }
+    });
 
     penggunaButton.setText("Pengguna");
     penggunaButton.setName("btnPengguna"); // NOI18N
@@ -141,9 +151,9 @@ public class MenuUtamaView extends javax.swing.JFrame {
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton2)
+                .addComponent(pengirimanButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3))
+                .addComponent(pelacakanButton))
               .addGroup(layout.createSequentialGroup()
                 .addComponent(penggunaButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -174,8 +184,8 @@ public class MenuUtamaView extends javax.swing.JFrame {
         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jButton3)
-          .addComponent(jButton2))
+          .addComponent(pelacakanButton)
+          .addComponent(pengirimanButton))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,6 +246,16 @@ public class MenuUtamaView extends javax.swing.JFrame {
     dispose();
   }//GEN-LAST:event_aksesButtonActionPerformed
 
+  private void pengirimanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pengirimanButtonActionPerformed
+    new PengirimanView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_pengirimanButtonActionPerformed
+
+  private void pelacakanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pelacakanButtonActionPerformed
+    new PelacakanView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_pelacakanButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,14 +299,14 @@ public class MenuUtamaView extends javax.swing.JFrame {
   private javax.swing.JButton biayaButton;
   private javax.swing.JButton cabangButton;
   private javax.swing.JButton exitButton;
-  private javax.swing.JButton jButton2;
-  private javax.swing.JButton jButton3;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JButton kotaButton;
+  private javax.swing.JButton pelacakanButton;
   private javax.swing.JButton penggunaButton;
+  private javax.swing.JButton pengirimanButton;
   private javax.swing.JButton peranButton;
   private javax.swing.JButton provinsiButton;
   // End of variables declaration//GEN-END:variables

@@ -1,6 +1,7 @@
 package jasa_pengiriman.client.view;
 
 import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.model.Kota;
 import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.service.KotaService;
@@ -96,8 +97,8 @@ public class PengirimanView extends javax.swing.JFrame {
     jLabel13 = new javax.swing.JLabel();
     provinsiComboBox = new javax.swing.JComboBox<>();
     kotaComboBox = new javax.swing.JComboBox<>();
-    jButton5 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
+    menuUtamaButton = new javax.swing.JButton();
+    keluarButton = new javax.swing.JButton();
     jLabel7 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTextArea1 = new javax.swing.JTextArea();
@@ -153,11 +154,21 @@ public class PengirimanView extends javax.swing.JFrame {
 
     jLabel13.setText("kg");
 
-    jButton5.setText("Menu Utama");
-    jButton5.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.setText("Menu Utama");
+    menuUtamaButton.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        menuUtamaButtonActionPerformed(evt);
+      }
+    });
 
-    jButton6.setText("Keluar");
-    jButton6.setName("btnKeluar"); // NOI18N
+    keluarButton.setText("Keluar");
+    keluarButton.setName("btnKeluar"); // NOI18N
+    keluarButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        keluarButtonActionPerformed(evt);
+      }
+    });
 
     jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel7.setText("Informasi Penerima");
@@ -179,11 +190,11 @@ public class PengirimanView extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(jButton5)
+            .addComponent(menuUtamaButton)
             .addGap(150, 150, 150)
             .addComponent(jLabel1)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton6))
+            .addComponent(keluarButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel5)
@@ -238,8 +249,8 @@ public class PengirimanView extends javax.swing.JFrame {
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
-          .addComponent(jButton5)
-          .addComponent(jButton6))
+          .addComponent(menuUtamaButton)
+          .addComponent(keluarButton))
         .addGap(45, 45, 45)
         .addComponent(jLabel7)
         .addGap(15, 15, 15)
@@ -302,6 +313,17 @@ public class PengirimanView extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
+  private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
+    new MenuUtamaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_menuUtamaButtonActionPerformed
+
+  private void keluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarButtonActionPerformed
+    ActiveUser.remove();
+    new LoginView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_keluarButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -343,8 +365,6 @@ public class PengirimanView extends javax.swing.JFrame {
   private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
-  private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel10;
   private javax.swing.JLabel jLabel11;
@@ -367,7 +387,9 @@ public class PengirimanView extends javax.swing.JFrame {
   private javax.swing.JTextField jTextField5;
   private javax.swing.JTextField jTextField6;
   private javax.swing.JTextField jTextField8;
+  private javax.swing.JButton keluarButton;
   private javax.swing.JComboBox<Object> kotaComboBox;
+  private javax.swing.JButton menuUtamaButton;
   private javax.swing.JComboBox<Object> provinsiComboBox;
   // End of variables declaration//GEN-END:variables
 }

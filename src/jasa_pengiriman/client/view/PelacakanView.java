@@ -6,6 +6,7 @@
 package jasa_pengiriman.client.view;
 
 import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.model.StatusPelacakan;
 import jasa_pengiriman.server.service.StatusPelacakanService;
 import java.rmi.RemoteException;
@@ -61,8 +62,8 @@ public class PelacakanView extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jButton1 = new javax.swing.JButton();
-    jButton2 = new javax.swing.JButton();
+    menuUtamaButton = new javax.swing.JButton();
+    keluarButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
@@ -82,11 +83,21 @@ public class PelacakanView extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-    jButton1.setText("Menu Utama");
-    jButton1.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.setText("Menu Utama");
+    menuUtamaButton.setName("btnMenuUtama"); // NOI18N
+    menuUtamaButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        menuUtamaButtonActionPerformed(evt);
+      }
+    });
 
-    jButton2.setText("Keluar");
-    jButton2.setName("btnKeluar"); // NOI18N
+    keluarButton.setText("Keluar");
+    keluarButton.setName("btnKeluar"); // NOI18N
+    keluarButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        keluarButtonActionPerformed(evt);
+      }
+    });
 
     jLabel1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel1.setText("Pelacakan");
@@ -153,7 +164,7 @@ public class PelacakanView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
               .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(menuUtamaButton)
                 .addGap(107, 107, 107)
                 .addComponent(jLabel1))
               .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -169,7 +180,7 @@ public class PelacakanView extends javax.swing.JFrame {
                     .addComponent(jButton3))
                   .addComponent(statusComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton2))
+            .addComponent(keluarButton))
           .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
             .addComponent(jButton4)
@@ -186,8 +197,8 @@ public class PelacakanView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton1)
-          .addComponent(jButton2)
+          .addComponent(menuUtamaButton)
+          .addComponent(keluarButton)
           .addComponent(jLabel1))
         .addGap(34, 34, 34)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -217,6 +228,17 @@ public class PelacakanView extends javax.swing.JFrame {
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
+
+  private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
+    new MenuUtamaView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_menuUtamaButtonActionPerformed
+
+  private void keluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarButtonActionPerformed
+    ActiveUser.remove();
+    new LoginView().setVisible(true);
+    dispose();
+  }//GEN-LAST:event_keluarButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -255,8 +277,6 @@ public class PelacakanView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton2;
   private javax.swing.JButton jButton3;
   private javax.swing.JButton jButton4;
   private javax.swing.JButton jButton5;
@@ -272,6 +292,8 @@ public class PelacakanView extends javax.swing.JFrame {
   private javax.swing.JTable jTable1;
   private javax.swing.JTextArea jTextArea1;
   private javax.swing.JTextField jTextField1;
+  private javax.swing.JButton keluarButton;
+  private javax.swing.JButton menuUtamaButton;
   private javax.swing.JComboBox<Object> statusComboBox;
   // End of variables declaration//GEN-END:variables
 }
