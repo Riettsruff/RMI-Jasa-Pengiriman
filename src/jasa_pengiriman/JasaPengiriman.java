@@ -5,6 +5,7 @@
  */
 package jasa_pengiriman;
 
+import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.view.LoginView;
 import jasa_pengiriman.client.view.TesterView;
 import jasa_pengiriman.server.service.AksesServiceImpl;
@@ -17,9 +18,6 @@ import jasa_pengiriman.server.service.PeranServiceImpl;
 import jasa_pengiriman.server.service.ProvinsiServiceImpl;
 import jasa_pengiriman.server.service.RiwayatPeranServiceImpl;
 import jasa_pengiriman.server.service.StatusPelacakanServiceImpl;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -34,7 +32,7 @@ import java.util.logging.Logger;
 public class JasaPengiriman {
 
   public static void main(String[] args) throws RemoteException {
-    Registry registry = LocateRegistry.createRegistry(3001);
+    Registry registry = LocateRegistry.createRegistry(RMI.getPort());
     
     registry.rebind("AuthService", new AuthServiceImpl());
     registry.rebind("AksesService", new AksesServiceImpl());
