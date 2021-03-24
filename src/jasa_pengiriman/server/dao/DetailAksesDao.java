@@ -10,6 +10,7 @@ import jasa_pengiriman.model.DetailAkses;
 import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Riett
  */
 public class DetailAksesDao {
-  private static List<DetailAkses> get(String type, String[] psSet) {
+  private static List<DetailAkses> get(String type, String[] values) {
     List<DetailAkses> detailAksesList = new ArrayList<DetailAkses>();
     
     try {
@@ -30,11 +31,11 @@ public class DetailAksesDao {
       switch(type) {
         case "BY_ID_AKSES":
           query += " WHERE a.id_akses = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         break;
         case "BY_ID_PERAN":
           query += " WHERE c.id_peran = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         break;
         case "ALL":
         default:
@@ -58,24 +59,80 @@ public class DetailAksesDao {
         
         detailAksesList.add(detailAkses);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(DetailAksesDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(DetailAksesDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return detailAksesList;
   }
   
   public static List<DetailAkses> getByIdAkses(int idAkses) {
-    String[] psSet = {Integer.toString(idAkses)};
-    return get("BY_ID_AKSES", psSet);
+    String[] values = {Integer.toString(idAkses)};
+    return get("BY_ID_AKSES", values);
   }
   
   public static List<DetailAkses> getByIdPeran(int idPeran) {
-    String[] psSet = {Integer.toString(idPeran)};
-    return get("BY_ID_PERAN", psSet);
+    String[] values = {Integer.toString(idPeran)};
+    return get("BY_ID_PERAN", values);
   }
   
   public static List<DetailAkses> getAll() {
     return get("ALL", null);
+  }
+  
+  public static boolean insert(DetailAkses detailAkses) {
+    try {
+      String table = "detail_akses";
+      String[] values = {
+        String.valueOf(detailAkses.getIdDetailAkses()),
+        String.valueOf(detailAkses.getPeran().getIdPeran()),
+        String.valueOf(detailAkses.getAkses().getIdAkses()),
+        detailAkses.getBatasanOperasi()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(DetailAksesDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean update(DetailAkses detailAkses) {
+    try {
+      String table = "detail_akses";
+      String[] fields = {"id_peran", "id_akses", "batasan_operasi"};
+      String[] values = {
+        String.valueOf(detailAkses.getPeran().getIdPeran()),
+        String.valueOf(detailAkses.getAkses().getIdAkses()),
+        detailAkses.getBatasanOperasi(),
+        String.valueOf(detailAkses.getIdDetailAkses())
+      };
+      String[] whereStatement = {"id_detail_akses = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
+    } catch (SQLException ex) {
+      Logger.getLogger(DetailAksesDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean deleteByIdDetailAkses(int idDetailAkses) {
+    try {
+      String table = "detail_akses";
+      String[] whereStatement = {"id_detail_akses = ?"};
+      String[] whereStatementSeparator = null;
+      String[] values = {
+        String.valueOf(idDetailAkses)
+      };
+      
+      return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(DetailAksesDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

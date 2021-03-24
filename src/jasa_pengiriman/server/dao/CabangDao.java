@@ -10,6 +10,7 @@ import jasa_pengiriman.model.Kota;
 import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class CabangDao {
   
-  private static List<Cabang> get(String type, String[] psSet) {
+  private static List<Cabang> get(String type, String[] values) {
     List<Cabang> cabangList = new ArrayList<Cabang>();
     
     try {
@@ -31,7 +32,7 @@ public class CabangDao {
       switch(type) {
         case "BY_ID_KOTA":
           query += " WHERE b.id_kota = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         break;
         case "ALL":
         default:
@@ -56,8 +57,8 @@ public class CabangDao {
         
         cabangList.add(cabang);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(CabangDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(CabangDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return cabangList;
@@ -68,7 +69,65 @@ public class CabangDao {
   }
   
   public static List<Cabang> getByIdKota(int idKota) {
-    String[] psSet = {Integer.toString(idKota)};
-    return get("BY_ID_KOTA", psSet);
+    String[] values = {Integer.toString(idKota)};
+    return get("BY_ID_KOTA", values);
+  }
+  
+  public static boolean insert(Cabang cabang) {
+    try {
+      String table = "cabang";
+      String[] values = {
+        String.valueOf(cabang.getIdCabang()),
+        String.valueOf(cabang.getKota().getIdKota()),
+        cabang.getNamaCabang(),
+        cabang.getAlamat(),
+        cabang.getNoHp()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(CabangDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean update(Cabang cabang) {
+    try {
+      String table = "cabang";
+      String[] fields = {"id_kota", "nama_cabang", "alamat", "no_hp"};
+      String[] values = {
+        String.valueOf(cabang.getKota().getIdKota()),
+        cabang.getNamaCabang(),
+        cabang.getAlamat(),
+        cabang.getNoHp(),
+        String.valueOf(cabang.getIdCabang())
+      };
+      String[] whereStatement = {"id_cabang = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
+    } catch (SQLException ex) {
+      Logger.getLogger(CabangDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean deleteByIdCabang(int idCabang) {
+    try {
+      String table = "cabang";
+      String[] whereStatement = {"id_cabang = ?"};
+      String[] whereStatementSeparator = null;
+      String[] values = {
+        String.valueOf(idCabang)
+      };
+      
+      return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(CabangDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

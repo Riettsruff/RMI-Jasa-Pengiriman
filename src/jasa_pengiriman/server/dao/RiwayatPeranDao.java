@@ -10,6 +10,7 @@ import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.model.RiwayatPeran;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,8 +26,8 @@ public class RiwayatPeranDao {
     List<RiwayatPeran> riwayatPeranList = new ArrayList<RiwayatPeran>();
     
     try {
-      String[] psSet = {Integer.toString(idPengguna)};
-      ResultSet rs = DB.query("SELECT a.id_riwayat_peran, a.tanggal_dibuat, b.id_pengguna, b.nama, c.* FROM riwayat_peran a INNER JOIN pengguna b ON a.id_pengguna = b.id_pengguna LEFT JOIN peran c ON a.id_peran = c.id_peran WHERE a.id_pengguna = ?", psSet);
+      String[] values = {Integer.toString(idPengguna)};
+      ResultSet rs = DB.query("SELECT a.id_riwayat_peran, a.tanggal_dibuat, b.id_pengguna, b.nama, c.* FROM riwayat_peran a INNER JOIN pengguna b ON a.id_pengguna = b.id_pengguna LEFT JOIN peran c ON a.id_peran = c.id_peran WHERE a.id_pengguna = ?", values);
       
       while(rs.next()) {
         RiwayatPeran riwayatPeran = new RiwayatPeran();
@@ -44,10 +45,28 @@ public class RiwayatPeranDao {
         
         riwayatPeranList.add(riwayatPeran);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(RiwayatPeranDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(RiwayatPeranDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return riwayatPeranList;
+  }
+  
+  public static boolean insert(RiwayatPeran riwayatPeran) {
+    try {
+      String table = "riwayat_peran";
+      String[] values = {
+        String.valueOf(riwayatPeran.getIdRiwayatPeran()),
+        String.valueOf(riwayatPeran.getPengguna().getIdPengguna()),
+        String.valueOf(riwayatPeran.getPeran().getIdPeran()),
+        riwayatPeran.getTanggalDibuat().toString()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(RiwayatPeranDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

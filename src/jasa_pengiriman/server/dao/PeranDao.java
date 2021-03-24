@@ -8,6 +8,7 @@ package jasa_pengiriman.server.dao;
 import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,10 +34,61 @@ public class PeranDao {
         
         peranList.add(peran);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return peranList;
+  }
+  
+  public static boolean insert(Peran peran) {
+    try {
+      String table = "peran";
+      String[] values = {
+        String.valueOf(peran.getIdPeran()),
+        peran.getNamaPeran()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean update(Peran peran) {
+    try {
+      String table = "peran";
+      String[] fields = {"nama_peran"};
+      String[] values = {
+        peran.getNamaPeran()
+      };
+      String[] whereStatement = {"id_peran = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
+    } catch (SQLException ex) {
+      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean deleteByIdPeran(int idPeran) {
+    try {
+      String table = "peran";
+      String[] whereStatement = {"id_peran = ?"};
+      String[] whereStatementSeparator = null;
+      String[] values = {
+        String.valueOf(idPeran)
+      };
+      
+      return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(PeranDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

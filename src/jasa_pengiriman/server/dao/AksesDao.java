@@ -8,6 +8,7 @@ package jasa_pengiriman.server.dao;
 import jasa_pengiriman.model.Akses;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,8 +35,8 @@ public class AksesDao {
         
         aksesList.add(akses);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(AksesDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(AksesDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return aksesList;

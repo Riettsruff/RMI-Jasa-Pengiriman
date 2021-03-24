@@ -10,6 +10,7 @@ import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,10 +23,10 @@ public class AuthDao {
   public static Pengguna login(String email, String password) {
     try {
       String[] fields = null;
-      String[] whereStatement = {"email=?", "password=?"};
+      String[] whereStatement = {"email = ?", "password = ?"};
       String[] whereStatementSeparator = {"AND"};
-      String[] ps = {email, password};
-      ResultSet rs = DB.get("pengguna", fields, whereStatement, whereStatementSeparator, ps);
+      String[] values = {email, password};
+      ResultSet rs = DB.get("pengguna", fields, whereStatement, whereStatementSeparator, values);
       
       if(rs.next()) {
         Pengguna pengguna = new Pengguna();
@@ -43,8 +44,8 @@ public class AuthDao {
         
         return pengguna;
       }
-    } catch (Exception e) { 
-      Logger.getLogger(AuthDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(AuthDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return null;

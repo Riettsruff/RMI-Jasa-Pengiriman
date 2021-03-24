@@ -9,6 +9,7 @@ import jasa_pengiriman.model.Kota;
 import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @author Riett
  */
 public class KotaDao {
-  private static List<Kota> get(String type, String[] psSet) {
+  private static List<Kota> get(String type, String[] values) {
     List<Kota> kotaList = new ArrayList<Kota>();
     
     try {
@@ -29,7 +30,7 @@ public class KotaDao {
       switch(type) {
         case "BY_ID_PROVINSI":
           query += " WHERE b.id_provinsi = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         break;
         case "ALL":
         default:
@@ -48,8 +49,8 @@ public class KotaDao {
         
         kotaList.add(kota);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(KotaDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(KotaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return kotaList;
@@ -60,7 +61,61 @@ public class KotaDao {
   }
   
   public static List<Kota> getByIdProvinsi(int idProvinsi) {
-    String[] psSet = {Integer.toString(idProvinsi)};
-    return get("BY_ID_PROVINSI", psSet);
+    String[] values = {Integer.toString(idProvinsi)};
+    return get("BY_ID_PROVINSI", values);
+  }
+  
+  public static boolean insert(Kota kota) {
+    try {
+      String table = "kota";
+      String[] values = {
+        String.valueOf(kota.getIdKota()),
+        String.valueOf(kota.getProvinsi().getIdProvinsi()),
+        kota.getNamaKota()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(KotaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean update(Kota kota) {
+    try {
+      String table = "kota";
+      String[] fields = {"id_provinsi", "nama_kota"};
+      String[] values = {
+        String.valueOf(kota.getProvinsi().getIdProvinsi()),
+        kota.getNamaKota(),
+        String.valueOf(kota.getIdKota())
+      };
+      String[] whereStatement = {"id_kota = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
+    } catch (SQLException ex) {
+      Logger.getLogger(KotaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean deleteByIdKota(int idKota) {
+    try {
+      String table = "kota";
+      String[] whereStatement = {"id_kota"};
+      String[] whereStatementSeparator = null;
+      String[] values = {
+        String.valueOf(idKota)
+      };
+       
+      return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(KotaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

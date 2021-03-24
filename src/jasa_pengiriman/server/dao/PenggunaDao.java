@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class PenggunaDao {
   
-  private static List<Pengguna> get(String type, String[] psSet) {
+  private static List<Pengguna> get(String type, String[] values) {
     List<Pengguna> penggunaList = new ArrayList<Pengguna>();
     
     try {
@@ -34,11 +34,11 @@ public class PenggunaDao {
       switch(type) {
         case "BY_ID_CABANG":
           query += " WHERE b.id_cabang = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         break;
         case "BY_ID_PERAN":
           query += " WHERE c.id_peran = ?";
-          rs = DB.query(query, psSet);
+          rs = DB.query(query, values);
         case "ALL":
         default:
           rs = DB.query(query);
@@ -62,8 +62,8 @@ public class PenggunaDao {
         
         penggunaList.add(pengguna);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return penggunaList;
@@ -74,12 +74,74 @@ public class PenggunaDao {
   }
   
   public static List<Pengguna> getByIdCabang(int idCabang) {
-    String[] psSet = {Integer.toString(idCabang)};
-    return PenggunaDao.get("BY_ID_CABANG", psSet);
+    String[] values = {Integer.toString(idCabang)};
+    return PenggunaDao.get("BY_ID_CABANG", values);
   }
   
   public static List<Pengguna> getByIdPeran(int idPeran) {
-    String[] psSet = {Integer.toString(idPeran)};
-    return PenggunaDao.get("BY_ID_PERAN", psSet);
+    String[] values = {Integer.toString(idPeran)};
+    return PenggunaDao.get("BY_ID_PERAN", values);
+  }
+  
+  public static boolean insert(Pengguna pengguna) {
+    try {
+      String table = "pengguna";
+      String[] values = {
+        String.valueOf(pengguna.getIdPengguna()),
+        String.valueOf(pengguna.getCabang().getIdCabang()),
+        String.valueOf(pengguna.getPeran().getIdPeran()),
+        pengguna.getNama(),
+        pengguna.getEmail(),
+        pengguna.getPassword(),
+        pengguna.getTerakhirLogin().toString()
+      };
+      
+      return DB.insert(table, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean update(Pengguna pengguna) {
+    try {
+      String table = "pengguna";
+      String[] fields = {"id_cabang", "id_peran", "nama", "email", "password", "terakhir_login"};
+      String[] values = {
+        String.valueOf(pengguna.getCabang().getIdCabang()),
+        String.valueOf(pengguna.getPeran().getIdPeran()),
+        pengguna.getNama(),
+        pengguna.getEmail(),
+        pengguna.getPassword(),
+        pengguna.getTerakhirLogin().toString(),
+        String.valueOf(pengguna.getIdPengguna())
+      };
+      String[] whereStatement = {"id_pengguna = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean deleteByIdPengguna(int idPengguna) {
+    try {
+      String table = "pengguna";
+      String[] whereStatement = {"id_pengguna = ?"};
+      String[] whereStatementSeparator = null;
+      String[] values = {
+        String.valueOf(idPengguna)
+      };
+      
+      return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
   }
 }

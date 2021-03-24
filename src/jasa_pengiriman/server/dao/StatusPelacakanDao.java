@@ -8,6 +8,7 @@ package jasa_pengiriman.server.dao;
 import jasa_pengiriman.model.StatusPelacakan;
 import jasa_pengiriman.server.helper.DB;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,8 +33,8 @@ public class StatusPelacakanDao {
         
         statusPelacakanList.add(statusPelacakan);
       }
-    } catch (Exception e) { 
-      Logger.getLogger(StatusPelacakanDao.class.getName()).log(Level.SEVERE, null, e);
+    } catch (SQLException ex) {
+      Logger.getLogger(StatusPelacakanDao.class.getName()).log(Level.SEVERE, null, ex);
     }
     
     return statusPelacakanList;
