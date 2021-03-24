@@ -76,7 +76,14 @@ public class DB {
       query += " (" + String.join(", ", fields) + ")";
     }
     
-    query += " VALUES (" + String.join(", ", values) + ") ";
+    query += " VALUES (";
+    
+    for(int i=0; i < values.length; ++i) {
+      query += "?";
+      if(i < values.length - 1) query += ", ";
+    }
+    
+    query += ") ";
     
     return query;
   }
@@ -109,11 +116,16 @@ public class DB {
   
   private static String updateBuilder(
     String table,
-    String[] values,
+    String[] fields,
     String[] whereStatement,
     String[] whereStatementSeparator
   ) {
-    String query = "UPDATE " + table + " SET (" + String.join(", ", values) + ")";
+    String query = "UPDATE " + table + " SET ";
+            
+    for(int i=0; i < fields.length; ++i) {
+      query += fields[i] + " = ?";
+      if(i < fields.length - 1) query += ", ";
+    }
     
     if(whereStatement != null) {
       query += " WHERE ";
@@ -152,11 +164,11 @@ public class DB {
     String table, 
     String[] fields, 
     String[] whereStatement, 
-    String[] whereOperator, 
-    String[] psSet
+    String[] whereStatementSeparator, 
+    String[] values
   ) throws SQLException {
-    String query = selectBuilder(table, fields, whereStatement, whereOperator);
-    PreparedStatement ps = prepStatement(query, psSet);
+    String query = selectBuilder(table, fields, whereStatement, whereStatementSeparator);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeQuery(ps);
   }
@@ -171,18 +183,18 @@ public class DB {
   public static boolean delete(
     String table, 
     String[] whereStatement, 
-    String[] whereLogicOperator, 
-    String[] psSet
+    String[] whereStatementSeparator, 
+    String[] values
   ) throws SQLException {
-    String query = deleteBuilder(table, whereStatement, whereLogicOperator);
-    PreparedStatement ps = prepStatement(query, psSet);
+    String query = deleteBuilder(table, whereStatement, whereStatementSeparator);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeUpdate(ps);
   }
   
-  public static boolean insert(String table, String[] values, String[] psSet) throws SQLException {
+  public static boolean insert(String table, String[] values) throws SQLException {
     String query = insertBuilder(table, null, values);
-    PreparedStatement ps = prepStatement(query, psSet);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeUpdate(ps);
   }
@@ -190,31 +202,30 @@ public class DB {
   public static boolean insert(
     String table, 
     String[] fields, 
-    String[] values,
-    String[] psSet
+    String[] values
   ) throws SQLException {
     String query = insertBuilder(table, fields, values);
-    PreparedStatement ps = prepStatement(query, psSet);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeUpdate(ps);
   }
   
-  public static boolean update(String table, String[] values, String[] psSet) throws SQLException {
-    String query = updateBuilder(table, values, null, null);
-    PreparedStatement ps = prepStatement(query, psSet);
+  public static boolean update(String table, String[] fields, String[] values) throws SQLException {
+    String query = updateBuilder(table, fields, null, null);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeUpdate(ps);
   }
   
   public static boolean update(
     String table, 
-    String[] values, 
-    String[] psSet,
+    String[] fields, 
+    String[] values,
     String[] whereStatement,
     String[] whereStatementSeparator
   ) throws SQLException {
-    String query = updateBuilder(table, values, whereStatement, whereStatementSeparator);
-    PreparedStatement ps = prepStatement(query, psSet);
+    String query = updateBuilder(table, fields, whereStatement, whereStatementSeparator);
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeUpdate(ps);
   }
@@ -225,8 +236,8 @@ public class DB {
     return executeQuery(ps);
   }
   
-  public static ResultSet query(String query, String[] psSet) throws SQLException {
-    PreparedStatement ps = prepStatement(query, psSet);
+  public static ResultSet query(String query, String[] values) throws SQLException {
+    PreparedStatement ps = prepStatement(query, values);
     
     return executeQuery(ps);
   }
