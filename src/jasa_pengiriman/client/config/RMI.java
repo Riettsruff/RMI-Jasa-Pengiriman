@@ -16,13 +16,13 @@ import java.rmi.RemoteException;
  */
 public class RMI {
   private static final String HOST = "localhost";
-  private static final String PORT = "3001";
+  private static final int PORT = 3001;
   
   public static String getHost() {
     return HOST;
   }
   
-  public static String getPort() {
+  public static int getPort() {
     return PORT;
   }
   
