@@ -17,4 +17,7 @@ import java.util.List;
 public interface KotaService extends Remote {
   public List<Kota> getAll() throws RemoteException;
   public List<Kota> getByIdProvinsi(int idProvinsi) throws RemoteException;
+  public boolean insert(Kota kota) throws RemoteException;
+  public boolean update(Kota kota) throws RemoteException;
+  public boolean deleteByIdKota(int idKota) throws RemoteException;
 }

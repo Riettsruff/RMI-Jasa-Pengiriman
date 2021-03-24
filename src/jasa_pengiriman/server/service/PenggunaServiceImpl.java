@@ -36,5 +36,20 @@ public class PenggunaServiceImpl extends UnicastRemoteObject implements Pengguna
   public List<Pengguna> getByIdPeran(int idPeran) throws RemoteException {
     return PenggunaDao.getByIdPeran(idPeran);
   }
+
+  @Override
+  public boolean insert(Pengguna pengguna) throws RemoteException {
+    return PenggunaDao.insert(pengguna);
+  }
+
+  @Override
+  public boolean update(Pengguna pengguna) throws RemoteException {
+    return PenggunaDao.update(pengguna);
+  }
+
+  @Override
+  public boolean deleteByIdPengguna(int idPengguna) throws RemoteException {
+    return PenggunaDao.deleteByIdPengguna(idPengguna);
+  }
   
 }

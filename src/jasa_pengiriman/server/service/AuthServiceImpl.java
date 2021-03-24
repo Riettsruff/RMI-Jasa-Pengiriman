@@ -23,5 +23,10 @@ public class AuthServiceImpl extends UnicastRemoteObject implements AuthService,
   public Pengguna login(String email, String password) throws RemoteException {
     return AuthDao.login(email, password);
   }
+
+  @Override
+  public boolean logout() throws RemoteException {
+    return true;
+  }
   
 }

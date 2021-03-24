@@ -24,5 +24,20 @@ public class PeranServiceImpl extends UnicastRemoteObject implements PeranServic
   public List<Peran> getAll() throws RemoteException {
     return PeranDao.getAll();
   }
+
+  @Override
+  public boolean insert(Peran peran) throws RemoteException {
+    return PeranDao.insert(peran);
+  }
+
+  @Override
+  public boolean update(Peran peran) throws RemoteException {
+    return PeranDao.update(peran);
+  }
+
+  @Override
+  public boolean deleteByIdPeran(int idPeran) throws RemoteException {
+    return PeranDao.deleteByIdPeran(idPeran);
+  }
   
 }

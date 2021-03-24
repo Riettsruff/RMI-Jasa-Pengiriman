@@ -16,4 +16,7 @@ import java.util.List;
  */
 public interface PeranService extends Remote {
   public List<Peran> getAll() throws RemoteException;
+  public boolean insert(Peran peran) throws RemoteException;
+  public boolean update(Peran peran) throws RemoteException;
+  public boolean deleteByIdPeran(int idPeran) throws RemoteException;
 }

@@ -29,5 +29,20 @@ public class KotaServiceImpl extends UnicastRemoteObject implements KotaService,
   public List<Kota> getByIdProvinsi(int idProvinsi) throws RemoteException {
     return KotaDao.getByIdProvinsi(idProvinsi);
   }
+
+  @Override
+  public boolean insert(Kota kota) throws RemoteException {
+    return KotaDao.insert(kota);
+  }
+
+  @Override
+  public boolean update(Kota kota) throws RemoteException {
+    return KotaDao.update(kota);
+  }
+
+  @Override
+  public boolean deleteByIdKota(int idKota) throws RemoteException {
+    return KotaDao.deleteByIdKota(idKota);
+  }
   
 }

@@ -24,5 +24,20 @@ public class ProvinsiServiceImpl extends UnicastRemoteObject implements Provinsi
   public List<Provinsi> getAll() throws RemoteException {
     return ProvinsiDao.getAll();
   }
+
+  @Override
+  public boolean insert(Provinsi provinsi) throws RemoteException {
+    return ProvinsiDao.insert(provinsi);
+  }
+
+  @Override
+  public boolean update(Provinsi provinsi) throws RemoteException {
+    return ProvinsiDao.update(provinsi);
+  }
+
+  @Override
+  public boolean deleteByIdProvinsi(int idProvinsi) throws RemoteException {
+    return ProvinsiDao.deleteByIdProvinsi(idProvinsi);
+  }
   
 }

@@ -29,5 +29,20 @@ public class CabangServiceImpl extends UnicastRemoteObject implements CabangServ
   public List<Cabang> getByIdKota(int idKota) throws RemoteException {
     return CabangDao.getByIdKota(idKota);
   }
+
+  @Override
+  public boolean insert(Cabang cabang) throws RemoteException {
+    return CabangDao.insert(cabang);
+  }
+
+  @Override
+  public boolean update(Cabang cabang) throws RemoteException {
+    return CabangDao.update(cabang);
+  }
+
+  @Override
+  public boolean deleteByIdCabang(int idCabang) throws RemoteException {
+    return CabangDao.deleteByIdCabang(idCabang);
+  }
   
 }

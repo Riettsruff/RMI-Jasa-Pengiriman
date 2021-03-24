@@ -24,5 +24,10 @@ public class RiwayatPeranServiceImpl extends UnicastRemoteObject implements Riwa
   public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException {
     return RiwayatPeranDao.getByIdPengguna(idPengguna);
   }
+
+  @Override
+  public boolean insert(RiwayatPeran riwayatPeran) throws RemoteException {
+    return RiwayatPeranDao.insert(riwayatPeran);
+  }
   
 }

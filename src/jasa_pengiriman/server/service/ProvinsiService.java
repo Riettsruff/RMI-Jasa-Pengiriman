@@ -16,4 +16,7 @@ import java.util.List;
  */
 public interface ProvinsiService extends Remote {
   public List<Provinsi> getAll() throws RemoteException;
+  public boolean insert(Provinsi provinsi) throws RemoteException;
+  public boolean update(Provinsi provinsi) throws RemoteException;
+  public boolean deleteByIdProvinsi(int idProvinsi) throws RemoteException;
 }

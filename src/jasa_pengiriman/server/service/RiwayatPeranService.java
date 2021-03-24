@@ -16,4 +16,5 @@ import java.util.List;
  */
 public interface RiwayatPeranService extends Remote {
   public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException; 
+  public boolean insert(RiwayatPeran riwayatPeran) throws RemoteException;
 }

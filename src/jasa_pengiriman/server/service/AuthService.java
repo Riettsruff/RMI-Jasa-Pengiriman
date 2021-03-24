@@ -15,4 +15,5 @@ import java.rmi.RemoteException;
  */
 public interface AuthService extends Remote {
   public Pengguna login(String email, String password) throws RemoteException;
+  public boolean logout() throws RemoteException;
 }
