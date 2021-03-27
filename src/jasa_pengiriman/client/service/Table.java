@@ -6,7 +6,7 @@
 package jasa_pengiriman.client.service;
 
 import java.util.HashMap;
-import javax.swing.JLabel;
+import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +19,7 @@ import javax.swing.table.TableModel;
  */
 public class Table {
   
-  public static void setData(JTable table, Object[][] rowsData, String[] fieldsData, boolean isCellEditable) {
+  public static void setModel(JTable table, Object[][] rowsData, String[] fieldsData, boolean isCellEditable) {
     table.setModel(new DefaultTableModel(rowsData, fieldsData) {
       @Override
       public boolean isCellEditable(int row, int col) {
@@ -38,13 +38,13 @@ public class Table {
     }
   }
   
-  public static void setCellsAlignmentCenter(JTable table, int... columns) {
+  public static void setCellsHorizontalAlignment(JTable table, HashMap<Integer, Integer> cellsAlignment) {
     TableColumnModel columnModel = table.getColumnModel();
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
     
-    for(int column : columns) {
-      columnModel.getColumn(column).setCellRenderer(centerRenderer);
+    for(Map.Entry<Integer, Integer> entry : cellsAlignment.entrySet()) {
+      DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+      cellRenderer.setHorizontalAlignment(entry.getValue());
+      columnModel.getColumn(entry.getKey()).setCellRenderer(cellRenderer);
     }
   }
   
