@@ -10,6 +10,7 @@ import jasa_pengiriman.server.dao.PenggunaDao;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +51,11 @@ public class PenggunaServiceImpl extends UnicastRemoteObject implements Pengguna
   @Override
   public boolean deleteByIdPengguna(int idPengguna) throws RemoteException {
     return PenggunaDao.deleteByIdPengguna(idPengguna);
+  }
+
+  @Override
+  public boolean updateTerakhirLoginByIdPengguna(Timestamp terakhirLogin, int idPengguna) throws RemoteException {
+    return PenggunaDao.updateTerakhirLoginByIdPengguna(terakhirLogin, idPengguna);
   }
   
 }

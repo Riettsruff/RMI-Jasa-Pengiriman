@@ -8,6 +8,7 @@ package jasa_pengiriman.server.service;
 import jasa_pengiriman.model.Pengguna;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,4 +22,5 @@ public interface PenggunaService extends Remote {
   public boolean insert(Pengguna pengguna) throws RemoteException;
   public boolean update(Pengguna pengguna) throws RemoteException;
   public boolean deleteByIdPengguna(int idPengguna) throws RemoteException;
+  public boolean updateTerakhirLoginByIdPengguna(Timestamp terakhirLogin, int idPengguna) throws RemoteException;
 }
