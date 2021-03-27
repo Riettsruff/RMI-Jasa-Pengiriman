@@ -5,7 +5,10 @@
  */
 package jasa_pengiriman.client.service;
 
+import java.util.HashMap;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -32,6 +35,16 @@ public class Table {
       if(i < columnModel.getColumnCount()) {
         columnModel.getColumn(i).setMaxWidth(widths[i]);
       } else break;
+    }
+  }
+  
+  public static void setCellsAlignmentCenter(JTable table, int... columns) {
+    TableColumnModel columnModel = table.getColumnModel();
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    
+    for(int column : columns) {
+      columnModel.getColumn(column).setCellRenderer(centerRenderer);
     }
   }
   
