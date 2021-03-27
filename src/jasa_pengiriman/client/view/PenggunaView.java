@@ -94,8 +94,6 @@ public class PenggunaView extends javax.swing.JFrame {
       } catch (RemoteException ex) {
         Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
       }
-      
-      penggunaTable.getSelectionModel().clearSelection();
     }
     
     private void initPenggunaTableData() {
@@ -117,7 +115,10 @@ public class PenggunaView extends javax.swing.JFrame {
           rowsData[i][4] = peran.toString() != null ? peran : "Tidak diketahui";
           rowsData[i][5] = cabang.toString() != null ? cabang : "Tidak diketahui";
           rowsData[i][6] = penggunaList.get(i).getPassword();
-          rowsData[i][7] = terakhirLogin.toString() != null ? terakhirLogin : "Belum pernah";
+          rowsData[i][7] = 
+            terakhirLogin.toString() != null 
+              ? DateFormat.dateToString(DateFormat.timestampToDate(terakhirLogin), "dd-MM-yyyy HH:mm:ss")
+              : "Belum pernah";
         }
         
         Table.setModel(penggunaTable, rowsData, fieldsData, false);
@@ -537,6 +538,9 @@ public class PenggunaView extends javax.swing.JFrame {
 
   private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
     initInputData();
+    
+    penggunaTable.getSelectionModel().clearSelection();
+    Table.deleteAllRows(riwayatPeranTable);
   }//GEN-LAST:event_resetButtonActionPerformed
 
   private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
