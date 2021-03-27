@@ -1,15 +1,27 @@
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.JasaPengiriman;
 import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.client.service.BasicValidation;
+import jasa_pengiriman.client.service.DateFormat;
+import jasa_pengiriman.client.service.Table;
 import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.model.Cabang;
+import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Peran;
+import jasa_pengiriman.model.RiwayatPeran;
 import jasa_pengiriman.server.service.CabangService;
+import jasa_pengiriman.server.service.PenggunaService;
 import jasa_pengiriman.server.service.PeranService;
+import jasa_pengiriman.server.service.RiwayatPeranService;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /*
@@ -25,26 +37,43 @@ import javax.swing.JOptionPane;
 public class PenggunaView extends javax.swing.JFrame {
     private PeranService peranService;
     private CabangService cabangService;
+    private PenggunaService penggunaService;
+    private RiwayatPeranService riwayatPeranService;
     /**
      * Creates new form Pengguna
      */
     public PenggunaView() {
-      initRMIServices();
-      initComponents();
-      initDataView();
+      if(ActiveUser.get() != null) {
+        initRMIServices();
+        initComponents();
+        initInputData();
+        initPenggunaTableData();
+        initRiwayatPeranTableData(-1);
+      } else {
+        try {
+          JasaPengiriman.main(null);
+        } catch (RemoteException ex) {
+          Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     
     private void initRMIServices() {
       try {
         this.peranService = (PeranService) RMI.getService("PeranService");
         this.cabangService = (CabangService) RMI.getService("CabangService");
+        this.penggunaService = (PenggunaService) RMI.getService("PenggunaService");
+        this.riwayatPeranService = (RiwayatPeranService) RMI.getService("RiwayatPeranService");
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
       }
     }
     
-    private void initDataView() {
+    private void initInputData() {
+      namaTextField.setText("");
+      emailTextField.setText("");
+      
       peranComboBox.removeAllItems();
       peranComboBox.addItem("- Pilih -");
       peranComboBox.setSelectedIndex(0);
@@ -52,6 +81,9 @@ public class PenggunaView extends javax.swing.JFrame {
       cabangComboBox.removeAllItems();
       cabangComboBox.addItem("- Pilih -");
       cabangComboBox.setSelectedIndex(0);
+      
+      passwordPasswordField.setText("secret");
+      passwordPasswordField.setEditable(false);
       
       try {
         List<Peran> peranList = peranService.getAll();
@@ -62,6 +94,119 @@ public class PenggunaView extends javax.swing.JFrame {
       } catch (RemoteException ex) {
         Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
       }
+      
+      penggunaTable.getSelectionModel().clearSelection();
+    }
+    
+    private void initPenggunaTableData() {
+      try {
+        List<Pengguna> penggunaList = penggunaService.getAll();
+        String[] fieldsData = {"No.", "Id Pengguna", "Nama", "Email", "Peran", "Cabang", "Password", "Terakhir Login"};
+        Object[][] rowsData = new Object[penggunaList.size()][fieldsData.length];
+        
+        for(int i=0; i < penggunaList.size(); ++i) {
+          rowsData[i][0] = (i + 1) + ".";
+          rowsData[i][1] = penggunaList.get(i).getIdPengguna();
+          rowsData[i][2] = penggunaList.get(i).getNama();
+          rowsData[i][3] = penggunaList.get(i).getEmail();
+          
+          Object peran = penggunaList.get(i).getPeran();
+          Object cabang = penggunaList.get(i).getCabang();
+          Timestamp terakhirLogin = penggunaList.get(i).getTerakhirLogin();
+          
+          rowsData[i][4] = peran.toString() != null ? peran : "Tidak diketahui";
+          rowsData[i][5] = cabang.toString() != null ? cabang : "Tidak diketahui";
+          rowsData[i][6] = penggunaList.get(i).getPassword();
+          rowsData[i][7] = terakhirLogin.toString() != null ? terakhirLogin : "Belum pernah";
+        }
+        
+        Table.setModel(penggunaTable, rowsData, fieldsData, false);
+        Table.setColumnWidths(penggunaTable, 50);
+        Table.setCellsHorizontalAlignment(penggunaTable, new HashMap<Integer, Integer>(){{
+          put(0, JLabel.CENTER);
+        }});
+        Table.removeColumns(penggunaTable, 1, 5);
+      } catch (RemoteException ex) {
+        Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    
+    private void initRiwayatPeranTableData(int idPengguna) {
+      String[] fieldsData = {"No.", "Id Riwayat Peran", "Nama Pengguna", "Peran", "Tanggal mulai"};
+      Object[][] rowsData = null;
+      
+      if(idPengguna == -1) {
+        Table.setModel(riwayatPeranTable, rowsData, fieldsData, false);
+      } else {
+        try {
+          List<RiwayatPeran> riwayatPeranList = riwayatPeranService.getByIdPengguna(idPengguna);
+          rowsData = new Object[riwayatPeranList.size()][fieldsData.length];
+          
+          for(int i=0; i < riwayatPeranList.size(); ++i) {
+            rowsData[i][0] = (i + 1) + ".";
+            rowsData[i][1] = riwayatPeranList.get(i).getIdRiwayatPeran();
+            rowsData[i][2] = riwayatPeranList.get(i).getPengguna();
+            
+            Object peran = riwayatPeranList.get(i).getPeran();
+            
+            rowsData[i][3] = peran.toString() != null ? peran : "Tidak diketahui";
+            rowsData[i][4] = DateFormat.dateToString(riwayatPeranList.get(i).getTanggalMulai(), "dd-MM-yyyy");
+          }
+          
+          Table.setModel(riwayatPeranTable, rowsData, fieldsData, false);
+        } catch (RemoteException ex) {
+          Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+      
+      Table.setCellsHorizontalAlignment(riwayatPeranTable, new HashMap<Integer, Integer>(){{
+        put(0, JLabel.CENTER);
+      }});
+      Table.setColumnWidths(riwayatPeranTable, 50);
+      Table.removeColumns(riwayatPeranTable, 1);
+    }
+    
+    private Pengguna getInputDataPengguna() {
+      String nama = namaTextField.getText();
+      String email = emailTextField.getText();
+      Peran peran = 
+        peranComboBox.getSelectedItem() instanceof String ? null : (Peran) peranComboBox.getSelectedItem();
+      Cabang cabang =
+        cabangComboBox.getSelectedItem() instanceof String ? null : (Cabang) cabangComboBox.getSelectedItem();
+      String password = String.valueOf(passwordPasswordField.getPassword());
+      
+      Pengguna pengguna = new Pengguna();
+      pengguna.setNama(nama);
+      pengguna.setEmail(email);
+      pengguna.setPeran(peran);
+      pengguna.setCabang(cabang);
+      pengguna.setPassword(password);
+      
+      return pengguna;
+    }
+    
+    private boolean isDataPenggunaValid(Pengguna pengguna) {
+      HashMap<HashMap<String, Object>, List<String>> data = 
+        new HashMap<HashMap<String, Object>, List<String>>(){{
+          put(
+            new HashMap<String, Object>(){{ put("Nama", pengguna.getNama()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Email", pengguna.getEmail()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); add("EMAIL"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Peran", pengguna.getPeran()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Cabang", pengguna.getCabang()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+        }};
+
+      return BasicValidation.isValid(data);
     }
 
     /**
@@ -75,31 +220,34 @@ public class PenggunaView extends javax.swing.JFrame {
 
     jLabel1 = new javax.swing.JLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
-    jButton1 = new javax.swing.JButton();
-    jButton2 = new javax.swing.JButton();
-    jButton3 = new javax.swing.JButton();
-    jButton4 = new javax.swing.JButton();
+    riwayatPeranTable = new javax.swing.JTable();
+    simpanButton = new javax.swing.JButton();
+    updateButton = new javax.swing.JButton();
+    hapusButton = new javax.swing.JButton();
+    refreshButton = new javax.swing.JButton();
     jLabel3 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
     jLabel5 = new javax.swing.JLabel();
-    jTextField4 = new javax.swing.JTextField();
+    namaTextField = new javax.swing.JTextField();
     jLabel6 = new javax.swing.JLabel();
-    jTextField5 = new javax.swing.JTextField();
+    emailTextField = new javax.swing.JTextField();
     cabangComboBox = new javax.swing.JComboBox<>();
     peranComboBox = new javax.swing.JComboBox<>();
     menuUtamaButton = new javax.swing.JButton();
-    exitButton = new javax.swing.JButton();
+    keluarButton = new javax.swing.JButton();
     jLabel2 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
-    jTable2 = new javax.swing.JTable();
+    penggunaTable = new javax.swing.JTable();
+    resetButton = new javax.swing.JButton();
+    jLabel7 = new javax.swing.JLabel();
+    passwordPasswordField = new javax.swing.JPasswordField();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
     jLabel1.setFont(new java.awt.Font("Bauhaus 93", 0, 18)); // NOI18N
     jLabel1.setText("Pengguna");
 
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
+    riwayatPeranTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -110,24 +258,40 @@ public class PenggunaView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable1.setName("tabRiwayat"); // NOI18N
-    jScrollPane1.setViewportView(jTable1);
+    riwayatPeranTable.setEnabled(false);
+    riwayatPeranTable.setName("tabRiwayat"); // NOI18N
+    jScrollPane1.setViewportView(riwayatPeranTable);
 
-    jButton1.setText("Simpan");
-    jButton1.setName("btnSimpan"); // NOI18N
-
-    jButton2.setText("Update");
-    jButton2.setName("btnUpdate"); // NOI18N
-
-    jButton3.setText("Hapus");
-    jButton3.setName("btnHapus"); // NOI18N
-
-    jButton4.setText("Refresh");
-    jButton4.setActionCommand("");
-    jButton4.setName("btnRefresh"); // NOI18N
-    jButton4.addActionListener(new java.awt.event.ActionListener() {
+    simpanButton.setText("Simpan");
+    simpanButton.setName("btnSimpan"); // NOI18N
+    simpanButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButton4ActionPerformed(evt);
+        simpanButtonActionPerformed(evt);
+      }
+    });
+
+    updateButton.setText("Update");
+    updateButton.setName("btnUpdate"); // NOI18N
+    updateButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        updateButtonActionPerformed(evt);
+      }
+    });
+
+    hapusButton.setText("Hapus");
+    hapusButton.setName("btnHapus"); // NOI18N
+    hapusButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        hapusButtonActionPerformed(evt);
+      }
+    });
+
+    refreshButton.setText("Refresh");
+    refreshButton.setActionCommand("");
+    refreshButton.setName("btnRefresh"); // NOI18N
+    refreshButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        refreshButtonActionPerformed(evt);
       }
     });
 
@@ -137,11 +301,11 @@ public class PenggunaView extends javax.swing.JFrame {
 
     jLabel5.setText("Nama");
 
-    jTextField4.setName("txtNamaPengguna"); // NOI18N
+    namaTextField.setName("txtNamaPengguna"); // NOI18N
 
     jLabel6.setText("E-mail");
 
-    jTextField5.setName("txtEmail"); // NOI18N
+    emailTextField.setName("txtEmail"); // NOI18N
 
     cabangComboBox.setName("cmbCabang"); // NOI18N
 
@@ -155,16 +319,16 @@ public class PenggunaView extends javax.swing.JFrame {
       }
     });
 
-    exitButton.setText("Keluar");
-    exitButton.addActionListener(new java.awt.event.ActionListener() {
+    keluarButton.setText("Keluar");
+    keluarButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        exitButtonActionPerformed(evt);
+        keluarButtonActionPerformed(evt);
       }
     });
 
     jLabel2.setText("Riwayat Peran");
 
-    jTable2.setModel(new javax.swing.table.DefaultTableModel(
+    penggunaTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -175,8 +339,25 @@ public class PenggunaView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable2.setName("tabPengguna"); // NOI18N
-    jScrollPane2.setViewportView(jTable2);
+    penggunaTable.setName("tabPengguna"); // NOI18N
+    penggunaTable.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        penggunaTableMouseClicked(evt);
+      }
+    });
+    jScrollPane2.setViewportView(penggunaTable);
+
+    resetButton.setText("Reset");
+    resetButton.setName("btnHapus"); // NOI18N
+    resetButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        resetButtonActionPerformed(evt);
+      }
+    });
+
+    jLabel7.setText("Password");
+
+    passwordPasswordField.setEditable(false);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -185,42 +366,43 @@ public class PenggunaView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jButton1)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton2)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton3)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton4))
-          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
+          .addComponent(jScrollPane2)
           .addGroup(layout.createSequentialGroup()
             .addComponent(menuUtamaButton)
-            .addGap(148, 148, 148)
+            .addGap(276, 276, 276)
             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(exitButton))
+            .addComponent(keluarButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addGroup(layout.createSequentialGroup()
-                    .addComponent(jLabel3)
-                    .addGap(18, 18, 18)
-                    .addComponent(cabangComboBox, 0, 142, Short.MAX_VALUE))
-                  .addGroup(layout.createSequentialGroup()
-                    .addComponent(jLabel4)
-                    .addGap(27, 27, 27)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                      .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                      .addComponent(peranComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-              .addComponent(jLabel6)
-              .addComponent(jLabel5))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+              .addComponent(jLabel5)
+              .addComponent(jLabel3)
+              .addComponent(jLabel7)
+              .addComponent(jLabel4)
+              .addComponent(jLabel6))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(jLabel2))))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(simpanButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(updateButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(hapusButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(resetButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(refreshButton))
+              .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                  .addComponent(emailTextField)
+                  .addComponent(peranComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 242, Short.MAX_VALUE)
+                  .addComponent(cabangComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                  .addComponent(namaTextField)
+                  .addComponent(passwordPasswordField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(jLabel2))))))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -230,59 +412,157 @@ public class PenggunaView extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel1)
           .addComponent(menuUtamaButton)
-          .addComponent(exitButton))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(keluarButton))
+        .addGap(15, 15, 15)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
           .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel5)
-              .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(10, 10, 10))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
             .addComponent(jLabel2)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel6)
-              .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(namaTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel5))
             .addGap(10, 10, 10)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel4)
-              .addComponent(peranComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel6))
+            .addGap(10, 10, 10)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(peranComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel4))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jLabel3)
-              .addComponent(cabangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(cabangComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel3))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel7)
+              .addComponent(passwordPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton4)
-          .addComponent(jButton1)
-          .addComponent(jButton3)
-          .addComponent(jButton2))
+          .addComponent(simpanButton)
+          .addComponent(hapusButton)
+          .addComponent(updateButton)
+          .addComponent(resetButton)
+          .addComponent(refreshButton))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-        .addContainerGap())
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+      initPenggunaTableData();
+      initRiwayatPeranTableData(-1);
+    }//GEN-LAST:event_refreshButtonActionPerformed
 
   private void menuUtamaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUtamaButtonActionPerformed
     new MenuUtamaView().setVisible(true);
     dispose();
   }//GEN-LAST:event_menuUtamaButtonActionPerformed
 
-  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+  private void keluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarButtonActionPerformed
     ActiveUser.remove();
-    new MenuUtamaView().setVisible(true);
+    new LoginView().setVisible(true);
     dispose();
-  }//GEN-LAST:event_exitButtonActionPerformed
+  }//GEN-LAST:event_keluarButtonActionPerformed
+
+  private void penggunaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_penggunaTableMouseClicked
+    int selectedRow = penggunaTable.getSelectedRow();
+    
+    namaTextField.setText(Table.getValue(penggunaTable, selectedRow, 2).toString());
+    emailTextField.setText(Table.getValue(penggunaTable, selectedRow, 3).toString());
+    peranComboBox.getModel().setSelectedItem(Table.getValue(penggunaTable, selectedRow, 4));
+    passwordPasswordField.setText(Table.getValue(penggunaTable, selectedRow, 6).toString());
+    passwordPasswordField.setEditable(true);
+    
+    Object cabangObj = Table.getValue(penggunaTable, selectedRow, 5);
+    
+    if(cabangObj instanceof String) cabangComboBox.setSelectedIndex(0);
+    else cabangComboBox.getModel().setSelectedItem(cabangObj);
+    
+    initRiwayatPeranTableData((int) Table.getValue(penggunaTable, selectedRow, 1));
+  }//GEN-LAST:event_penggunaTableMouseClicked
+
+  private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
+    Pengguna pengguna = getInputDataPengguna();
+    
+    if(isDataPenggunaValid(pengguna)) {
+      try {
+        if(penggunaService.insert(pengguna)) {
+          JOptionPane
+            .showMessageDialog(this, "Pengguna berhasil ditambahkan.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initPenggunaTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Pengguna gagal ditambahkan.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }//GEN-LAST:event_simpanButtonActionPerformed
+
+  private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+    Pengguna pengguna = getInputDataPengguna();
+    int selectedRow = penggunaTable.getSelectedRow();
+    
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah pengguna terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      pengguna.setIdPengguna((int) Table.getValue(penggunaTable, selectedRow, 1));
+      
+      if(isDataPenggunaValid(pengguna)) {
+        try {
+          if(penggunaService.update(pengguna)) {
+            JOptionPane
+              .showMessageDialog(this, "Pengguna berhasil diupdate.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+            initInputData();
+            initPenggunaTableData();
+          } else {
+            JOptionPane
+              .showMessageDialog(this, "Pengguna gagal diupdate.", "Oops!", JOptionPane.ERROR_MESSAGE);
+          }
+        } catch (RemoteException ex) {
+          Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+    }
+  }//GEN-LAST:event_updateButtonActionPerformed
+
+  private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+    initInputData();
+  }//GEN-LAST:event_resetButtonActionPerformed
+
+  private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+    int selectedRow = penggunaTable.getSelectedRow();
+    
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah pengguna terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      int idPengguna = (int) Table.getValue(penggunaTable, selectedRow, 1);
+      
+      try {
+        if(penggunaService.deleteByIdPengguna(idPengguna)) {
+          JOptionPane
+            .showMessageDialog(this, "Pengguna berhasil dihapus.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initPenggunaTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Pengguna gagal dihapus.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }//GEN-LAST:event_hapusButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -322,24 +602,27 @@ public class PenggunaView extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JComboBox<Object> cabangComboBox;
-  private javax.swing.JButton exitButton;
-  private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton2;
-  private javax.swing.JButton jButton3;
-  private javax.swing.JButton jButton4;
+  private javax.swing.JTextField emailTextField;
+  private javax.swing.JButton hapusButton;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
+  private javax.swing.JLabel jLabel7;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JTable jTable1;
-  private javax.swing.JTable jTable2;
-  private javax.swing.JTextField jTextField4;
-  private javax.swing.JTextField jTextField5;
+  private javax.swing.JButton keluarButton;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JTextField namaTextField;
+  private javax.swing.JPasswordField passwordPasswordField;
+  private javax.swing.JTable penggunaTable;
   private javax.swing.JComboBox<Object> peranComboBox;
+  private javax.swing.JButton refreshButton;
+  private javax.swing.JButton resetButton;
+  private javax.swing.JTable riwayatPeranTable;
+  private javax.swing.JButton simpanButton;
+  private javax.swing.JButton updateButton;
   // End of variables declaration//GEN-END:variables
 }

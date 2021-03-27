@@ -9,10 +9,10 @@ import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.server.service.AuthService;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
+import jasa_pengiriman.server.service.PenggunaService;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
  */
 public class LoginView extends javax.swing.JFrame {
   private AuthService authService;
+  private PenggunaService penggunaService;
   /**
    * Creates new form LoginView
    */
@@ -34,6 +35,7 @@ public class LoginView extends javax.swing.JFrame {
   private void initRMIServices() {
     try {
       this.authService = (AuthService) RMI.getService("AuthService");
+      this.penggunaService = (PenggunaService) RMI.getService("PenggunaService");
     } catch (Exception ex) {
       JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
       System.exit(1);
@@ -138,6 +140,11 @@ public class LoginView extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Email/Password tidak sesuai", "Oops!", JOptionPane.ERROR_MESSAGE);
       } else {
         ActiveUser.set(pengguna);
+        
+        Date date = new Date();
+        Timestamp  loginDateTime = new Timestamp(date.getTime());
+        penggunaService.updateTerakhirLoginByIdPengguna(loginDateTime, pengguna.getIdPengguna());
+        
         new MenuUtamaView().setVisible(true);
         dispose();
       }

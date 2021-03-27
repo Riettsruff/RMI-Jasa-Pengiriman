@@ -17,7 +17,16 @@ public class MenuUtamaView extends javax.swing.JFrame {
      * Creates new form MenuUtama
      */
     public MenuUtamaView() {
-        initComponents();
+      initComponents();
+      initDataView();
+    }
+    
+    private void initDataView() {
+      String terakhirLogin = 
+        ActiveUser.get().getTerakhirLogin() == null 
+          ? "Belum pernah" 
+          : ActiveUser.get().getTerakhirLogin().toString();
+      terakhirLoginValue.setText(terakhirLogin);
     }
 
     /**
@@ -43,6 +52,8 @@ public class MenuUtamaView extends javax.swing.JFrame {
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
+    terakhirLoginLabel = new javax.swing.JLabel();
+    terakhirLoginValue = new javax.swing.JLabel();
 
     jLabel3.setText("jLabel3");
 
@@ -137,12 +148,17 @@ public class MenuUtamaView extends javax.swing.JFrame {
     jLabel4.setFont(new java.awt.Font("Bauhaus 93", 0, 36)); // NOI18N
     jLabel4.setText("MENU UTAMA");
 
+    terakhirLoginLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+    terakhirLoginLabel.setText("Terakhir Login: ");
+
+    terakhirLoginValue.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
+        .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
             .addComponent(jLabel4)
@@ -150,6 +166,10 @@ public class MenuUtamaView extends javax.swing.JFrame {
             .addComponent(exitButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(terakhirLoginLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(terakhirLoginValue))
               .addGroup(layout.createSequentialGroup()
                 .addComponent(pengirimanButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -170,7 +190,7 @@ public class MenuUtamaView extends javax.swing.JFrame {
                 .addComponent(aksesButton))
               .addComponent(jLabel1)
               .addComponent(jLabel2))
-            .addGap(0, 59, Short.MAX_VALUE)))
+            .addGap(0, 225, Short.MAX_VALUE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -180,7 +200,11 @@ public class MenuUtamaView extends javax.swing.JFrame {
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jLabel4)
           .addComponent(exitButton))
-        .addGap(44, 44, 44)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(terakhirLoginLabel)
+          .addComponent(terakhirLoginValue))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +223,7 @@ public class MenuUtamaView extends javax.swing.JFrame {
           .addComponent(biayaButton)
           .addComponent(peranButton)
           .addComponent(aksesButton))
-        .addGap(0, 12, Short.MAX_VALUE))
+        .addGap(20, 20, 20))
     );
 
     pack();
@@ -309,5 +333,7 @@ public class MenuUtamaView extends javax.swing.JFrame {
   private javax.swing.JButton pengirimanButton;
   private javax.swing.JButton peranButton;
   private javax.swing.JButton provinsiButton;
+  private javax.swing.JLabel terakhirLoginLabel;
+  private javax.swing.JLabel terakhirLoginValue;
   // End of variables declaration//GEN-END:variables
 }

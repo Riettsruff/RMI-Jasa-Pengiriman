@@ -223,7 +223,7 @@ public class ProvinsiView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ProvinsiView().setVisible(true);
+              new ProvinsiView().setVisible(true);
             }
         });
     }
