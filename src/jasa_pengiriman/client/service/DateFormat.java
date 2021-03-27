@@ -5,6 +5,7 @@
  */
 package jasa_pengiriman.client.service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,5 +25,9 @@ public class DateFormat {
     } catch (ParseException ex) {
       return null;
     }
+  }
+  
+  public static Date timestampToDate(Timestamp timestamp) {
+    return new Date(timestamp.getTime());
   }
 }
