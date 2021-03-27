@@ -61,4 +61,9 @@ public class Table {
     
     return tableModel.getValueAt(row, column);
   }
+  
+  public static void deleteAllRows(JTable table) {
+    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+    tableModel.setRowCount(0);
+  }
 }
