@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2021 at 12:20 AM
+-- Generation Time: Mar 27, 2021 at 01:52 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -65,7 +65,7 @@ CREATE TABLE `cabang` (
 --
 
 INSERT INTO `cabang` (`id_cabang`, `id_kota`, `nama_cabang`, `alamat`, `no_hp`) VALUES
-(4, 1, 'Cab. Salatiga', 'Jl. Diponegoro', '082283947281');
+(7, 1, 'Cab. Salatiga', 'Jl. Diponegoro', '082283947281');
 
 -- --------------------------------------------------------
 
@@ -126,8 +126,8 @@ CREATE TABLE `pengguna` (
   `id_peran` int(11) DEFAULT NULL,
   `nama` varchar(100) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(200) NOT NULL,
-  `terakhir_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `password` varchar(200) NOT NULL DEFAULT 'secret',
+  `terakhir_login` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `id_cabang`, `id_peran`, `nama`, `email`, `password`, `terakhir_login`) VALUES
-(4, 4, 4, 'Admin Cab. Salatiga', 'admin.salatiga@jasakirim.com', 'admin123', '2021-03-15 22:23:40');
+(4, NULL, 4, 'Admin Cab. Salatiga', 'admin.salatiga@jasakirim.com', 'admin123', '2021-03-27 11:30:01');
 
 -- --------------------------------------------------------
 
@@ -202,8 +202,15 @@ CREATE TABLE `riwayat_peran` (
   `id_riwayat_peran` int(11) NOT NULL,
   `id_pengguna` int(11) NOT NULL,
   `id_peran` int(11) DEFAULT NULL,
-  `tanggal_dibuat` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `tanggal_mulai` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `riwayat_peran`
+--
+
+INSERT INTO `riwayat_peran` (`id_riwayat_peran`, `id_pengguna`, `id_peran`, `tanggal_mulai`) VALUES
+(2, 4, 4, '2021-03-27');
 
 -- --------------------------------------------------------
 
@@ -328,7 +335,7 @@ ALTER TABLE `biaya`
 -- AUTO_INCREMENT for table `cabang`
 --
 ALTER TABLE `cabang`
-  MODIFY `id_cabang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_cabang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `detail_akses`
@@ -352,7 +359,7 @@ ALTER TABLE `pelacakan`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `peran`
@@ -370,7 +377,7 @@ ALTER TABLE `provinsi`
 -- AUTO_INCREMENT for table `riwayat_peran`
 --
 ALTER TABLE `riwayat_peran`
-  MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `status_pelacakan`
