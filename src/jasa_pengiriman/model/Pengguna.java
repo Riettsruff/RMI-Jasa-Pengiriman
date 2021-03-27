@@ -74,4 +74,9 @@ public class Pengguna implements Serializable {
   public void setTerakhirLogin(Timestamp terakhirLogin) {
     this.terakhirLogin = terakhirLogin;
   }
+  
+  @Override
+  public String toString() {
+    return nama;
+  }
 }

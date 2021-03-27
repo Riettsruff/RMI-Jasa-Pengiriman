@@ -6,7 +6,7 @@
 package jasa_pengiriman.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  *
@@ -16,7 +16,7 @@ public class RiwayatPeran implements Serializable {
   private int idRiwayatPeran;
   private Pengguna pengguna;
   private Peran peran;
-  private Timestamp tanggalDibuat;
+  private Date tanggalMulai;
   
   public void setIdRiwayatPeran(int idRiwayatPeran) {
     this.idRiwayatPeran = idRiwayatPeran;
@@ -42,11 +42,11 @@ public class RiwayatPeran implements Serializable {
     return peran;
   }
   
-  public void setTanggalDibuat(Timestamp tanggalDibuat) {
-    this.tanggalDibuat = tanggalDibuat;
+  public void setTanggalMulai(Date tanggalMulai) {
+    this.tanggalMulai = tanggalMulai;
   }
   
-  public Timestamp getTanggalDibuat() {
-    return tanggalDibuat;
+  public Date getTanggalMulai() {
+    return tanggalMulai;
   }
 }
