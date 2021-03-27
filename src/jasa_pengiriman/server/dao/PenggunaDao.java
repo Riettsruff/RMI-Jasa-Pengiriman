@@ -13,6 +13,8 @@ import static jasa_pengiriman.server.service.Conn.Conn;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +30,7 @@ public class PenggunaDao {
     List<Pengguna> penggunaList = new ArrayList<Pengguna>();
     
     try {
-      String query = "SELECT a.id_pengguna, a.nama, a.email, a.terakhir_login, b.id_cabang, b.nama_cabang, c.* FROM pengguna a LEFT JOIN cabang b ON a.id_cabang = b.id_cabang LEFT JOIN peran c ON c.id_peran = a.id_peran";
+      String query = "SELECT a.id_pengguna, a.nama, a.email, a.password, a.terakhir_login, b.id_cabang, b.nama_cabang, c.* FROM pengguna a LEFT JOIN cabang b ON a.id_cabang = b.id_cabang LEFT JOIN peran c ON c.id_peran = a.id_peran";
       ResultSet rs = null;
       
       switch(type) {
@@ -58,6 +60,7 @@ public class PenggunaDao {
         pengguna.setPeran(peran);
         pengguna.setNama(rs.getString("nama"));
         pengguna.setEmail(rs.getString("email"));
+        pengguna.setPassword(rs.getString("password"));
         pengguna.setTerakhirLogin(rs.getTimestamp("terakhir_login"));
         
         penggunaList.add(pengguna);
@@ -86,17 +89,15 @@ public class PenggunaDao {
   public static boolean insert(Pengguna pengguna) {
     try {
       String table = "pengguna";
+      String[] fields = {"id_cabang", "id_peran", "nama", "email"};
       String[] values = {
-        String.valueOf(pengguna.getIdPengguna()),
         String.valueOf(pengguna.getCabang().getIdCabang()),
         String.valueOf(pengguna.getPeran().getIdPeran()),
         pengguna.getNama(),
         pengguna.getEmail(),
-        pengguna.getPassword(),
-        pengguna.getTerakhirLogin().toString()
       };
       
-      return DB.insert(table, values);
+      return DB.insert(table, fields, values);
     } catch (SQLException ex) {
       Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -107,14 +108,13 @@ public class PenggunaDao {
   public static boolean update(Pengguna pengguna) {
     try {
       String table = "pengguna";
-      String[] fields = {"id_cabang", "id_peran", "nama", "email", "password", "terakhir_login"};
+      String[] fields = {"id_cabang", "id_peran", "nama", "email", "password"};
       String[] values = {
         String.valueOf(pengguna.getCabang().getIdCabang()),
         String.valueOf(pengguna.getPeran().getIdPeran()),
         pengguna.getNama(),
         pengguna.getEmail(),
         pengguna.getPassword(),
-        pengguna.getTerakhirLogin().toString(),
         String.valueOf(pengguna.getIdPengguna())
       };
       String[] whereStatement = {"id_pengguna = ?"};
@@ -138,6 +138,25 @@ public class PenggunaDao {
       };
       
       return DB.delete(table, whereStatement, whereStatementSeparator, values);
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return false;
+  }
+  
+  public static boolean updateTerakhirLoginByIdPengguna(Timestamp terakhirLogin, int idPengguna) {
+    try {
+      String table = "pengguna";
+      String[] fields = {"terakhir_login"};
+      String[] values = {
+        terakhirLogin.toString(),
+        String.valueOf(idPengguna)
+      };
+      String[] whereStatement = {"id_pengguna = ?"};
+      String[] whereStatementSeparator = null;
+      
+      return DB.update(table, fields, values, whereStatement, whereStatementSeparator);
     } catch (SQLException ex) {
       Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
     }

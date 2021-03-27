@@ -5,6 +5,7 @@
  */
 package jasa_pengiriman.server.dao;
 
+import jasa_pengiriman.client.service.DateFormat;
 import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Peran;
 import jasa_pengiriman.model.RiwayatPeran;
@@ -27,7 +28,7 @@ public class RiwayatPeranDao {
     
     try {
       String[] values = {Integer.toString(idPengguna)};
-      ResultSet rs = DB.query("SELECT a.id_riwayat_peran, a.tanggal_dibuat, b.id_pengguna, b.nama, c.* FROM riwayat_peran a INNER JOIN pengguna b ON a.id_pengguna = b.id_pengguna LEFT JOIN peran c ON a.id_peran = c.id_peran WHERE a.id_pengguna = ?", values);
+      ResultSet rs = DB.query("SELECT a.id_riwayat_peran, a.tanggal_mulai, b.id_pengguna, b.nama, c.* FROM riwayat_peran a INNER JOIN pengguna b ON a.id_pengguna = b.id_pengguna LEFT JOIN peran c ON a.id_peran = c.id_peran WHERE a.id_pengguna = ? ORDER BY a.tanggal_mulai DESC", values);
       
       while(rs.next()) {
         RiwayatPeran riwayatPeran = new RiwayatPeran();
@@ -41,7 +42,7 @@ public class RiwayatPeranDao {
         riwayatPeran.setIdRiwayatPeran(rs.getInt("id_riwayat_peran"));
         riwayatPeran.setPengguna(pengguna);
         riwayatPeran.setPeran(peran);
-        riwayatPeran.setTanggalDibuat(rs.getTimestamp("tanggal_dibuat"));
+        riwayatPeran.setTanggalMulai(rs.getDate("tanggal_mulai"));
         
         riwayatPeranList.add(riwayatPeran);
       }
@@ -59,7 +60,7 @@ public class RiwayatPeranDao {
         String.valueOf(riwayatPeran.getIdRiwayatPeran()),
         String.valueOf(riwayatPeran.getPengguna().getIdPengguna()),
         String.valueOf(riwayatPeran.getPeran().getIdPeran()),
-        riwayatPeran.getTanggalDibuat().toString()
+        DateFormat.dateToString(riwayatPeran.getTanggalMulai(), "yyyy-MM-dd")
       };
       
       return DB.insert(table, values);
