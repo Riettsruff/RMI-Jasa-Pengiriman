@@ -100,20 +100,21 @@ public class BiayaView extends javax.swing.JFrame {
     kotaAsalComboBox = new javax.swing.JComboBox<>();
     jScrollPane2 = new javax.swing.JScrollPane();
     jTable2 = new javax.swing.JTable();
-    jButton1 = new javax.swing.JButton();
+    simpanButton = new javax.swing.JButton();
     menuUtamaButton = new javax.swing.JButton();
-    exitButton = new javax.swing.JButton();
+    keluarButton = new javax.swing.JButton();
     jLabel7 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
-    jTextField1 = new javax.swing.JTextField();
+    hargaTextField = new javax.swing.JTextField();
     jLabel3 = new javax.swing.JLabel();
     jLabel6 = new javax.swing.JLabel();
     jLabel8 = new javax.swing.JLabel();
     provinsiTujuanComboBox = new javax.swing.JComboBox<>();
     kotaTujuanComboBox = new javax.swing.JComboBox<>();
-    jButton4 = new javax.swing.JButton();
-    jButton5 = new javax.swing.JButton();
-    jButton6 = new javax.swing.JButton();
+    updateButton = new javax.swing.JButton();
+    hapusButton = new javax.swing.JButton();
+    refreshButton = new javax.swing.JButton();
+    resetButton = new javax.swing.JButton();
 
     jTable1.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -159,8 +160,8 @@ public class BiayaView extends javax.swing.JFrame {
     ));
     jScrollPane2.setViewportView(jTable2);
 
-    jButton1.setText("Simpan");
-    jButton1.setName("btnSimpan"); // NOI18N
+    simpanButton.setText("Simpan");
+    simpanButton.setName("btnSimpan"); // NOI18N
 
     menuUtamaButton.setText("Menu Utama");
     menuUtamaButton.setName("btnMenuUtama"); // NOI18N
@@ -170,11 +171,11 @@ public class BiayaView extends javax.swing.JFrame {
       }
     });
 
-    exitButton.setText("Keluar");
-    exitButton.setName("btnKeluar"); // NOI18N
-    exitButton.addActionListener(new java.awt.event.ActionListener() {
+    keluarButton.setText("Keluar");
+    keluarButton.setName("btnKeluar"); // NOI18N
+    keluarButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        exitButtonActionPerformed(evt);
+        keluarButtonActionPerformed(evt);
       }
     });
 
@@ -183,8 +184,8 @@ public class BiayaView extends javax.swing.JFrame {
 
     jLabel2.setText("Harga/KG");
 
-    jTextField1.setText(" ");
-    jTextField1.setName("txtHarga"); // NOI18N
+    hargaTextField.setText(" ");
+    hargaTextField.setName("txtHarga"); // NOI18N
 
     jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
     jLabel3.setText("Tujuan");
@@ -197,14 +198,17 @@ public class BiayaView extends javax.swing.JFrame {
 
     kotaTujuanComboBox.setName("cmbKotaTujuan"); // NOI18N
 
-    jButton4.setText("Update");
-    jButton4.setName("btnUpdate"); // NOI18N
+    updateButton.setText("Update");
+    updateButton.setName("btnUpdate"); // NOI18N
 
-    jButton5.setText("Hapus");
-    jButton5.setName("btnHapus"); // NOI18N
+    hapusButton.setText("Hapus");
+    hapusButton.setName("btnHapus"); // NOI18N
 
-    jButton6.setText("Refresh");
-    jButton6.setName("btnRefresh"); // NOI18N
+    refreshButton.setText("Refresh");
+    refreshButton.setName("btnRefresh"); // NOI18N
+
+    resetButton.setText("Reset");
+    resetButton.setName("btnHapus"); // NOI18N
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -213,6 +217,7 @@ public class BiayaView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(menuUtamaButton)
@@ -222,7 +227,7 @@ public class BiayaView extends javax.swing.JFrame {
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(exitButton))
+                .addComponent(keluarButton))
               .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                   .addComponent(jLabel3)
@@ -231,31 +236,36 @@ public class BiayaView extends javax.swing.JFrame {
                     .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(provinsiTujuanComboBox, 0, 123, Short.MAX_VALUE)
+                  .addComponent(provinsiTujuanComboBox, 0, 150, Short.MAX_VALUE)
                   .addComponent(kotaTujuanComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))))
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jButton1)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton4)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton5)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton6))
-          .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel5)
-                  .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                  .addComponent(provinsiAsalComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-              .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(jLabel2)
-              .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(0, 0, Short.MAX_VALUE)))
+              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addComponent(hargaTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                  .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4))
+                  .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                      .addGap(18, 18, 18)
+                      .addComponent(provinsiAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                      .addGap(18, 18, 18)
+                      .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(simpanButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(updateButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(hapusButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(resetButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(refreshButton)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -269,7 +279,7 @@ public class BiayaView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel1)
                   .addComponent(menuUtamaButton)
-                  .addComponent(exitButton))
+                  .addComponent(keluarButton))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel7)
@@ -284,25 +294,26 @@ public class BiayaView extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
               .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(jLabel5)
-                  .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jLabel5))
               .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(kotaTujuanComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-          .addComponent(jLabel8))
+          .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(jLabel8)
+            .addComponent(kotaAsalComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(18, 18, 18)
         .addComponent(jLabel2)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+        .addComponent(hargaTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addGap(18, 18, 18)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButton1)
-          .addComponent(jButton4)
-          .addComponent(jButton5)
-          .addComponent(jButton6))
+          .addComponent(simpanButton)
+          .addComponent(updateButton)
+          .addComponent(hapusButton)
+          .addComponent(resetButton)
+          .addComponent(refreshButton))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
         .addContainerGap())
     );
 
@@ -318,11 +329,11 @@ public class BiayaView extends javax.swing.JFrame {
     dispose();
   }//GEN-LAST:event_menuUtamaButtonActionPerformed
 
-  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+  private void keluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarButtonActionPerformed
     ActiveUser.remove();
     new LoginView().setVisible(true);
     dispose();
-  }//GEN-LAST:event_exitButtonActionPerformed
+  }//GEN-LAST:event_keluarButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -361,11 +372,8 @@ public class BiayaView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton exitButton;
-  private javax.swing.JButton jButton1;
-  private javax.swing.JButton jButton4;
-  private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
+  private javax.swing.JButton hapusButton;
+  private javax.swing.JTextField hargaTextField;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -378,11 +386,15 @@ public class BiayaView extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTable jTable1;
   private javax.swing.JTable jTable2;
-  private javax.swing.JTextField jTextField1;
+  private javax.swing.JButton keluarButton;
   private javax.swing.JComboBox<Object> kotaAsalComboBox;
   private javax.swing.JComboBox<Object> kotaTujuanComboBox;
   private javax.swing.JButton menuUtamaButton;
   private javax.swing.JComboBox<Object> provinsiAsalComboBox;
   private javax.swing.JComboBox<Object> provinsiTujuanComboBox;
+  private javax.swing.JButton refreshButton;
+  private javax.swing.JButton resetButton;
+  private javax.swing.JButton simpanButton;
+  private javax.swing.JButton updateButton;
   // End of variables declaration//GEN-END:variables
 }
