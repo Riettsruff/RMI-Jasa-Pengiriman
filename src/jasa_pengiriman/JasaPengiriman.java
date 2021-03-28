@@ -9,6 +9,7 @@ import jasa_pengiriman.client.config.RMI;
 import jasa_pengiriman.client.view.LoginView;
 import jasa_pengiriman.server.service.AksesServiceImpl;
 import jasa_pengiriman.server.service.AuthServiceImpl;
+import jasa_pengiriman.server.service.BiayaServiceImpl;
 import jasa_pengiriman.server.service.CabangServiceImpl;
 import jasa_pengiriman.server.service.DetailAksesServiceImpl;
 import jasa_pengiriman.server.service.KotaServiceImpl;
@@ -40,6 +41,7 @@ public class JasaPengiriman {
     registry.rebind("ProvinsiService", new ProvinsiServiceImpl());
     registry.rebind("RiwayatPeranService", new RiwayatPeranServiceImpl());
     registry.rebind("StatusPelacakanService", new StatusPelacakanServiceImpl());
+    registry.rebind("BiayaService", new BiayaServiceImpl());
     
     System.out.println("App server started...");
     
