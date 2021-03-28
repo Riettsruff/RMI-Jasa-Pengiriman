@@ -6,6 +6,7 @@
 package jasa_pengiriman.client.service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -18,7 +19,7 @@ public class BasicValidation {
   private static final String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
   private static final String NUMERIC_REGEX = "-?\\d+(\\.\\d+)?";
   
-  public static boolean isValid(HashMap<HashMap<String, Object>, List<String>> data) {
+  public static boolean isValid(LinkedHashMap<HashMap<String, Object>, List<String>> data) {
     for(Map.Entry<HashMap<String, Object>, List<String>> entry : data.entrySet()) {
       Map.Entry<String, Object> input = entry.getKey().entrySet().iterator().next();
       List<String> options = entry.getValue();
