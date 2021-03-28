@@ -62,7 +62,8 @@ public class PeranDao {
       String table = "peran";
       String[] fields = {"nama_peran"};
       String[] values = {
-        peran.getNamaPeran()
+        peran.getNamaPeran(),
+        String.valueOf(peran.getIdPeran())
       };
       String[] whereStatement = {"id_peran = ?"};
       String[] whereStatementSeparator = null;

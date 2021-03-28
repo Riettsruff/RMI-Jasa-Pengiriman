@@ -41,6 +41,7 @@ public class PenggunaDao {
         case "BY_ID_PERAN":
           query += " WHERE c.id_peran = ?";
           rs = DB.query(query, values);
+        break;
         case "ALL":
         default:
           rs = DB.query(query);
