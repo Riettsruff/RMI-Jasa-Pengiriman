@@ -5,14 +5,25 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.JasaPengiriman;
 import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.client.service.BasicValidation;
+import jasa_pengiriman.client.service.Table;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Cabang;
+import jasa_pengiriman.model.Kota;
 import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.CabangService;
+import jasa_pengiriman.server.service.KotaService;
 import jasa_pengiriman.server.service.ProvinsiService;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,28 +32,44 @@ import javax.swing.JOptionPane;
  */
 public class KotaView extends javax.swing.JFrame {
     private ProvinsiService provinsiService;
+    private KotaService kotaService;
+    private CabangService cabangService;
     /**
      * Creates new form KotaView
      */
     public KotaView() {
-      initRMIServices();
-      initComponents();
-      initDataView();
+      if(ActiveUser.get() != null) {
+        initRMIServices();
+        initComponents();
+        initInputData();
+        initKotaTableData();
+        initCabangTableData(-1);
+      } else {
+        try {
+          JasaPengiriman.main(null);
+        } catch (RemoteException ex) {
+          Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     
     private void initRMIServices() {
       try {
         this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
+        this.kotaService = (KotaService) RMI.getService("KotaService");
+        this.cabangService = (CabangService) RMI.getService("CabangService");
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
       }
     }
     
-    private void initDataView() {
+    private void initInputData() {
       provinsiComboBox.removeAllItems();
       provinsiComboBox.addItem("- Pilih -");
       provinsiComboBox.setSelectedIndex(0);
+      
+      namaKotaTextField.setText("");
       
       try {
         List<Provinsi> provinsiList = provinsiService.getAll();
@@ -51,6 +78,96 @@ public class KotaView extends javax.swing.JFrame {
       } catch (RemoteException ex) {
         Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
       }
+    }
+    
+    private void initKotaTableData() {
+      try {
+        List<Kota> kotaList = kotaService.getAll();
+        String[] fieldsData = {"No.", "Id Kota", "Nama Provinsi", "Nama Kota"};
+        
+        Object[][] rowsData = new Object[kotaList.size()][fieldsData.length];
+        
+        for(int i=0; i < kotaList.size(); ++i) {
+          rowsData[i][0] = (i + 1) + ".";
+          rowsData[i][1] = kotaList.get(i).getIdKota();
+          
+          Object provinsi = kotaList.get(i).getProvinsi();
+          
+          rowsData[i][2] = provinsi.toString() != null ? provinsi : "Tidak diketahui";
+          rowsData[i][3] = kotaList.get(i).getNamaKota();
+        }
+        
+        Table.setModel(kotaTable, rowsData, fieldsData, false);
+        Table.setColumnWidths(kotaTable, 50);
+        Table.setCellsHorizontalAlignment(kotaTable, new HashMap<Integer, Integer>(){{
+          put(0, JLabel.CENTER);
+        }});
+        Table.removeColumns(kotaTable, 1);
+      } catch (RemoteException ex) {
+        Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    
+    private void initCabangTableData(int idKota) {
+      String[] fieldsData = {"No.", "Id Cabang", "Nama Cabang", "Alamat", "No.Hp"};
+      Object[][] rowsData = null;
+      
+      if(idKota == -1) {
+        Table.setModel(cabangTable, rowsData, fieldsData, false);
+      } else {
+        try {
+          List<Cabang> cabangList = cabangService.getByIdKota(idKota);
+          rowsData = new Object[cabangList.size()][fieldsData.length];
+          
+          for(int i=0; i < cabangList.size(); ++i) {
+            rowsData[i][0] = (i + 1) + ".";
+            rowsData[i][1] = cabangList.get(i).getIdCabang();
+            rowsData[i][2] = cabangList.get(i).getNamaCabang();
+            rowsData[i][3] = cabangList.get(i).getAlamat();
+            rowsData[i][4] = cabangList.get(i).getNoHp();
+          }
+          
+          Table.setModel(cabangTable, rowsData, fieldsData, false);
+        } catch (RemoteException ex) {
+          Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+      
+      Table.setCellsHorizontalAlignment(cabangTable, new HashMap<Integer, Integer>(){{
+        put(0, JLabel.CENTER);
+      }});
+      Table.setColumnWidths(cabangTable, 50);
+      Table.removeColumns(cabangTable, 1);
+    }
+    
+    private Kota getInputDataKota() {
+      Provinsi provinsi = 
+        provinsiComboBox.getSelectedItem() instanceof String 
+          ? null 
+          : (Provinsi) provinsiComboBox.getSelectedItem();
+      String namaKota = namaKotaTextField.getText();
+      
+      Kota kota = new Kota();
+      kota.setProvinsi(provinsi);
+      kota.setNamaKota(namaKota);
+      
+      return kota;
+    }
+    
+    private boolean isDataKotaValid(Kota kota) {
+      LinkedHashMap<HashMap<String, Object>, List<String>> data = 
+        new LinkedHashMap<HashMap<String, Object>, List<String>>(){{
+          put(
+            new HashMap<String, Object>(){{ put("Provinsi", kota.getProvinsi()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Nama Kota", kota.getNamaKota()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+        }};
+      
+      return BasicValidation.isValid(data);
     }
 
     /**
@@ -70,16 +187,17 @@ public class KotaView extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
     provinsiComboBox = new javax.swing.JComboBox<>();
-    jTextField1 = new javax.swing.JTextField();
+    namaKotaTextField = new javax.swing.JTextField();
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
+    cabangTable = new javax.swing.JTable();
     jLabel4 = new javax.swing.JLabel();
-    jButton3 = new javax.swing.JButton();
-    jButton4 = new javax.swing.JButton();
-    jButton5 = new javax.swing.JButton();
+    simpanButton = new javax.swing.JButton();
+    updateButton = new javax.swing.JButton();
+    hapusButton = new javax.swing.JButton();
     jScrollPane3 = new javax.swing.JScrollPane();
-    jTable3 = new javax.swing.JTable();
-    jButton6 = new javax.swing.JButton();
+    kotaTable = new javax.swing.JTable();
+    refreshButton = new javax.swing.JButton();
+    resetButton = new javax.swing.JButton();
 
     jTable2.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
@@ -121,10 +239,10 @@ public class KotaView extends javax.swing.JFrame {
 
     provinsiComboBox.setName("cmbProvinsi"); // NOI18N
 
-    jTextField1.setText(" ");
-    jTextField1.setName("txtKota"); // NOI18N
+    namaKotaTextField.setText(" ");
+    namaKotaTextField.setName("txtKota"); // NOI18N
 
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
+    cabangTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -135,21 +253,37 @@ public class KotaView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable1.setName("tblCabang"); // NOI18N
-    jScrollPane1.setViewportView(jTable1);
+    cabangTable.setEnabled(false);
+    cabangTable.setName("tblCabang"); // NOI18N
+    jScrollPane1.setViewportView(cabangTable);
 
     jLabel4.setText("Daftar Cabang");
 
-    jButton3.setText("Simpan");
-    jButton3.setName("btnSimpan"); // NOI18N
+    simpanButton.setText("Simpan");
+    simpanButton.setName("btnSimpan"); // NOI18N
+    simpanButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        simpanButtonActionPerformed(evt);
+      }
+    });
 
-    jButton4.setText("Update");
-    jButton4.setName("btnUpdate"); // NOI18N
+    updateButton.setText("Update");
+    updateButton.setName("btnUpdate"); // NOI18N
+    updateButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        updateButtonActionPerformed(evt);
+      }
+    });
 
-    jButton5.setText("Hapus");
-    jButton5.setName("btnHapus"); // NOI18N
+    hapusButton.setText("Hapus");
+    hapusButton.setName("btnHapus"); // NOI18N
+    hapusButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        hapusButtonActionPerformed(evt);
+      }
+    });
 
-    jTable3.setModel(new javax.swing.table.DefaultTableModel(
+    kotaTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -160,11 +294,29 @@ public class KotaView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable3.setName("tblKota"); // NOI18N
-    jScrollPane3.setViewportView(jTable3);
+    kotaTable.setName("tblKota"); // NOI18N
+    kotaTable.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        kotaTableMouseClicked(evt);
+      }
+    });
+    jScrollPane3.setViewportView(kotaTable);
 
-    jButton6.setText("Refresh");
-    jButton6.setName("btnRefresh"); // NOI18N
+    refreshButton.setText("Refresh");
+    refreshButton.setName("btnRefresh"); // NOI18N
+    refreshButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        refreshButtonActionPerformed(evt);
+      }
+    });
+
+    resetButton.setText("Reset");
+    resetButton.setName("btnHapus"); // NOI18N
+    resetButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        resetButtonActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -173,36 +325,38 @@ public class KotaView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane3)
+          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 912, Short.MAX_VALUE)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
             .addGap(0, 0, Short.MAX_VALUE)
-            .addComponent(jButton6))
+            .addComponent(refreshButton))
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5))
+                .addComponent(simpanButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(updateButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(hapusButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(resetButton))
               .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                   .addComponent(jLabel3)
                   .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                  .addComponent(provinsiComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                  .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(namaKotaTextField)
+                  .addComponent(provinsiComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
               .addComponent(menuUtamaButton))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(jLabel4)
+              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                 .addGroup(layout.createSequentialGroup()
                   .addComponent(jLabel1)
-                  .addGap(201, 201, 201)
+                  .addGap(355, 355, 355)
                   .addComponent(exitButton))
-                .addComponent(jLabel4))
-              .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -225,15 +379,16 @@ public class KotaView extends javax.swing.JFrame {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(jLabel3)
-              .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(namaKotaTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(jButton3)
-              .addComponent(jButton4)
-              .addComponent(jButton5)))
+              .addComponent(simpanButton)
+              .addComponent(updateButton)
+              .addComponent(hapusButton)
+              .addComponent(resetButton)))
           .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(31, 31, 31)
-        .addComponent(jButton6)
+        .addComponent(refreshButton)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -252,6 +407,100 @@ public class KotaView extends javax.swing.JFrame {
     new LoginView().setVisible(true);
     dispose();
   }//GEN-LAST:event_exitButtonActionPerformed
+
+  private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+    initKotaTableData();
+    initCabangTableData(-1);
+  }//GEN-LAST:event_refreshButtonActionPerformed
+
+  private void kotaTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_kotaTableMouseClicked
+    int selectedRow = kotaTable.getSelectedRow();
+    
+    provinsiComboBox.getModel().setSelectedItem(Table.getValue(kotaTable, selectedRow, 2));
+    namaKotaTextField.setText(Table.getValue(kotaTable, selectedRow, 3).toString());
+    
+    initCabangTableData((int) Table.getValue(kotaTable, selectedRow, 1));
+  }//GEN-LAST:event_kotaTableMouseClicked
+
+  private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
+    Kota kota = getInputDataKota();
+    
+    if(isDataKotaValid(kota)) {
+      try {
+        if(kotaService.insert(kota)) {
+          JOptionPane
+            .showMessageDialog(this, "Kota berhasil ditambahkan.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initKotaTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Kota gagal ditambahkan.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }//GEN-LAST:event_simpanButtonActionPerformed
+
+  private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+    Kota kota = getInputDataKota();
+    int selectedRow = kotaTable.getSelectedRow();
+    
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah kota terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      kota.setIdKota((int) Table.getValue(kotaTable, selectedRow, 1));
+      
+      if(isDataKotaValid(kota)) {
+        try {
+          if(kotaService.update(kota)) {
+            JOptionPane
+              .showMessageDialog(this, "Kota berhasil diupdate.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+            initInputData();
+            initKotaTableData();
+          } else {
+            JOptionPane
+              .showMessageDialog(this, "Kota gagal diupdate.", "Oops!", JOptionPane.ERROR_MESSAGE);
+          }
+        } catch (RemoteException ex) {
+          Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+    }
+  }//GEN-LAST:event_updateButtonActionPerformed
+
+  private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+    initInputData();
+    
+    kotaTable.getSelectionModel().clearSelection();
+    Table.deleteAllRows(cabangTable);
+  }//GEN-LAST:event_resetButtonActionPerformed
+
+  private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
+    int selectedRow = kotaTable.getSelectedRow();
+    
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah kota terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      int idKota = (int) Table.getValue(kotaTable, selectedRow, 1);
+      
+      try {
+        if(kotaService.deleteByIdKota(idKota)) {
+          JOptionPane
+            .showMessageDialog(this, "Kota berhasil dihapus.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initKotaTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Kota gagal dihapus.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(KotaView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+  }//GEN-LAST:event_hapusButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,11 +539,9 @@ public class KotaView extends javax.swing.JFrame {
     }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JTable cabangTable;
   private javax.swing.JButton exitButton;
-  private javax.swing.JButton jButton3;
-  private javax.swing.JButton jButton4;
-  private javax.swing.JButton jButton5;
-  private javax.swing.JButton jButton6;
+  private javax.swing.JButton hapusButton;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -302,11 +549,14 @@ public class KotaView extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JScrollPane jScrollPane3;
-  private javax.swing.JTable jTable1;
   private javax.swing.JTable jTable2;
-  private javax.swing.JTable jTable3;
-  private javax.swing.JTextField jTextField1;
+  private javax.swing.JTable kotaTable;
   private javax.swing.JButton menuUtamaButton;
+  private javax.swing.JTextField namaKotaTextField;
   private javax.swing.JComboBox<Object> provinsiComboBox;
+  private javax.swing.JButton refreshButton;
+  private javax.swing.JButton resetButton;
+  private javax.swing.JButton simpanButton;
+  private javax.swing.JButton updateButton;
   // End of variables declaration//GEN-END:variables
 }

@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -187,8 +188,8 @@ public class PenggunaView extends javax.swing.JFrame {
     }
     
     private boolean isDataPenggunaValid(Pengguna pengguna) {
-      HashMap<HashMap<String, Object>, List<String>> data = 
-        new HashMap<HashMap<String, Object>, List<String>>(){{
+      LinkedHashMap<HashMap<String, Object>, List<String>> data = 
+        new LinkedHashMap<HashMap<String, Object>, List<String>>(){{
           put(
             new HashMap<String, Object>(){{ put("Nama", pengguna.getNama()); }},
             new ArrayList<String>(){{ add("REQUIRED"); }}

@@ -17,6 +17,7 @@ import jasa_pengiriman.server.service.ProvinsiService;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,8 +128,8 @@ public class ProvinsiView extends javax.swing.JFrame {
     }
     
     private boolean isDataProvinsiValid(Provinsi provinsi) {
-      HashMap<HashMap<String, Object>, List<String>> data = 
-        new HashMap<HashMap<String, Object>, List<String>>(){{
+      LinkedHashMap<HashMap<String, Object>, List<String>> data = 
+        new LinkedHashMap<HashMap<String, Object>, List<String>>(){{
           put(
             new HashMap<String, Object>(){{ put("Nama Provinsi", provinsi.getNamaProvinsi()); }},
             new ArrayList<String>(){{ add("REQUIRED"); }}
