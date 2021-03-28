@@ -6,6 +6,7 @@
 package jasa_pengiriman.server.service;
 
 import jasa_pengiriman.model.Biaya;
+import jasa_pengiriman.server.dao.BiayaDao;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,24 +18,26 @@ import java.util.List;
  */
 public class BiayaServiceImpl extends UnicastRemoteObject implements BiayaService, Serializable {
 
+  public BiayaServiceImpl() throws RemoteException {}
+  
   @Override
   public List<Biaya> getAll() throws RemoteException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return BiayaDao.getAll();
   }
 
   @Override
   public boolean insert(Biaya biaya) throws RemoteException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return BiayaDao.insert(biaya);
   }
 
   @Override
   public boolean update(Biaya biaya) throws RemoteException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return BiayaDao.update(biaya);
   }
 
   @Override
   public boolean deleteByIdBiaya(int idBiaya) throws RemoteException {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return BiayaDao.deleteByIdBiaya(idBiaya);
   }
   
 }

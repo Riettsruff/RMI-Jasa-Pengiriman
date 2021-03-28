@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author Riett
  */
 public class BiayaDao {
-  public List<Biaya> getAll() {
+  public static List<Biaya> getAll() {
     List<Biaya> biayaList = new ArrayList<Biaya>();
     
     try {
