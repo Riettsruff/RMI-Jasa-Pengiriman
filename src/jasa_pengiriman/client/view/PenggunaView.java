@@ -476,7 +476,12 @@ public class PenggunaView extends javax.swing.JFrame {
     
     namaTextField.setText(Table.getValue(penggunaTable, selectedRow, 2).toString());
     emailTextField.setText(Table.getValue(penggunaTable, selectedRow, 3).toString());
-    peranComboBox.getModel().setSelectedItem(Table.getValue(penggunaTable, selectedRow, 4));
+    
+    Object peranObj = Table.getValue(penggunaTable, selectedRow, 4);
+    
+    if(peranObj instanceof String) peranComboBox.setSelectedIndex(0);
+    else peranComboBox.getModel().setSelectedItem(peranObj);
+    
     passwordPasswordField.setText(Table.getValue(penggunaTable, selectedRow, 6).toString());
     passwordPasswordField.setEditable(true);
     
