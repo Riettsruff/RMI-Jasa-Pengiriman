@@ -46,9 +46,11 @@ public class CabangDao {
         
         provinsi.setIdProvinsi(rs.getInt("id_provinsi"));
         provinsi.setNamaProvinsi(rs.getString("nama_provinsi"));
+        
         kota.setIdKota(rs.getInt("id_kota"));
         kota.setNamaKota(rs.getString("nama_kota"));
         kota.setProvinsi(provinsi);
+        
         cabang.setIdCabang(rs.getInt("id_cabang"));
         cabang.setKota(kota);
         cabang.setNamaCabang(rs.getString("nama_cabang"));
