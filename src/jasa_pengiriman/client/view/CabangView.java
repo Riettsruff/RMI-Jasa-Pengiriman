@@ -5,19 +5,30 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.JasaPengiriman;
 import jasa_pengiriman.client.config.RMI;
+import jasa_pengiriman.client.service.BasicValidation;
+import jasa_pengiriman.client.service.DateFormat;
+import jasa_pengiriman.client.service.Table;
 import jasa_pengiriman.client.store.ActiveUser;
 import jasa_pengiriman.model.Cabang;
 import jasa_pengiriman.model.Kota;
+import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.service.CabangService;
 import jasa_pengiriman.server.service.KotaService;
+import jasa_pengiriman.server.service.PenggunaService;
 import jasa_pengiriman.server.service.ProvinsiService;
 import java.rmi.RemoteException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,13 +39,24 @@ public class CabangView extends javax.swing.JFrame {
     private ProvinsiService provinsiService;
     private KotaService kotaService;
     private CabangService cabangService;
+    private PenggunaService penggunaService;
     /**
      * Creates new form CabangView
      */
     public CabangView() {
-      initRMIServices();
-      initComponents();
-      initDataView();
+      if(ActiveUser.get() != null) {
+        initRMIServices();
+        initComponents();
+        initInputData();
+        initCabangTableData();
+        initPenggunaTableData(-1);
+      } else {
+        try {
+          JasaPengiriman.main(null);
+        } catch (RemoteException ex) {
+          Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     
     private void initRMIServices() {
@@ -42,13 +64,18 @@ public class CabangView extends javax.swing.JFrame {
         this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
         this.kotaService = (KotaService) RMI.getService("KotaService");
         this.cabangService = (CabangService) RMI.getService("CabangService");
+        this.penggunaService = (PenggunaService) RMI.getService("PenggunaService");
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
       }
     }
     
-    private void initDataView() {
+    private void initInputData() {
+      namaCabangTextField.setText("");
+      alamatTextField.setText("");
+      noHpTextField.setText("");
+      
       provinsiComboBox.removeAllItems();
       provinsiComboBox.addItem("- Pilih -");
       
@@ -66,6 +93,125 @@ public class CabangView extends javax.swing.JFrame {
       }
     }
     
+    private void initCabangTableData() {
+      try {
+        List<Cabang> cabangList = cabangService.getAll();
+        String[] fieldsData = {"No.", "Id Cabang", "Nama Cabang", "Provinsi", "Kota", "Alamat", "No.HP"};
+        
+        Object[][] rowsData = new Object[cabangList.size()][fieldsData.length];
+        
+        for(int i=0; i < cabangList.size(); ++i) {
+          rowsData[i][0] = (i + 1) + ".";
+          rowsData[i][1] = cabangList.get(i).getIdCabang();
+          rowsData[i][2] = cabangList.get(i).getNamaCabang();
+          rowsData[i][3] = cabangList.get(i).getKota().getProvinsi();
+          rowsData[i][4] = cabangList.get(i).getKota();
+          rowsData[i][5] = cabangList.get(i).getAlamat();
+          rowsData[i][6] = cabangList.get(i).getNoHp();
+        }
+        
+        Table.setModel(cabangTable, rowsData, fieldsData, false);
+        Table.setColumnWidths(cabangTable, 50);
+        Table.setCellsHorizontalAlignment(cabangTable, new HashMap<Integer, Integer>(){{
+          put(0, JLabel.CENTER);
+        }});
+        Table.removeColumns(cabangTable, 1);
+      } catch (RemoteException ex) {
+        Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    
+    private void initPenggunaTableData(int idCabang) {
+      String[] fieldsData = {"No.", "Id Pengguna", "Nama", "Email", "Terakhir Login"};
+      Object[][] rowsData = null;
+      
+      if(idCabang == -1) {
+        Table.setModel(penggunaTable, rowsData, fieldsData, false);
+      } else {
+        try {
+          List<Pengguna> penggunaList = penggunaService.getByIdCabang(idCabang);
+          rowsData = new Object[penggunaList.size()][fieldsData.length];
+          
+          for(int i=0; i < penggunaList.size(); ++i) {
+            rowsData[i][0] = (i + 1) + ".";
+            rowsData[i][1] = penggunaList.get(i).getIdPengguna();
+            rowsData[i][2] = penggunaList.get(i).getNama();
+            rowsData[i][3] = penggunaList.get(i).getEmail();
+            
+            Timestamp terakhirLogin = penggunaList.get(i).getTerakhirLogin();
+            
+            rowsData[i][4] = 
+              terakhirLogin.toString() != null 
+                ? DateFormat.dateToString(DateFormat.timestampToDate(terakhirLogin), "dd-MM-yyyy HH:mm:ss")
+                : "Belum pernah";
+            
+          }
+          
+          Table.setModel(penggunaTable, rowsData, fieldsData, false);
+        } catch (RemoteException ex) {
+          Logger.getLogger(PeranView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+      
+      Table.setCellsHorizontalAlignment(penggunaTable, new HashMap<Integer, Integer>(){{
+        put(0, JLabel.CENTER);
+      }});
+      Table.setColumnWidths(penggunaTable, 50);
+      Table.removeColumns(penggunaTable, 1);
+    }
+    
+    private Cabang getInputDataCabang() {
+      String namaCabang = namaCabangTextField.getText();
+      String alamat = alamatTextField.getText();
+      String noHp = noHpTextField.getText();
+      Provinsi provinsi = 
+        provinsiComboBox.getSelectedItem() instanceof String 
+          ? null 
+          : (Provinsi) provinsiComboBox.getSelectedItem();
+      Kota kota = 
+        kotaComboBox.getSelectedItem() instanceof String
+          ? null
+          : (Kota) kotaComboBox.getSelectedItem();
+      
+      Cabang cabang = new Cabang();
+      cabang.setNamaCabang(namaCabang);
+      cabang.setAlamat(alamat);
+      cabang.setNoHp(noHp);
+      
+      if(kota != null) kota.setProvinsi(provinsi);
+      cabang.setKota(kota);
+      
+      return cabang;
+    }
+    
+    private boolean isDataCabangValid(Cabang cabang) {
+      LinkedHashMap<HashMap<String, Object>, List<String>> data = 
+        new LinkedHashMap<HashMap<String, Object>, List<String>>(){{
+          put(
+            new HashMap<String, Object>(){{ put("Nama Cabang", cabang.getNamaCabang()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Alamat", cabang.getAlamat()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("No.HP", cabang.getNoHp()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); add("NUMERIC"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Provinsi", cabang.getKota() != null ? cabang.getKota().getProvinsi() : null); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+          put(
+            new HashMap<String, Object>(){{ put("Kota", cabang.getKota()); }},
+            new ArrayList<String>(){{ add("REQUIRED"); }}
+          );
+        }};
+      
+      return BasicValidation.isValid(data);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -79,7 +225,7 @@ public class CabangView extends javax.swing.JFrame {
     jScrollPane1 = new javax.swing.JScrollPane();
     jTable1 = new javax.swing.JTable();
     menuUtamaButton = new javax.swing.JButton();
-    exitButton = new javax.swing.JButton();
+    keluarButton = new javax.swing.JButton();
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
@@ -96,10 +242,11 @@ public class CabangView extends javax.swing.JFrame {
     hapusButton = new javax.swing.JButton();
     jLabel7 = new javax.swing.JLabel();
     jScrollPane2 = new javax.swing.JScrollPane();
-    jTable2 = new javax.swing.JTable();
+    penggunaTable = new javax.swing.JTable();
     jScrollPane3 = new javax.swing.JScrollPane();
-    jTable3 = new javax.swing.JTable();
-    jButton6 = new javax.swing.JButton();
+    cabangTable = new javax.swing.JTable();
+    refreshButton = new javax.swing.JButton();
+    resetButton = new javax.swing.JButton();
 
     jTextField2.setText("jTextField2");
 
@@ -126,11 +273,11 @@ public class CabangView extends javax.swing.JFrame {
       }
     });
 
-    exitButton.setText("Keluar");
-    exitButton.setName("btnKeluar"); // NOI18N
-    exitButton.addActionListener(new java.awt.event.ActionListener() {
+    keluarButton.setText("Keluar");
+    keluarButton.setName("btnKeluar"); // NOI18N
+    keluarButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        exitButtonActionPerformed(evt);
+        keluarButtonActionPerformed(evt);
       }
     });
 
@@ -186,7 +333,7 @@ public class CabangView extends javax.swing.JFrame {
 
     jLabel7.setText("Informasi Pengguna");
 
-    jTable2.setModel(new javax.swing.table.DefaultTableModel(
+    penggunaTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -197,10 +344,10 @@ public class CabangView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable2.setName("tblInformasiPengguna"); // NOI18N
-    jScrollPane2.setViewportView(jTable2);
+    penggunaTable.setName("tblInformasiPengguna"); // NOI18N
+    jScrollPane2.setViewportView(penggunaTable);
 
-    jTable3.setModel(new javax.swing.table.DefaultTableModel(
+    cabangTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][] {
         {null, null, null, null},
         {null, null, null, null},
@@ -211,11 +358,29 @@ public class CabangView extends javax.swing.JFrame {
         "Title 1", "Title 2", "Title 3", "Title 4"
       }
     ));
-    jTable3.setName("tblCabang"); // NOI18N
-    jScrollPane3.setViewportView(jTable3);
+    cabangTable.setName("tblCabang"); // NOI18N
+    cabangTable.addMouseListener(new java.awt.event.MouseAdapter() {
+      public void mouseClicked(java.awt.event.MouseEvent evt) {
+        cabangTableMouseClicked(evt);
+      }
+    });
+    jScrollPane3.setViewportView(cabangTable);
 
-    jButton6.setText("Refresh");
-    jButton6.setName("btnRefresh"); // NOI18N
+    refreshButton.setText("Refresh");
+    refreshButton.setName("btnRefresh"); // NOI18N
+    refreshButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        refreshButtonActionPerformed(evt);
+      }
+    });
+
+    resetButton.setText("Reset");
+    resetButton.setName("btnHapus"); // NOI18N
+    resetButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        resetButtonActionPerformed(evt);
+      }
+    });
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -224,40 +389,54 @@ public class CabangView extends javax.swing.JFrame {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
+          .addComponent(jScrollPane3)
           .addGroup(layout.createSequentialGroup()
             .addComponent(menuUtamaButton)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(exitButton))
+            .addComponent(jLabel1)
+            .addGap(336, 336, 336)
+            .addComponent(keluarButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel2)
-              .addComponent(jLabel3)
-              .addComponent(jLabel4)
-              .addComponent(jLabel6)
-              .addComponent(jLabel5))
-            .addGap(20, 20, 20)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(namaCabangTextField)
-              .addComponent(alamatTextField)
-              .addComponent(noHpTextField)
-              .addComponent(provinsiComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(0, 412, Short.MAX_VALUE))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addComponent(jButton6))
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(simpanButton)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(updateButton)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(hapusButton)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel2)
+                  .addComponent(jLabel3)
+                  .addComponent(jLabel4))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(alamatTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(noHpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                  .addComponent(namaCabangTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                  .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5))
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                  .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createSequentialGroup()
+                  .addGap(0, 0, Short.MAX_VALUE)
+                  .addComponent(simpanButton)
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                  .addComponent(updateButton)
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                  .addComponent(hapusButton)
+                  .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                  .addComponent(resetButton))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel7)
-              .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(jLabel1))))
+              .addGroup(layout.createSequentialGroup()
+                .addGap(565, 565, 565)
+                .addComponent(refreshButton)
+                .addGap(0, 0, Short.MAX_VALUE))
+              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel7)
+                  .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE))))))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -266,47 +445,48 @@ public class CabangView extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(menuUtamaButton)
-          .addComponent(exitButton)
+          .addComponent(keluarButton)
           .addComponent(jLabel1))
-        .addGap(18, 18, 18)
+        .addGap(15, 15, 15)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
             .addComponent(jLabel7)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGap(18, 18, 18)
-            .addComponent(jButton6))
+            .addComponent(refreshButton))
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                  .addComponent(jLabel2)
+                  .addComponent(namaCabangTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4))
               .addGroup(layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(namaCabangTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(34, 34, 34)
                 .addComponent(alamatTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(noHpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jLabel5))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jLabel6))))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(noHpTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(18, 18, 18)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel5)
+              .addComponent(provinsiComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(9, 9, 9)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(jLabel6)
+              .addComponent(kotaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(18, 18, 18)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
               .addComponent(simpanButton)
               .addComponent(updateButton)
-              .addComponent(hapusButton))))
+              .addComponent(hapusButton)
+              .addComponent(resetButton))))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(14, Short.MAX_VALUE))
     );
 
     pack();
@@ -317,66 +497,108 @@ public class CabangView extends javax.swing.JFrame {
     dispose();
   }//GEN-LAST:event_menuUtamaButtonActionPerformed
 
-  private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+  private void keluarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keluarButtonActionPerformed
     ActiveUser.remove();
     new LoginView().setVisible(true);
     dispose();
-  }//GEN-LAST:event_exitButtonActionPerformed
+  }//GEN-LAST:event_keluarButtonActionPerformed
 
   private void simpanButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanButtonActionPerformed
-    String namaCabang = namaCabangTextField.getText();
-    String alamat = alamatTextField.getText();
-    String noHp = noHpTextField.getText();
-    int idKota = 1;
+    Cabang cabang = getInputDataCabang();
     
-    Cabang cabang = new Cabang();
-    Kota kota = new Kota();
-    
-    kota.setIdKota(idKota);
-    cabang.setIdCabang(Types.NULL);
-    cabang.setNamaCabang(namaCabang);
-    cabang.setAlamat(alamat);
-    cabang.setNoHp(noHp);
-    cabang.setKota(kota);
-    
-    try {
-      System.out.println(cabangService.insert(cabang));
-    } catch (RemoteException ex) {
-      Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+    if(isDataCabangValid(cabang)) {
+      try {
+        if(cabangService.insert(cabang)) {
+          JOptionPane
+            .showMessageDialog(this, "Cabang berhasil ditambahkan.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initCabangTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Cabang gagal ditambahkan.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
   }//GEN-LAST:event_simpanButtonActionPerformed
 
   private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-    int idCabang = 4;
-    int idKota = 1;
-    String namaCabang = namaCabangTextField.getText();
-    String alamat = alamatTextField.getText();
-    String noHp = noHpTextField.getText();
+    Cabang cabang = getInputDataCabang();
+    int selectedRow = cabangTable.getSelectedRow();
     
-    Cabang cabang = new Cabang();
-    Kota kota = new Kota();
-    
-    kota.setIdKota(idKota);
-    cabang.setIdCabang(idCabang);
-    cabang.setNamaCabang(namaCabang);
-    cabang.setAlamat(alamat);
-    cabang.setNoHp(noHp);
-    cabang.setKota(kota);
-    
-    try {
-      System.out.println(cabangService.update(cabang));
-    } catch (RemoteException ex) {
-      Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah cabang terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      cabang.setIdCabang((int) Table.getValue(cabangTable, selectedRow, 1));
+      
+      if(isDataCabangValid(cabang)) {
+        try {
+          if(cabangService.update(cabang)) {
+            JOptionPane
+              .showMessageDialog(this, "Cabang berhasil diupdate.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+            initInputData();
+            initCabangTableData();
+          } else {
+            JOptionPane
+              .showMessageDialog(this, "Cabang gagal diupdate.", "Oops!", JOptionPane.ERROR_MESSAGE);
+          }
+        } catch (RemoteException ex) {
+          Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
   }//GEN-LAST:event_updateButtonActionPerformed
 
   private void hapusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusButtonActionPerformed
-    try {
-      System.out.println(cabangService.deleteByIdCabang(4));
-    } catch (RemoteException ex) {
-      Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+    int selectedRow = cabangTable.getSelectedRow();
+    
+    if(selectedRow == -1) {
+      JOptionPane
+        .showMessageDialog(this, "Pilihlah salah cabang terlebih dahulu.", "Oops!", JOptionPane.ERROR_MESSAGE);
+    } else {
+      int idCabang = (int) Table.getValue(cabangTable, selectedRow, 1);
+      
+      try {
+        if(cabangService.deleteByIdCabang(idCabang)) {
+          JOptionPane
+            .showMessageDialog(this, "Cabang berhasil dihapus.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
+          initInputData();
+          initCabangTableData();
+        } else {
+          JOptionPane
+            .showMessageDialog(this, "Cabang gagal dihapus.", "Oops!", JOptionPane.ERROR_MESSAGE);
+        }
+      } catch (RemoteException ex) {
+        Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
   }//GEN-LAST:event_hapusButtonActionPerformed
+
+  private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+    initInputData();
+    
+    cabangTable.getSelectionModel().clearSelection();
+    Table.deleteAllRows(penggunaTable);
+  }//GEN-LAST:event_resetButtonActionPerformed
+
+  private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+    initCabangTableData();
+    initPenggunaTableData(-1);
+  }//GEN-LAST:event_refreshButtonActionPerformed
+
+  private void cabangTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cabangTableMouseClicked
+    int selectedRow = cabangTable.getSelectedRow();
+    
+    namaCabangTextField.setText(Table.getValue(cabangTable, selectedRow, 2).toString());
+    alamatTextField.setText(Table.getValue(cabangTable, selectedRow, 5).toString());
+    noHpTextField.setText(Table.getValue(cabangTable, selectedRow, 6).toString());
+    provinsiComboBox.getModel().setSelectedItem(Table.getValue(cabangTable, selectedRow, 3));
+    kotaComboBox.getModel().setSelectedItem(Table.getValue(cabangTable, selectedRow, 4));
+    
+    initPenggunaTableData((int) Table.getValue(cabangTable, selectedRow, 1));
+  }//GEN-LAST:event_cabangTableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -416,9 +638,8 @@ public class CabangView extends javax.swing.JFrame {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JTextField alamatTextField;
-  private javax.swing.JButton exitButton;
+  private javax.swing.JTable cabangTable;
   private javax.swing.JButton hapusButton;
-  private javax.swing.JButton jButton6;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
@@ -430,14 +651,16 @@ public class CabangView extends javax.swing.JFrame {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JScrollPane jScrollPane3;
   private javax.swing.JTable jTable1;
-  private javax.swing.JTable jTable2;
-  private javax.swing.JTable jTable3;
   private javax.swing.JTextField jTextField2;
+  private javax.swing.JButton keluarButton;
   private javax.swing.JComboBox<Object> kotaComboBox;
   private javax.swing.JButton menuUtamaButton;
   private javax.swing.JTextField namaCabangTextField;
   private javax.swing.JTextField noHpTextField;
+  private javax.swing.JTable penggunaTable;
   private javax.swing.JComboBox<Object> provinsiComboBox;
+  private javax.swing.JButton refreshButton;
+  private javax.swing.JButton resetButton;
   private javax.swing.JButton simpanButton;
   private javax.swing.JButton updateButton;
   // End of variables declaration//GEN-END:variables

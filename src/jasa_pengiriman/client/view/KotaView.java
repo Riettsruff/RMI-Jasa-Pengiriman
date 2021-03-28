@@ -90,10 +90,7 @@ public class KotaView extends javax.swing.JFrame {
         for(int i=0; i < kotaList.size(); ++i) {
           rowsData[i][0] = (i + 1) + ".";
           rowsData[i][1] = kotaList.get(i).getIdKota();
-          
-          Object provinsi = kotaList.get(i).getProvinsi();
-          
-          rowsData[i][2] = provinsi.toString() != null ? provinsi : "Tidak diketahui";
+          rowsData[i][2] = kotaList.get(i).getProvinsi();
           rowsData[i][3] = kotaList.get(i).getNamaKota();
         }
         

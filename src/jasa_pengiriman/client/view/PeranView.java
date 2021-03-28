@@ -42,6 +42,7 @@ public class PeranView extends javax.swing.JFrame {
         initComponents();
         initInputData();
         initPeranTableData();
+        initPenggunaTableData(-1);
       } else {
         try {
           JasaPengiriman.main(null);
