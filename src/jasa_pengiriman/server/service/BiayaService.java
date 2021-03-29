@@ -18,4 +18,5 @@ public interface BiayaService extends Remote {
   public boolean insert(Biaya biaya) throws RemoteException;
   public boolean update(Biaya biaya) throws RemoteException;
   public boolean deleteByIdBiaya(int idBiaya) throws RemoteException;
+  public Biaya getByRoute(int idKotaAsal, int idKotaTujuan) throws RemoteException;
 }

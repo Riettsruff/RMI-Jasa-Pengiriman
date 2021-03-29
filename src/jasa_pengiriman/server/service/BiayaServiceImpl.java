@@ -61,5 +61,17 @@ public class BiayaServiceImpl extends UnicastRemoteObject implements BiayaServic
   public boolean deleteByIdBiaya(int idBiaya) throws RemoteException {
     return BiayaDao.deleteByIdBiaya(idBiaya);
   }
+
+  /**
+   * Mengembalikan hasil dari generate Biaya berdasarkan Route
+   * @param idKotaAsal
+   * @param idKotaTujuan
+   * @return Biaya
+   * @throws RemoteException 
+   */
+  @Override
+  public Biaya getByRoute(int idKotaAsal, int idKotaTujuan) throws RemoteException {
+    return BiayaDao.getByRoute(idKotaAsal, idKotaTujuan);
+  }
   
 }
