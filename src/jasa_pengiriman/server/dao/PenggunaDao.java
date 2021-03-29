@@ -6,8 +6,10 @@
 package jasa_pengiriman.server.dao;
 
 import jasa_pengiriman.model.Cabang;
+import jasa_pengiriman.model.Kota;
 import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Peran;
+import jasa_pengiriman.model.Provinsi;
 import jasa_pengiriman.server.helper.DB;
 import static jasa_pengiriman.server.service.Conn.Conn;
 import java.sql.PreparedStatement;
@@ -77,6 +79,58 @@ public class PenggunaDao {
     
     return penggunaList;
   } 
+  
+  /**
+   * Untuk generate Pengguna berdasarkan idPengguna
+   * @param idPengguna
+   * @return Pengguna 
+   */
+  public static Pengguna getByIdPengguna(int idPengguna) {
+    try {
+      String query = "SELECT a.*, b.id_pengguna, b.nama, b.email, b.password, b.terakhir_login, c.id_cabang, c.nama_cabang, c.alamat AS alamat_cabang, c.no_hp AS no_hp_cabang, d.id_kota, d.nama_kota, e.id_provinsi, e.nama_provinsi FROM peran a INNER JOIN pengguna b ON a.id_peran = b.id_peran LEFT JOIN cabang c ON b.id_cabang = c.id_cabang INNER JOIN kota d ON c.id_kota = d.id_kota INNER JOIN provinsi e ON d.id_provinsi = e.id_provinsi";
+      String[] values = {
+        String.valueOf(idPengguna)
+      };
+      
+      ResultSet rs = DB.query(query, values);
+      
+      if(rs.next()) {
+        Pengguna pengguna = new Pengguna();
+        Cabang cabang = new Cabang();
+        Peran peran = new Peran();
+        Kota kota = new Kota();
+        Provinsi provinsi = new Provinsi();
+        
+        provinsi.setIdProvinsi(rs.getInt("id_provinsi"));
+        provinsi.setNamaProvinsi(rs.getString("nama_provinsi"));
+        
+        kota.setIdKota(rs.getInt("id_kota"));
+        kota.setNamaKota(rs.getString("nama_kota"));
+        kota.setProvinsi(provinsi);
+        
+        cabang.setIdCabang(rs.getInt("id_cabang"));
+        cabang.setNamaCabang(rs.getString("nama_cabang"));
+        cabang.setKota(kota);
+        
+        peran.setIdPeran(rs.getInt("id_peran"));
+        peran.setNamaPeran(rs.getString("nama_peran"));
+        
+        pengguna.setIdPengguna(rs.getInt("id_pengguna"));
+        pengguna.setCabang(cabang);
+        pengguna.setPeran(peran);
+        pengguna.setNama(rs.getString("nama"));
+        pengguna.setEmail(rs.getString("email"));
+        pengguna.setPassword(rs.getString("password"));
+        pengguna.setTerakhirLogin(rs.getTimestamp("terakhir_login"));
+        
+        return pengguna;
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(PenggunaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return null;
+  }
   
   /**
    * Untuk generate seluruh Pengguna

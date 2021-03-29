@@ -12,8 +12,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Mengimplementasi PenggunaService
@@ -52,6 +50,17 @@ public class PenggunaServiceImpl extends UnicastRemoteObject implements Pengguna
   @Override
   public List<Pengguna> getByIdPeran(int idPeran) throws RemoteException {
     return PenggunaDao.getByIdPeran(idPeran);
+  }
+  
+  /**
+   * Mengembalikan hasil dari generate Pengguna berdasarkan idPengguna
+   * @param idPengguna
+   * @return Pengguna
+   * @throws RemoteException 
+   */
+  @Override
+  public Pengguna getByIdPengguna(int idPengguna) throws RemoteException {
+    return PenggunaDao.getByIdPengguna(idPengguna);
   }
 
   /**
