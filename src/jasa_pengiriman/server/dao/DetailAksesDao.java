@@ -31,20 +31,21 @@ public class DetailAksesDao {
     List<DetailAkses> detailAksesList = new ArrayList<DetailAkses>();
     
     try {
-      String query = "SELECT a.*, b.id_detail_akses, b.batasan_operasi, c.* FROM akses a INNER JOIN detail_akses b ON a.id_akses = b.id_akses INNER JOIN peran c ON b.id_peran = c.id_peran";
+      String query = "SELECT a.*, b.id_detail_akses, b.batasan_operasi, c.* FROM akses a INNER JOIN detail_akses b ON a.id_akses = b.id_akses LEFT JOIN peran c ON b.id_peran = c.id_peran";
       ResultSet rs = null;
       
       switch(type) {
         case "BY_ID_AKSES":
-          query += " WHERE a.id_akses = ?";
+          query += " WHERE a.id_akses = ? ORDER BY c.nama_peran ASC";
           rs = DB.query(query, values);
         break;
         case "BY_ID_PERAN":
-          query += " WHERE c.id_peran = ?";
+          query += " WHERE c.id_peran = ? ORDER BY c.nama_peran ASC";
           rs = DB.query(query, values);
         break;
         case "ALL":
         default:
+          query += " ORDER BY c.nama_peran ASC";
           rs = DB.query(query);
       }
       
