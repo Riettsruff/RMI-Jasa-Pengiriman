@@ -87,7 +87,7 @@ public class PenggunaDao {
    */
   public static Pengguna getByIdPengguna(int idPengguna) {
     try {
-      String query = "SELECT a.*, b.id_pengguna, b.nama, b.email, b.password, b.terakhir_login, c.id_cabang, c.nama_cabang, c.alamat AS alamat_cabang, c.no_hp AS no_hp_cabang, d.id_kota, d.nama_kota, e.id_provinsi, e.nama_provinsi FROM peran a INNER JOIN pengguna b ON a.id_peran = b.id_peran LEFT JOIN cabang c ON b.id_cabang = c.id_cabang INNER JOIN kota d ON c.id_kota = d.id_kota INNER JOIN provinsi e ON d.id_provinsi = e.id_provinsi";
+      String query = "SELECT a.*, b.id_pengguna, b.nama, b.email, b.password, b.terakhir_login, c.id_cabang, c.nama_cabang, c.alamat AS alamat_cabang, c.no_hp AS no_hp_cabang, d.id_kota, d.nama_kota, e.id_provinsi, e.nama_provinsi FROM peran a INNER JOIN pengguna b ON a.id_peran = b.id_peran LEFT JOIN cabang c ON b.id_cabang = c.id_cabang INNER JOIN kota d ON c.id_kota = d.id_kota INNER JOIN provinsi e ON d.id_provinsi = e.id_provinsi WHERE b.id_pengguna = ?";
       String[] values = {
         String.valueOf(idPengguna)
       };
