@@ -47,4 +47,13 @@ public class DateFormat {
   public static Date timestampToDate(Timestamp timestamp) {
     return new Date(timestamp.getTime());
   }
+  
+  /**
+   * Untuk mengkonversi tipe Date menjadi Timestamp
+   * @param date
+   * @return Timestamp
+   */
+  public static Timestamp dateToTimestamp(Date date) {
+    return new Timestamp(date.getTime());
+  }
 }
