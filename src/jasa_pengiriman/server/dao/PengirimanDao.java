@@ -30,7 +30,7 @@ public class PengirimanDao {
     List<Pengiriman> pengirimanList = new ArrayList<Pengiriman>();
     
     try {
-      String query = "SELECT a.id_kota AS id_kota_pengirim, a.id_provinsi AS id_provinsi_pengirim, a.nama_kota AS nama_kota_pengirim, b.id_cabang AS id_cabang_pengirim, b.nama_cabang AS nama_cabang_pengirim, c.no_resi, c.isi_barang, c.berat AS berat_barang, c.waktu_kirim, c.nama_penerima, c.alamat_penerima, c.no_hp_penerima, c.biaya, d.id_kota AS id_kota_penerima, d.id_provinsi AS id_provinsi_penerima, d.nama_kota AS nama_kota_penerima FROM kota a INNER JOIN cabang b ON a.id_kota = b.id_kota RIGHT JOIN pengiriman c ON b.id_cabang = c.id_cabang_pengirim LEFT JOIN kota d ON c.id_kota_penerima = d.id_kota ORDER BY c.waktu_kirim DESC";
+      String query = "SELECT x.id_provinsi AS id_provinsi_pengirim, x.nama_provinsi AS nama_provinsi_pengirim, a.id_kota AS id_kota_pengirim, a.nama_kota AS nama_kota_pengirim, b.id_cabang AS id_cabang_pengirim, b.nama_cabang AS nama_cabang_pengirim, c.no_resi, c.isi_barang, c.berat AS berat_barang, c.waktu_kirim, c.nama_penerima, c.alamat_penerima, c.no_hp_penerima, c.biaya, d.id_kota AS id_kota_penerima, d.nama_kota AS nama_kota_penerima, y.id_provinsi AS id_provinsi_penerima, y.nama_provinsi AS nama_provinsi_penerima FROM provinsi x INNER JOIN kota a ON x.id_provinsi = a.id_provinsi INNER JOIN cabang b ON a.id_kota = b.id_kota RIGHT JOIN pengiriman c ON b.id_cabang = c.id_cabang_pengirim LEFT JOIN kota d ON c.id_kota_penerima = d.id_kota INNER JOIN provinsi y ON d.id_provinsi = y.id_provinsi ORDER BY c.waktu_kirim DESC";
       ResultSet rs = DB.query(query);
       
       while(rs.next()) {
@@ -42,6 +42,7 @@ public class PengirimanDao {
         Provinsi provinsiPenerima = new Provinsi();
         
         provinsiPengirim.setIdProvinsi(rs.getInt("id_provinsi_pengirim"));
+        provinsiPengirim.setNamaProvinsi(rs.getString("nama_provinsi_pengirim"));
         
         kotaPengirim.setIdKota(rs.getInt("id_kota_pengirim"));
         kotaPengirim.setNamaKota(rs.getString("nama_kota_pengirim"));
@@ -52,6 +53,7 @@ public class PengirimanDao {
         cabangPengirim.setKota(kotaPengirim);
         
         provinsiPenerima.setIdProvinsi(rs.getInt("id_provinsi_penerima"));
+        provinsiPenerima.setNamaProvinsi(rs.getString("nama_provinsi_penerima"));
         
         kotaPenerima.setIdKota(rs.getInt("id_kota_penerima"));
         kotaPenerima.setNamaKota(rs.getString("nama_kota_penerima"));
