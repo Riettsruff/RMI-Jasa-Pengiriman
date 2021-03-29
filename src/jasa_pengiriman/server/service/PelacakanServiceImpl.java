@@ -28,6 +28,17 @@ public class PelacakanServiceImpl extends UnicastRemoteObject implements Pelacak
   public List<Pelacakan> getAll() throws RemoteException {
     return PelacakanDao.getAll();
   }
+  
+  /**
+   * Mengembalikan hasil dari generate Pelacakan berdasarkan noResi
+   * @param noResi
+   * @return List
+   * @throws RemoteException 
+   */
+  @Override
+  public List<Pelacakan> getByNoResi(String noResi) throws RemoteException {
+    return PelacakanDao.getByNoResi(noResi);
+  }
 
   /**
    * Mengembalikan hasil dari insert Pelacakan

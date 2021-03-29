@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface PelacakanService extends Remote {
   public List<Pelacakan> getAll() throws RemoteException;
+  public List<Pelacakan> getByNoResi(String noResi) throws RemoteException;
   public boolean insert(Pelacakan pelacakan) throws RemoteException;
   public boolean update(Pelacakan pelacakan) throws RemoteException;
   public boolean deleteByIdPelacakan(int idPelacakan) throws RemoteException;

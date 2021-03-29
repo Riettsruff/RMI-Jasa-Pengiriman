@@ -78,6 +78,54 @@ public class PelacakanDao {
   }
   
   /**
+   * Untuk generate Pelacakan berdasarkan noResi
+   * @param noResi
+   * @return List
+   */
+  public static List<Pelacakan> getByNoResi(String noResi) {
+    List<Pelacakan> pelacakanList = new ArrayList<Pelacakan>();
+    
+    try {
+      String query = "SELECT a.*, b.id_pelacakan, b.no_resi, b.waktu_lapor, b.keterangan, c.id_cabang, c.nama_cabang, c.id_kota FROM status_pelacakan a INNER JOIN pelacakan b ON a.id_status_pelacakan = b.id_status_pelacakan LEFT JOIN cabang c ON b.id_cabang = c.id_cabang WHERE b.no_resi = ?";
+      String[] values = { noResi };
+      
+      ResultSet rs = DB.query(query, values);
+      
+      while(rs.next()) {
+        StatusPelacakan statusPelacakan = new StatusPelacakan();
+        Pelacakan pelacakan = new Pelacakan();
+        Pengiriman pengiriman = new Pengiriman();
+        Cabang cabang = new Cabang();
+        Kota kota = new Kota();
+        
+        statusPelacakan.setIdStatusPelacakan(rs.getInt("id_status_pelacakan"));
+        statusPelacakan.setNamaStatus(rs.getString("nama_status"));
+        
+        pengiriman.setNoResi(rs.getString("no_resi"));
+        
+        kota.setIdKota(rs.getInt("id_kota"));
+        
+        cabang.setIdCabang(rs.getInt("id_cabang"));
+        cabang.setNamaCabang(rs.getString("nama_cabang"));
+        cabang.setKota(kota);
+        
+        pelacakan.setIdPelacakan(rs.getInt("id_pelacakan"));
+        pelacakan.setPengiriman(pengiriman);
+        pelacakan.setCabang(cabang);
+        pelacakan.setWaktuLapor(rs.getTimestamp("waktu_lapor"));
+        pelacakan.setStatusPelacakan(statusPelacakan);
+        pelacakan.setKeterangan(rs.getString("keterangan"));
+        
+        pelacakanList.add(pelacakan);
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(PelacakanDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return pelacakanList;
+  }
+  
+  /**
    * Untuk menangani proses insert Pelacakan
    * @param pelacakan
    * @return boolean
