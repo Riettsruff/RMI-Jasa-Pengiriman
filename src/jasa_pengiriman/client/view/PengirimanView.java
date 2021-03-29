@@ -133,7 +133,7 @@ public class PengirimanView extends javax.swing.JFrame {
           rowsData[i][10] = CurrencyFormat.getString(pengirimanList.get(i).getBiaya(), "in", "ID");
         }
         
-        Table.setModel(pengirimanTable, rowsData, fieldsData, false);
+        Table.setModel(pengirimanTable, rowsData, fieldsData, true);
         Table.setColumnWidths(pengirimanTable, 50);
         Table.setCellsHorizontalAlignment(pengirimanTable, new HashMap<Integer, Integer>(){{
           put(0, JLabel.CENTER);

@@ -80,6 +80,38 @@ public class PengirimanDao {
   }
   
   /**
+   * Untuk generate Pengiriman berdasarkan noResi
+   * @param noResi
+   * @return Pengiriman
+   */
+  public static Pengiriman getByNoResi(String noResi) {
+    try {
+      String table = "pengiriman";
+      String[] fields = null;
+      String[] whereStatement = {"no_resi = ?"};
+      String[] whereStatementSeparator = null;
+      String[] values = { noResi };
+      
+      ResultSet rs = DB.get(table, fields, whereStatement, whereStatementSeparator, values);
+      
+      if(rs.next()) {
+        Pengiriman pengiriman = new Pengiriman();
+        pengiriman.setNoResi(rs.getString("no_resi"));
+        pengiriman.setIsiBarang(rs.getString("isi_barang"));
+        pengiriman.setBeratBarang(rs.getDouble("berat"));
+        pengiriman.setBiaya(rs.getLong("biaya"));
+        pengiriman.setWaktuKirim(rs.getTimestamp("waktu_kirim"));
+        
+        return pengiriman;
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(PengirimanDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return null;
+  }
+  
+  /**
    * Untuk menangani proses insert Pengiriman
    * @param pengiriman
    * @return boolean

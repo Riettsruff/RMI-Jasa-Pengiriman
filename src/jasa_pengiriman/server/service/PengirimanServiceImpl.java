@@ -28,6 +28,17 @@ public class PengirimanServiceImpl extends UnicastRemoteObject implements Pengir
   public List<Pengiriman> getAll() throws RemoteException {
     return PengirimanDao.getAll();
   }
+  
+  /**
+   * Mengembalikan hasil dari generate Pengiriman berdasarkan noResi
+   * @param noResi
+   * @return Pengiriman
+   * @throws RemoteException 
+   */
+  @Override
+  public Pengiriman getByNoResi(String noResi) throws RemoteException {
+    return PengirimanDao.getByNoResi(noResi);
+  }
 
   /**
    * Mengembalikan hasil dari insert Pengiriman
