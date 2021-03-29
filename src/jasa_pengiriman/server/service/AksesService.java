@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka AksesService
  */
 public interface AksesService extends Remote {
   public List<Akses> getAll() throws RemoteException;

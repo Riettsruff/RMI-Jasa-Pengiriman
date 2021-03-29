@@ -11,8 +11,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
- *
- * @author Riett
+ * Mengenerate informasi terkait RMI di sisi client
  */
 public class RMI {
   private static final String HOST = "localhost";

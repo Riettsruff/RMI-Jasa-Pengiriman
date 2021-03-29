@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka CabangService
  */
 public interface CabangService extends Remote {
   public List<Cabang> getAll() throws RemoteException;

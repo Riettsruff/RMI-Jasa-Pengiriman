@@ -8,8 +8,7 @@ package jasa_pengiriman.model;
 import java.io.Serializable;
 
 /**
- *
- * @author Riett
+ * Sebagai Model untuk DetailAkses
  */
 public class DetailAkses implements Serializable {
   private int idDetailAkses;

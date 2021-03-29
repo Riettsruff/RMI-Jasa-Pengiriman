@@ -12,8 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka PenggunaService
  */
 public interface PenggunaService extends Remote {
   public List<Pengguna> getAll() throws RemoteException;

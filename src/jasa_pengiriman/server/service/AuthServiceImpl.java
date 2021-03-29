@@ -12,21 +12,22 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- *
- * @author Riett
+ * Mengimplementasi AuthService
  */
 public class AuthServiceImpl extends UnicastRemoteObject implements AuthService, Serializable {
 
   public AuthServiceImpl() throws RemoteException {}
   
+  /**
+   * Mengembalikan hasil dari authentikasi login
+   * @param email
+   * @param password
+   * @return Pengguna
+   * @throws RemoteException 
+   */
   @Override
   public Pengguna login(String email, String password) throws RemoteException {
     return AuthDao.login(email, password);
-  }
-
-  @Override
-  public boolean logout() throws RemoteException {
-    return true;
   }
   
 }

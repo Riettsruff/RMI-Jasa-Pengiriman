@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka PeranService
  */
 public interface PeranService extends Remote {
   public List<Peran> getAll() throws RemoteException;

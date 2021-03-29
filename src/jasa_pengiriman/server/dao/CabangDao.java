@@ -17,11 +17,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk Cabang
  */
 public class CabangDao {
   
+  /**
+   * Untuk generate Cabang berdasarkan id_kota maupun seluruhnya
+   * @param type
+   * @param values
+   * @return List
+   */
   private static List<Cabang> get(String type, String[] values) {
     List<Cabang> cabangList = new ArrayList<Cabang>();
     
@@ -66,15 +71,29 @@ public class CabangDao {
     return cabangList;
   }
   
+  /**
+   * Untuk generate seluruh Cabang
+   * @return List 
+   */
   public static List<Cabang> getAll() {
     return get("ALL", null);
   }
   
+  /**
+   * Untuk generate seluruh Cabang berdasarkan idKota
+   * @param idKota
+   * @return List
+   */
   public static List<Cabang> getByIdKota(int idKota) {
     String[] values = {Integer.toString(idKota)};
     return get("BY_ID_KOTA", values);
   }
   
+  /**
+   * Untuk menangani proses insert Cabang
+   * @param cabang
+   * @return boolean
+   */
   public static boolean insert(Cabang cabang) {
     try {
       String table = "cabang";
@@ -94,6 +113,11 @@ public class CabangDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses update Cabang
+   * @param cabang
+   * @return boolean
+   */
   public static boolean update(Cabang cabang) {
     try {
       String table = "cabang";
@@ -116,6 +140,11 @@ public class CabangDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses delete Cabang berdasarkan idCabang
+   * @param idCabang
+   * @return boolean
+   */
   public static boolean deleteByIdCabang(int idCabang) {
     try {
       String table = "cabang";

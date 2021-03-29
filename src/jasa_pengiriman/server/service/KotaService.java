@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka KotaService
  */
 public interface KotaService extends Remote {
   public List<Kota> getAll() throws RemoteException;

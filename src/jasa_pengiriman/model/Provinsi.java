@@ -8,8 +8,7 @@ package jasa_pengiriman.model;
 import java.io.Serializable;
 
 /**
- *
- * @author Riett
+ * Sebagai Model untuk Provinsi
  */
 public class Provinsi implements Serializable {
   private int idProvinsi;
@@ -33,6 +32,6 @@ public class Provinsi implements Serializable {
   
   @Override
   public String toString() {
-    return namaProvinsi;
+    return String.valueOf(idProvinsi);
   }
 }

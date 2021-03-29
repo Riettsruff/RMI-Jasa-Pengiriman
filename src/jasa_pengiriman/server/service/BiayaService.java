@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka BiayaService
  */
 public interface BiayaService extends Remote {
   public List<Biaya> getAll() throws RemoteException;

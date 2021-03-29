@@ -21,11 +21,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk Pengguna
  */
 public class PenggunaDao {
   
+  /**
+   * Untuk generate Pengguna berdasarkan id_cabang, id_peran maupun seluruhnya
+   * @param type
+   * @param values
+   * @return List
+   */
   private static List<Pengguna> get(String type, String[] values) {
     List<Pengguna> penggunaList = new ArrayList<Pengguna>();
     
@@ -73,20 +78,39 @@ public class PenggunaDao {
     return penggunaList;
   } 
   
+  /**
+   * Untuk generate seluruh Pengguna
+   * @return List
+   */
   public static List<Pengguna> getAll() {
     return PenggunaDao.get("ALL", null);
   }
   
+  /**
+   * Untuk generate seluruh Pengguna berdasarkan idCabang
+   * @param idCabang
+   * @return List
+   */
   public static List<Pengguna> getByIdCabang(int idCabang) {
     String[] values = {Integer.toString(idCabang)};
     return PenggunaDao.get("BY_ID_CABANG", values);
   }
   
+  /**
+   * Untuk generate seluruh Pengguna berdasarkan idPeran
+   * @param idPeran
+   * @return List
+   */
   public static List<Pengguna> getByIdPeran(int idPeran) {
     String[] values = {Integer.toString(idPeran)};
     return PenggunaDao.get("BY_ID_PERAN", values);
   }
   
+  /**
+   * Untuk menangani proses insert Pengguna
+   * @param pengguna
+   * @return boolean
+   */
   public static boolean insert(Pengguna pengguna) {
     try {
       String table = "pengguna";
@@ -106,6 +130,11 @@ public class PenggunaDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses update Pengguna
+   * @param pengguna
+   * @return boolean
+   */
   public static boolean update(Pengguna pengguna) {
     try {
       String table = "pengguna";
@@ -129,6 +158,11 @@ public class PenggunaDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses delete Pengguna berdasarkan idPengguna
+   * @param idPengguna
+   * @return boolean
+   */
   public static boolean deleteByIdPengguna(int idPengguna) {
     try {
       String table = "pengguna";
@@ -146,6 +180,12 @@ public class PenggunaDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses update field terakhir_login berdasarkan idPengguna
+   * @param terakhirLogin
+   * @param idPengguna
+   * @return boolean
+   */
   public static boolean updateTerakhirLoginByIdPengguna(Timestamp terakhirLogin, int idPengguna) {
     try {
       String table = "pengguna";

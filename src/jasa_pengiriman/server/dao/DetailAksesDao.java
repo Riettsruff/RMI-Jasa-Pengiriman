@@ -17,10 +17,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk DetailAkses
  */
 public class DetailAksesDao {
+  
+  /**
+   * Untuk generate DetailAkses berdasarkan id_akses, id_peran maupun seluruhnya
+   * @param type
+   * @param values
+   * @return List
+   */
   private static List<DetailAkses> get(String type, String[] values) {
     List<DetailAkses> detailAksesList = new ArrayList<DetailAkses>();
     
@@ -66,20 +72,39 @@ public class DetailAksesDao {
     return detailAksesList;
   }
   
+  /**
+   * Untuk generate seluruh DetailAkses berdasarkan idAkses
+   * @param idAkses
+   * @return List
+   */
   public static List<DetailAkses> getByIdAkses(int idAkses) {
     String[] values = {Integer.toString(idAkses)};
     return get("BY_ID_AKSES", values);
   }
   
+  /**
+   * Untuk generate seluruh DetailAkses berdasarkan idPeran
+   * @param idPeran
+   * @return List
+   */
   public static List<DetailAkses> getByIdPeran(int idPeran) {
     String[] values = {Integer.toString(idPeran)};
     return get("BY_ID_PERAN", values);
   }
   
+  /**
+   * Untuk generate seluruh DetailAkses
+   * @return List
+   */
   public static List<DetailAkses> getAll() {
     return get("ALL", null);
   }
   
+  /**
+   * Untuk menangani proses insert DetailAkses
+   * @param detailAkses
+   * @return boolean
+   */
   public static boolean insert(DetailAkses detailAkses) {
     try {
       String table = "detail_akses";
@@ -98,6 +123,11 @@ public class DetailAksesDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses update DetailAkses
+   * @param detailAkses
+   * @return boolean
+   */
   public static boolean update(DetailAkses detailAkses) {
     try {
       String table = "detail_akses";
@@ -119,6 +149,11 @@ public class DetailAksesDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses delete DetailAkses berdasarkan idDetailAkses
+   * @param idDetailAkses
+   * @return boolean
+   */
   public static boolean deleteByIdDetailAkses(int idDetailAkses) {
     try {
       String table = "detail_akses";

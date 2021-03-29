@@ -13,18 +13,29 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Mengimplementasi RiwayatPeranService
  */
 public class RiwayatPeranServiceImpl extends UnicastRemoteObject implements RiwayatPeranService, Serializable {
 
   public RiwayatPeranServiceImpl() throws RemoteException {}
   
+  /**
+   * Mengembalikan hasil dari generate RiwayatPeran berdasarkan idPengguna
+   * @param idPengguna
+   * @return List
+   * @throws RemoteException 
+   */
   @Override
   public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException {
     return RiwayatPeranDao.getByIdPengguna(idPengguna);
   }
 
+  /**
+   * Mengembalikan hasil dari insert RiwayatPeran
+   * @param riwayatPeran
+   * @return boolean
+   * @throws RemoteException 
+   */
   @Override
   public boolean insert(RiwayatPeran riwayatPeran) throws RemoteException {
     return RiwayatPeranDao.insert(riwayatPeran);

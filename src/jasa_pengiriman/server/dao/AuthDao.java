@@ -15,11 +15,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk Auth
  */
 public class AuthDao {
   
+  /**
+   * Untuk authentikasi login
+   * @param email
+   * @param password
+   * @return Pengguna
+   */
   public static Pengguna login(String email, String password) {
     try {
       String[] fields = null;

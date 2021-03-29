@@ -14,11 +14,17 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- *
- * @author Riett
+ * Untuk penanganan Tabel
  */
 public class Table {
   
+  /**
+   * Untuk mengeset suatu Model dari suatu Tabel
+   * @param table
+   * @param rowsData
+   * @param fieldsData
+   * @param isCellEditable 
+   */
   public static void setModel(JTable table, Object[][] rowsData, String[] fieldsData, boolean isCellEditable) {
     table.setModel(new DefaultTableModel(rowsData, fieldsData) {
       @Override
@@ -28,6 +34,11 @@ public class Table {
     });
   }
   
+  /**
+   * Untuk mengeset width columns suatu Table
+   * @param table
+   * @param widths 
+   */
   public static void setColumnWidths(JTable table, int... widths) {
     TableColumnModel columnModel = table.getColumnModel();
     
@@ -38,6 +49,11 @@ public class Table {
     }
   }
   
+  /**
+   * Untuk mengeset Horizontal Alignment cells pada suatu Tabel
+   * @param table
+   * @param cellsAlignment 
+   */
   public static void setCellsHorizontalAlignment(JTable table, HashMap<Integer, Integer> cellsAlignment) {
     TableColumnModel columnModel = table.getColumnModel();
     
@@ -48,6 +64,11 @@ public class Table {
     }
   }
   
+  /**
+   * Untuk remove columns tertentu pada suatu Tabel
+   * @param table
+   * @param columns 
+   */
   public static void removeColumns(JTable table, int... columns) {
     TableColumnModel columnModel = table.getColumnModel();
     
@@ -56,12 +77,23 @@ public class Table {
     }
   }
   
+  /**
+   * Untuk menghasilkan value dari row & column tertentu
+   * @param table
+   * @param row
+   * @param column
+   * @return Object
+   */
   public static Object getValue(JTable table, int row, int column) {
     TableModel tableModel = table.getModel();
     
     return tableModel.getValueAt(row, column);
   }
   
+  /**
+   * Untuk menghapus seluruh baris suatu Tabel
+   * @param table 
+   */
   public static void deleteAllRows(JTable table) {
     DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
     tableModel.setRowCount(0);

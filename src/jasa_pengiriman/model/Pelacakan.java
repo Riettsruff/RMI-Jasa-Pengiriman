@@ -9,8 +9,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- *
- * @author Riett
+ * Sebagai Model untuk Pelacakan
  */
 public class Pelacakan implements Serializable {
   private int idPelacakan;

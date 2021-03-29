@@ -15,11 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk Akses
  */
 public class AksesDao {
   
+  /**
+   * Untuk generate seluruh Akses
+   * @return List
+   */
   public static List<Akses> getAll() {
     List<Akses> aksesList = new ArrayList<Akses>();
     

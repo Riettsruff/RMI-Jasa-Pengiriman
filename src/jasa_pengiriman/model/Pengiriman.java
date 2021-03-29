@@ -9,8 +9,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- *
- * @author Riett
+ * Sebagai Model untuk Pengiriman
  */
 public class Pengiriman implements Serializable {
   private String noResi, isiBarang, namaPenerima, alamatPenerima, noHpPenerima;

@@ -28,6 +28,11 @@ import java.rmi.registry.Registry;
  */
 public class JasaPengiriman {
 
+  /**
+   * Method yang akan dieksekusi pertama kali saat program dijalankan
+   * @param args
+   * @throws RemoteException 
+   */
   public static void main(String[] args) throws RemoteException {
     Registry registry = LocateRegistry.createRegistry(RMI.getPort());
     

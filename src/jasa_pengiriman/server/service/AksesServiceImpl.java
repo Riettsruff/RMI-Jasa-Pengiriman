@@ -13,13 +13,17 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Mengimplementasi AksesService
  */
 public class AksesServiceImpl extends UnicastRemoteObject implements AksesService, Serializable {
 
   public AksesServiceImpl() throws RemoteException {}
   
+  /**
+   * Megembalikan hasil dari generate seluruh Akses
+   * @return List
+   * @throws RemoteException 
+   */
   @Override
   public List<Akses> getAll() throws RemoteException {
     return AksesDao.getAll();

@@ -15,10 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk StatusPelacakan
  */
 public class StatusPelacakanDao {
+  
+  /**
+   * Untuk generate seluruh StatusPelacakan
+   * @return List
+   */
   public static List<StatusPelacakan> getAll() {
     List<StatusPelacakan> statusPelacakanList = new ArrayList<StatusPelacakan>();
     

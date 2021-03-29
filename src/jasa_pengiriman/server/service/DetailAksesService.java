@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka DetailAksesService
  */
 public interface DetailAksesService extends Remote {
   public List<DetailAkses> getByIdAkses(int idAkses) throws RemoteException;

@@ -15,10 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Riett
+ * Sebagai DAO untuk Provinsi
  */
 public class ProvinsiDao {
+  
+  /**
+   * Untuk generate seluruh Provinsi
+   * @return List
+   */
   public static List<Provinsi> getAll() {
     List<Provinsi> provinsiList = new ArrayList<Provinsi>();
     
@@ -40,6 +44,11 @@ public class ProvinsiDao {
     return provinsiList;
   }
   
+  /**
+   * Untuk menangani proses insert Provinsi
+   * @param provinsi
+   * @return boolean
+   */
   public static boolean insert(Provinsi provinsi) {
     try {
       String table = "provinsi";
@@ -56,6 +65,11 @@ public class ProvinsiDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses update Provinsi
+   * @param provinsi
+   * @return boolean
+   */
   public static boolean update(Provinsi provinsi) {
     try {
       String table = "provinsi";
@@ -75,6 +89,11 @@ public class ProvinsiDao {
     return false;
   }
   
+  /**
+   * Untuk menangani proses delete provinsi berdasarkan idProvinsi
+   * @param idProvinsi
+   * @return boolean
+   */
   public static boolean deleteByIdProvinsi(int idProvinsi) {
     try {
       String table = "provinsi";

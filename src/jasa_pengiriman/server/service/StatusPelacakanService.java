@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka StatusPelacakanService
  */
 public interface StatusPelacakanService extends Remote {
   public List<StatusPelacakan> getAll() throws RemoteException;

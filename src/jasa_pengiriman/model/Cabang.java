@@ -8,8 +8,7 @@ package jasa_pengiriman.model;
 import java.io.Serializable;
 
 /**
- *
- * @author Riett
+ * Sebagai Model untuk Cabang
  */
 public class Cabang implements Serializable {
   private int idCabang;

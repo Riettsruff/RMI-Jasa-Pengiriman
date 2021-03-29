@@ -9,9 +9,16 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Sebagai Koneksi untuk terhubung ke database
+ */
 public class Conn {
   private static Connection conn;
   
+  /**
+   * Constructor statis untuk suatu koneksi database
+   * @return Connection
+   */
   public static Connection Conn() {
     if(conn == null) {
       try {

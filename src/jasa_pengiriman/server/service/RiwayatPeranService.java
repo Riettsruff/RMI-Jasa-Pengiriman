@@ -11,8 +11,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Sebagai antarmuka RiwayatPeranService
  */
 public interface RiwayatPeranService extends Remote {
   public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException; 

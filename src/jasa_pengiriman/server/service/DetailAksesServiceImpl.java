@@ -13,38 +13,72 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
- *
- * @author Riett
+ * Mengimplementasi DetailAksesService
  */
 public class DetailAksesServiceImpl extends UnicastRemoteObject implements DetailAksesService, Serializable {
 
   public DetailAksesServiceImpl() throws RemoteException {}
   
+  /**
+   * Mengembalikan hasil dari generate DetailAkses berdasarkan idAkses
+   * @param idAkses
+   * @return List
+   * @throws RemoteException 
+   */
   @Override
   public List<DetailAkses> getByIdAkses(int idAkses) throws RemoteException {
     return DetailAksesDao.getByIdAkses(idAkses);
   }
 
+  /**
+   * Mengembalikan hasil dari generate DetailAkses berdasarkan idPeran
+   * @param idPeran 
+   * @return List
+   * @throws RemoteException 
+   */
   @Override
   public List<DetailAkses> getByIdPeran(int idPeran) throws RemoteException {
     return DetailAksesDao.getByIdPeran(idPeran);
   }
 
+  /**
+   * Mengembalikan hasil dari generate seluruh DetailAkses
+   * @return List
+   * @throws RemoteException 
+   */
   @Override
   public List<DetailAkses> getAll() throws RemoteException {
     return DetailAksesDao.getAll();
   }
 
+  /**
+   * Mengembalikan hasil dari insert DetailAkses
+   * @param detailAkses
+   * @return boolean
+   * @throws RemoteException 
+   */
   @Override
   public boolean insert(DetailAkses detailAkses) throws RemoteException {
     return DetailAksesDao.insert(detailAkses);
   }
 
+  /**
+   * Mengembalikan hasil dari update DetailAkses
+   * @param detailAkses
+   * @return boolean
+   * @throws RemoteException 
+   */
   @Override
   public boolean update(DetailAkses detailAkses) throws RemoteException {
     return DetailAksesDao.update(detailAkses);
   }
 
+  /**
+   * Mengembalikan hasil dari delete DetailAkses berdasarkan idDetailAkses
+   * @param idDetailAkses
+   * @return boolean
+   * @throws RemoteException 
+   */
   @Override
   public boolean deleteByIdDetailAkses(int idDetailAkses) throws RemoteException {
     return DetailAksesDao.deleteByIdDetailAkses(idDetailAkses);
