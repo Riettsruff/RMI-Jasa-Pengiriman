@@ -13,7 +13,9 @@ import jasa_pengiriman.server.service.BiayaServiceImpl;
 import jasa_pengiriman.server.service.CabangServiceImpl;
 import jasa_pengiriman.server.service.DetailAksesServiceImpl;
 import jasa_pengiriman.server.service.KotaServiceImpl;
+import jasa_pengiriman.server.service.PelacakanServiceImpl;
 import jasa_pengiriman.server.service.PenggunaServiceImpl;
+import jasa_pengiriman.server.service.PengirimanServiceImpl;
 import jasa_pengiriman.server.service.PeranServiceImpl;
 import jasa_pengiriman.server.service.ProvinsiServiceImpl;
 import jasa_pengiriman.server.service.RiwayatPeranServiceImpl;
@@ -47,6 +49,8 @@ public class JasaPengiriman {
     registry.rebind("RiwayatPeranService", new RiwayatPeranServiceImpl());
     registry.rebind("StatusPelacakanService", new StatusPelacakanServiceImpl());
     registry.rebind("BiayaService", new BiayaServiceImpl());
+    registry.rebind("PengirimanService", new PengirimanServiceImpl());
+    registry.rebind("PelacakanService", new PelacakanServiceImpl());
     
     System.out.println("App server started...");
     
