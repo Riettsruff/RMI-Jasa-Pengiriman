@@ -5,6 +5,7 @@
  */
 package jasa_pengiriman.client.view;
 
+import jasa_pengiriman.client.service.DateFormat;
 import jasa_pengiriman.client.store.ActiveUser;
 
 /**
@@ -25,7 +26,10 @@ public class MenuUtamaView extends javax.swing.JFrame {
       String terakhirLogin = 
         ActiveUser.get().getTerakhirLogin() == null 
           ? "Belum pernah" 
-          : ActiveUser.get().getTerakhirLogin().toString();
+          : DateFormat.dateToString(
+            DateFormat.timestampToDate(ActiveUser.get().getTerakhirLogin()), 
+            "dd-MM-yyyy HH:mm:ss"
+          );
       terakhirLoginValue.setText(terakhirLogin);
     }
 

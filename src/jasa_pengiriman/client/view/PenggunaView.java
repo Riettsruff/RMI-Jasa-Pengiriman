@@ -16,7 +16,9 @@ import jasa_pengiriman.server.service.PeranService;
 import jasa_pengiriman.server.service.RiwayatPeranService;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -504,6 +506,18 @@ public class PenggunaView extends javax.swing.JFrame {
             .showMessageDialog(this, "Pengguna berhasil ditambahkan.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
           initInputData();
           initPenggunaTableData();
+          
+          try {
+            RiwayatPeran riwayatPeran = new RiwayatPeran();
+            riwayatPeran.setIdRiwayatPeran(Types.NULL);
+            riwayatPeran.setPengguna(pengguna);
+            riwayatPeran.setPeran(pengguna.getPeran());
+            riwayatPeran.setTanggalMulai(new Date());
+            
+            riwayatPeranService.insert(riwayatPeran);
+          } catch (RemoteException ex) {
+            Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+          }
         } else {
           JOptionPane
             .showMessageDialog(this, "Pengguna gagal ditambahkan.", "Oops!", JOptionPane.ERROR_MESSAGE);
@@ -526,11 +540,27 @@ public class PenggunaView extends javax.swing.JFrame {
       
       if(isDataPenggunaValid(pengguna)) {
         try {
+          Pengguna prevPengguna = penggunaService.getByIdPengguna(pengguna.getIdPengguna());
+          
           if(penggunaService.update(pengguna)) {
             JOptionPane
               .showMessageDialog(this, "Pengguna berhasil diupdate.", "Sukses!", JOptionPane.INFORMATION_MESSAGE);
             initInputData();
             initPenggunaTableData();
+            
+            if(prevPengguna.getPeran().getIdPeran() != pengguna.getPeran().getIdPeran()) {
+              try {
+                RiwayatPeran riwayatPeran = new RiwayatPeran();
+                riwayatPeran.setIdRiwayatPeran(Types.NULL);
+                riwayatPeran.setPengguna(pengguna);
+                riwayatPeran.setPeran(pengguna.getPeran());
+                riwayatPeran.setTanggalMulai(new Date());
+
+                riwayatPeranService.insert(riwayatPeran);
+              } catch (RemoteException ex) {
+                Logger.getLogger(PenggunaView.class.getName()).log(Level.SEVERE, null, ex);
+              }
+            }
           } else {
             JOptionPane
               .showMessageDialog(this, "Pengguna gagal diupdate.", "Oops!", JOptionPane.ERROR_MESSAGE);
