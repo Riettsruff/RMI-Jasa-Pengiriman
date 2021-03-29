@@ -19,6 +19,7 @@ import jasa_pengiriman.server.service.CabangService;
 import jasa_pengiriman.server.service.KotaService;
 import jasa_pengiriman.server.service.PenggunaService;
 import jasa_pengiriman.server.service.ProvinsiService;
+import java.awt.event.ItemEvent;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -78,16 +79,17 @@ public class CabangView extends javax.swing.JFrame {
       
       provinsiComboBox.removeAllItems();
       provinsiComboBox.addItem("- Pilih -");
+      provinsiComboBox.setSelectedIndex(0);
       
       kotaComboBox.removeAllItems();
       kotaComboBox.addItem("- Pilih -");
+      kotaComboBox.setSelectedIndex(0);
+      kotaComboBox.setEnabled(false);
       
       try {
         List<Provinsi> provinsiList = provinsiService.getAll();
-        List<Kota> kotaList = kotaService.getAll();
         
         for(Provinsi provinsi : provinsiList) provinsiComboBox.addItem(provinsi);
-        for(Kota kota : kotaList) kotaComboBox.addItem(kota);
       } catch (RemoteException ex) {
         Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
       }
@@ -304,6 +306,11 @@ public class CabangView extends javax.swing.JFrame {
     noHpTextField.setName("txtNoHP"); // NOI18N
 
     provinsiComboBox.setName("cmbProvinsi"); // NOI18N
+    provinsiComboBox.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        provinsiComboBoxItemStateChanged(evt);
+      }
+    });
 
     kotaComboBox.setName("cmbKota"); // NOI18N
 
@@ -598,6 +605,29 @@ public class CabangView extends javax.swing.JFrame {
     
     initPenggunaTableData((int) Table.getValue(cabangTable, selectedRow, 1));
   }//GEN-LAST:event_cabangTableMouseClicked
+
+  private void provinsiComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_provinsiComboBoxItemStateChanged
+    if(evt.getStateChange() == ItemEvent.SELECTED) {
+      kotaComboBox.removeAllItems();
+      kotaComboBox.addItem("- Pilih -");
+      kotaComboBox.setSelectedIndex(0);
+      
+      if(provinsiComboBox.getSelectedItem() instanceof String) {
+        kotaComboBox.setEnabled(false);
+      } else {
+        try {
+          Provinsi provinsi = (Provinsi) provinsiComboBox.getSelectedItem();
+          List<Kota> kotaList = kotaService.getByIdProvinsi(provinsi.getIdProvinsi());
+          
+          kotaComboBox.setEnabled(true);
+          
+          for(Kota kota : kotaList) kotaComboBox.addItem(kota);
+        } catch (RemoteException ex) {
+          Logger.getLogger(CabangView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
+    }
+  }//GEN-LAST:event_provinsiComboBoxItemStateChanged
 
     /**
      * @param args the command line arguments
