@@ -32,6 +32,6 @@ public class Provinsi implements Serializable {
   
   @Override
   public String toString() {
-    return String.valueOf(idProvinsi);
+    return namaProvinsi;
   }
 }
