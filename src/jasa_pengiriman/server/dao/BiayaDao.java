@@ -68,6 +68,46 @@ public class BiayaDao {
   }
   
   /**
+   * Untuk generate Biaya berdasarkan Route
+   * @param idKotaAsal
+   * @param idKotaTujuan
+   * @return Biaya
+   */
+  public static Biaya getByRoute(int idKotaAsal, int idKotaTujuan) {
+    try {
+      String table = "biaya";
+      String[] fields = null;
+      String[] whereStatement = {"id_kota_asal = ?", "id_kota_tujuan = ?"};
+      String[] whereStatementSeparator = {"AND"};
+      String[] values = {
+        String.valueOf(idKotaAsal),
+        String.valueOf(idKotaTujuan)
+      };
+      
+      ResultSet rs = DB.get(table, fields, whereStatement, whereStatementSeparator, values);
+      
+      if(rs.next()) {
+        Kota kotaAsal = new Kota();
+        Kota kotaTujuan = new Kota();
+        Biaya biaya = new Biaya();
+        
+        kotaAsal.setIdKota(rs.getInt("id_kota_asal"));
+        kotaTujuan.setIdKota(rs.getInt("id_kota_tujuan"));
+        
+        biaya.setIdBiaya(rs.getInt("id_biaya"));
+        biaya.setKotaAsal(kotaAsal);
+        biaya.setKotaTujuan(kotaTujuan);
+        
+        return biaya;
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(BiayaDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
+    return null;
+  }
+  
+  /**
    * Untuk menangani proses insert Biaya
    * @param biaya
    * @return boolean
