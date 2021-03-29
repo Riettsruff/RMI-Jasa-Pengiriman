@@ -167,7 +167,15 @@ public class BiayaView extends javax.swing.JFrame {
             new ArrayList<String>(){{ add("REQUIRED"); }}
           );
           put(
-            new HashMap<String, Object>(){{ put("Harga", biaya.getHarga() == Long.MIN_VALUE ? "" : biaya.getHarga() == Long.MAX_VALUE ? "-" : biaya.getHarga()); }},
+            new HashMap<String, Object>(){{ 
+              put(
+                "Harga", 
+                biaya.getHarga() == Long.MIN_VALUE 
+                  ? "" 
+                  : biaya.getHarga() == Long.MAX_VALUE 
+                    ? "-" 
+                    : biaya.getHarga()); 
+            }},
             new ArrayList<String>(){{ add("REQUIRED"); add("NUMERIC"); }}
           );
         }};
