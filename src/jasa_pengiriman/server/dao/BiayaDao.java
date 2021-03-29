@@ -97,6 +97,7 @@ public class BiayaDao {
         biaya.setIdBiaya(rs.getInt("id_biaya"));
         biaya.setKotaAsal(kotaAsal);
         biaya.setKotaTujuan(kotaTujuan);
+        biaya.setHarga(rs.getLong("harga"));
         
         return biaya;
       }

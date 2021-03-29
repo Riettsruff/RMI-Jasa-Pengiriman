@@ -6,11 +6,15 @@ import jasa_pengiriman.client.service.CurrencyFormat;
 import jasa_pengiriman.client.service.DateFormat;
 import jasa_pengiriman.client.service.Table;
 import jasa_pengiriman.client.store.ActiveUser;
+import jasa_pengiriman.model.Biaya;
 import jasa_pengiriman.model.Cabang;
 import jasa_pengiriman.model.Kota;
+import jasa_pengiriman.model.Pengguna;
 import jasa_pengiriman.model.Pengiriman;
 import jasa_pengiriman.model.Provinsi;
+import jasa_pengiriman.server.service.BiayaService;
 import jasa_pengiriman.server.service.KotaService;
+import jasa_pengiriman.server.service.PenggunaService;
 import jasa_pengiriman.server.service.PengirimanService;
 import jasa_pengiriman.server.service.ProvinsiService;
 import java.awt.event.ItemEvent;
@@ -40,6 +44,8 @@ public class PengirimanView extends javax.swing.JFrame {
     ProvinsiService provinsiService;
     KotaService kotaService;
     PengirimanService pengirimanService;
+    BiayaService biayaService;
+    PenggunaService penggunaService;
             
     /**
      * Creates new form Pengiriman
@@ -56,6 +62,8 @@ public class PengirimanView extends javax.swing.JFrame {
         this.provinsiService = (ProvinsiService) RMI.getService("ProvinsiService");
         this.kotaService = (KotaService) RMI.getService("KotaService");
         this.pengirimanService = (PengirimanService) RMI.getService("PengirimanService");
+        this.biayaService = (BiayaService) RMI.getService("BiayaService");
+        this.penggunaService = (PenggunaService) RMI.getService("PenggunaService");
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, "Internal Server Error", "Oops!", JOptionPane.ERROR_MESSAGE);
         System.exit(1);
@@ -63,7 +71,7 @@ public class PengirimanView extends javax.swing.JFrame {
     }
     
     private void initInputData() {
-      noResiTextField.setText("");
+      noResiTextField.setText("RS" + DateFormat.dateToString(new Date(), "yyyyMMddHHmmss"));
       isiBarangTextField.setText("");
       beratTextField.setText("");
       biayaLabel.setText("Rp0,00");
@@ -148,6 +156,9 @@ public class PengirimanView extends javax.swing.JFrame {
         beratBarang = beratTextField.getText().isEmpty() ? Double.MIN_VALUE : Double.MAX_VALUE;
       }
       
+      Long biaya = 
+        Long.parseLong(biayaLabel.getText().replace("Rp", "").replace(",00", "").replace(".", "").trim());
+      
       String namaPenerima = namaTextField.getText();
       
       Provinsi provinsiPenerima = 
@@ -167,11 +178,13 @@ public class PengirimanView extends javax.swing.JFrame {
       pengiriman.setNoResi(noResi);
       pengiriman.setIsiBarang(isiBarang);
       pengiriman.setBeratBarang(beratBarang);
+      pengiriman.setBiaya(biaya);
       pengiriman.setNamaPenerima(namaPenerima);
       pengiriman.setNoHpPenerima(noHpPenerima);
       pengiriman.setAlamatPenerima(alamatPenerima);
       pengiriman.setKotaPenerima(kotaPenerima);
       pengiriman.setWaktuKirim(waktuKirim);
+      pengiriman.setCabangPengirim(ActiveUser.get().getCabang());
       
       return pengiriman;
     }
@@ -216,19 +229,46 @@ public class PengirimanView extends javax.swing.JFrame {
       return BasicValidation.isValid(data);
     }
     
-    private void updateBiayaLabel() {
+    private void updateBiayaLabel(boolean showErrorMsg) {
       Double berat;
       
       try {
-        berat = Double.parseDouble(beratTextField.getText());
+        berat = Double.parseDouble(beratTextField.getText().trim());
       } catch(NumberFormatException ex) {
         berat = 0.0;
+        biayaLabel.setText(CurrencyFormat.getString(0, "in", "ID"));
       }
       
-      try {
-        
-      } catch (RemoteException ex) {
-        Logger.getLogger(PengirimanView.class.getName()).log(Level.SEVERE, null, ex);
+      Kota kotaPenerima = 
+        kotaComboBox.getSelectedItem() instanceof String 
+          ? null
+          : (Kota) kotaComboBox.getSelectedItem();
+      
+      if(kotaPenerima != null) {
+        try {
+          Pengguna pengirim = penggunaService.getByIdPengguna(ActiveUser.get().getIdPengguna());
+          
+          if(pengirim != null && pengirim.getCabang() != null ) {
+            Biaya biaya = biayaService.getByRoute(
+              pengirim.getCabang().getKota().getIdKota(), 
+              kotaPenerima.getIdKota()
+            );
+            
+            if(biaya != null) {
+              biayaLabel.setText(CurrencyFormat.getString((long) (biaya.getHarga() * berat), "in", "ID"));
+            } else {
+              if(showErrorMsg) {
+                JOptionPane.showMessageDialog(
+                  this, 
+                  "Biaya dari " + pengirim.getCabang().getKota().getNamaKota() + " ke " + kotaPenerima.getNamaKota() + " belum ditetapkan.", "Oops!", JOptionPane.ERROR_MESSAGE
+                );
+                kotaComboBox.setSelectedIndex(0);
+              }
+            }
+          }
+        } catch (RemoteException ex) {
+          Logger.getLogger(PengirimanView.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     }
 
@@ -338,6 +378,18 @@ public class PengirimanView extends javax.swing.JFrame {
 
     jLabel9.setText("Alamat");
 
+    beratTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+      public void keyPressed(java.awt.event.KeyEvent evt) {
+        beratTextFieldKeyPressed(evt);
+      }
+      public void keyReleased(java.awt.event.KeyEvent evt) {
+        beratTextFieldKeyReleased(evt);
+      }
+      public void keyTyped(java.awt.event.KeyEvent evt) {
+        beratTextFieldKeyTyped(evt);
+      }
+    });
+
     jLabel10.setText("No. HP");
 
     jLabel11.setText("Biaya");
@@ -355,6 +407,12 @@ public class PengirimanView extends javax.swing.JFrame {
     provinsiComboBox.addItemListener(new java.awt.event.ItemListener() {
       public void itemStateChanged(java.awt.event.ItemEvent evt) {
         provinsiComboBoxItemStateChanged(evt);
+      }
+    });
+
+    kotaComboBox.addItemListener(new java.awt.event.ItemListener() {
+      public void itemStateChanged(java.awt.event.ItemEvent evt) {
+        kotaComboBoxItemStateChanged(evt);
       }
     });
 
@@ -674,6 +732,22 @@ public class PengirimanView extends javax.swing.JFrame {
       }
     }
   }//GEN-LAST:event_provinsiComboBoxItemStateChanged
+
+  private void beratTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_beratTextFieldKeyPressed
+    
+  }//GEN-LAST:event_beratTextFieldKeyPressed
+
+  private void beratTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_beratTextFieldKeyTyped
+    
+  }//GEN-LAST:event_beratTextFieldKeyTyped
+
+  private void beratTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_beratTextFieldKeyReleased
+    updateBiayaLabel(false);
+  }//GEN-LAST:event_beratTextFieldKeyReleased
+
+  private void kotaComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_kotaComboBoxItemStateChanged
+    if(evt.getStateChange() == ItemEvent.SELECTED) updateBiayaLabel(true);
+  }//GEN-LAST:event_kotaComboBoxItemStateChanged
 
     /**
      * @param args the command line arguments
