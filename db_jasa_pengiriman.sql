@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2021 at 01:47 AM
+-- Generation Time: Apr 05, 2021 at 05:07 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -137,7 +137,6 @@ CREATE TABLE `kota` (
 INSERT INTO `kota` (`id_kota`, `id_provinsi`, `nama_kota`) VALUES
 (1, 1, 'Salatiga'),
 (3, 1, 'Purworejo'),
-(4, 3, 'Pontianak'),
 (5, 4, 'Ambon'),
 (6, 5, 'Manado');
 
@@ -155,6 +154,13 @@ CREATE TABLE `pelacakan` (
   `waktu_lapor` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `keterangan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pelacakan`
+--
+
+INSERT INTO `pelacakan` (`id_pelacakan`, `no_resi`, `id_cabang`, `id_status_pelacakan`, `waktu_lapor`, `keterangan`) VALUES
+(4, 'RS20210330073044', 10, 12, '2021-03-30 00:32:52', 'Sedang disortir');
 
 -- --------------------------------------------------------
 
@@ -177,7 +183,7 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `id_cabang`, `id_peran`, `nama`, `email`, `password`, `terakhir_login`) VALUES
-(4, 10, 5, 'Admin Cab. Salatiga', 'admin.salatiga@jasakirim.com', 'admin123', '2021-03-29 23:46:50');
+(4, 10, 5, 'Admin Cab. Salatiga', 'admin.salatiga@jasakirim.com', 'admin123', '2021-04-05 03:07:43');
 
 -- --------------------------------------------------------
 
@@ -197,6 +203,13 @@ CREATE TABLE `pengiriman` (
   `no_hp_penerima` varchar(15) NOT NULL,
   `biaya` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pengiriman`
+--
+
+INSERT INTO `pengiriman` (`no_resi`, `id_cabang_pengirim`, `id_kota_penerima`, `isi_barang`, `berat`, `waktu_kirim`, `nama_penerima`, `alamat_penerima`, `no_hp_penerima`, `biaya`) VALUES
+('RS20210330073044', 10, 3, 'Buku', 1.5, '2021-03-30 00:31:46', 'Rietts', 'Test', '08132247882773', 15000);
 
 -- --------------------------------------------------------
 
@@ -233,7 +246,6 @@ CREATE TABLE `provinsi` (
 
 INSERT INTO `provinsi` (`id_provinsi`, `nama_provinsi`) VALUES
 (1, 'Jawa Tengah'),
-(3, 'Kalimantan Barat'),
 (4, 'Maluku'),
 (5, 'Sulawesi Utara');
 
@@ -411,19 +423,19 @@ ALTER TABLE `kota`
 -- AUTO_INCREMENT for table `pelacakan`
 --
 ALTER TABLE `pelacakan`
-  MODIFY `id_pelacakan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pelacakan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `peran`
 --
 ALTER TABLE `peran`
-  MODIFY `id_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `provinsi`
@@ -435,7 +447,7 @@ ALTER TABLE `provinsi`
 -- AUTO_INCREMENT for table `riwayat_peran`
 --
 ALTER TABLE `riwayat_peran`
-  MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_riwayat_peran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `status_pelacakan`
