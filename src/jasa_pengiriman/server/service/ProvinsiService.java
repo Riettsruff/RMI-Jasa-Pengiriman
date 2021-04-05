@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka ProvinsiService
- */
 public interface ProvinsiService extends Remote {
   public List<Provinsi> getAll() throws RemoteException;
   public boolean insert(Provinsi provinsi) throws RemoteException;

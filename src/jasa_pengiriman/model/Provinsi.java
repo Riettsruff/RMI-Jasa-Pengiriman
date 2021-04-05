@@ -7,9 +7,6 @@ package jasa_pengiriman.model;
 
 import java.io.Serializable;
 
-/**
- * Sebagai Model untuk Provinsi
- */
 public class Provinsi implements Serializable {
   private int idProvinsi;
   private String namaProvinsi;

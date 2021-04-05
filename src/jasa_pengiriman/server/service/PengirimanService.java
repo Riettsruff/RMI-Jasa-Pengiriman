@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka PengirimanService
- */
 public interface PengirimanService extends Remote {
   public List<Pengiriman> getAll() throws RemoteException;
   public Pengiriman getByNoResi(String noResi) throws RemoteException;

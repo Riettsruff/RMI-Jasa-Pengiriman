@@ -14,15 +14,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk StatusPelacakan
- */
 public class StatusPelacakanDao {
   
-  /**
-   * Untuk generate seluruh StatusPelacakan
-   * @return List
-   */
   public static List<StatusPelacakan> getAll() {
     List<StatusPelacakan> statusPelacakanList = new ArrayList<StatusPelacakan>();
     

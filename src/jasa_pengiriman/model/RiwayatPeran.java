@@ -8,9 +8,6 @@ package jasa_pengiriman.model;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Sebagai Model untuk RiwayatPeran
- */
 public class RiwayatPeran implements Serializable {
   private int idRiwayatPeran;
   private Pengguna pengguna;

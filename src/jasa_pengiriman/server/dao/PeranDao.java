@@ -14,15 +14,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk Peran
- */
 public class PeranDao {
-  
-  /**
-   * Untuk generate seluruh Peran
-   * @return List
-   */
+
   public static List<Peran> getAll() {
     List<Peran> peranList = new ArrayList<Peran>();
     
@@ -44,11 +37,6 @@ public class PeranDao {
     return peranList;
   }
   
-  /**
-   * Untuk menangani proses insert Peran
-   * @param peran
-   * @return boolean
-   */
   public static boolean insert(Peran peran) {
     try {
       String table = "peran";
@@ -65,11 +53,6 @@ public class PeranDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses update Peran
-   * @param peran
-   * @return boolean
-   */
   public static boolean update(Peran peran) {
     try {
       String table = "peran";
@@ -89,11 +72,6 @@ public class PeranDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses delete Peran berdasarkan idPeran
-   * @param idPeran
-   * @return boolean
-   */
   public static boolean deleteByIdPeran(int idPeran) {
     try {
       String table = "peran";

@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka PeranService
- */
 public interface PeranService extends Remote {
   public List<Peran> getAll() throws RemoteException;
   public boolean insert(Peran peran) throws RemoteException;

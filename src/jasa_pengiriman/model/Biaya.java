@@ -7,9 +7,6 @@ package jasa_pengiriman.model;
 
 import java.io.Serializable;
 
-/**
- * Sebagai Model untuk Biaya
- */
 public class Biaya implements Serializable {
   private int idBiaya;
   private Kota kotaAsal, kotaTujuan;

@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka BiayaService
- */
 public interface BiayaService extends Remote {
   public List<Biaya> getAll() throws RemoteException;
   public boolean insert(Biaya biaya) throws RemoteException;

@@ -12,62 +12,30 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-/**
- * Mengimplementasi CabangService
- */
 public class CabangServiceImpl extends UnicastRemoteObject implements CabangService, Serializable {
 
   public CabangServiceImpl() throws RemoteException {}
   
-  /**
-   * Mengembalikan hasil dari generate seluruh Cabang
-   * @return List
-   * @throws RemoteException 
-   */
   @Override
   public List<Cabang> getAll() throws RemoteException {
     return CabangDao.getAll();
   }
 
-  /**
-   * Mengembalikan hasil dari generate Cabang berdasarkan idKota
-   * @param idKota
-   * @return List
-   * @throws RemoteException 
-   */
   @Override
   public List<Cabang> getByIdKota(int idKota) throws RemoteException {
     return CabangDao.getByIdKota(idKota);
   }
 
-  /**
-   * Mengembalikan hasil dari insert Cabang
-   * @param cabang
-   * @return boolean
-   * @throws RemoteException 
-   */
   @Override
   public boolean insert(Cabang cabang) throws RemoteException {
     return CabangDao.insert(cabang);
   }
 
-  /**
-   * Mengembalikan hasil dari update Cabang
-   * @param cabang
-   * @return boolean
-   * @throws RemoteException 
-   */
   @Override
   public boolean update(Cabang cabang) throws RemoteException {
     return CabangDao.update(cabang);
   }
 
-  /**
-   * Mengembalikan hasil dari delete Cabang berdasarkan idCabang
-   * @param idCabang
-   * @return boolean
-   * @throws RemoteException 
-   */
   @Override
   public boolean deleteByIdCabang(int idCabang) throws RemoteException {
     return CabangDao.deleteByIdCabang(idCabang);

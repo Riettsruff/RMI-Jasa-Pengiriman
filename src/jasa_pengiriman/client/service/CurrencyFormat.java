@@ -8,18 +8,8 @@ package jasa_pengiriman.client.service;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Untuk penanganan format suatu currency
- */
 public class CurrencyFormat {
   
-  /**
-   * Untuk menghasilkan format currency yang diinginkan
-   * @param currency
-   * @param languageCode
-   * @param countryCode
-   * @return String
-   */
   public static String getString(long currency, String languageCode, String countryCode) {
     return NumberFormat.getCurrencyInstance(new Locale(languageCode, countryCode)).format(currency);
   }

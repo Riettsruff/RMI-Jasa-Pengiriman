@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka DetailAksesService
- */
 public interface DetailAksesService extends Remote {
   public List<DetailAkses> getByIdAkses(int idAkses) throws RemoteException;
   public List<DetailAkses> getByIdPeran(int idPeran) throws RemoteException;

@@ -15,17 +15,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk Kota
- */
 public class KotaDao {
   
-  /**
-   * Untuk generate Kota berdasarkan id_provinsi maupun seluruhnya
-   * @param type
-   * @param values
-   * @return List
-   */
   private static List<Kota> get(String type, String[] values) {
     List<Kota> kotaList = new ArrayList<Kota>();
     
@@ -62,29 +53,15 @@ public class KotaDao {
     return kotaList;
   }
   
-  /**
-   * Untuk generate seluruh Kota
-   * @return List
-   */
   public static List<Kota> getAll() {
     return get("ALL", null);
   }
   
-  /**
-   * Untuk generate seluruh Kota berdasarkan id_provinsi
-   * @param idProvinsi
-   * @return List
-   */
   public static List<Kota> getByIdProvinsi(int idProvinsi) {
     String[] values = {Integer.toString(idProvinsi)};
     return get("BY_ID_PROVINSI", values);
   }
   
-  /**
-   * Untuk menangani proses insert Kota
-   * @param kota
-   * @return boolean
-   */
   public static boolean insert(Kota kota) {
     try {
       String table = "kota";
@@ -102,11 +79,6 @@ public class KotaDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses update Kota
-   * @param kota
-   * @return boolean
-   */
   public static boolean update(Kota kota) {
     try {
       String table = "kota";
@@ -127,11 +99,6 @@ public class KotaDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses delete Kota berdasarkan idKota
-   * @param idKota
-   * @return boolean
-   */
   public static boolean deleteByIdKota(int idKota) {
     try {
       String table = "kota";

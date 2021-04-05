@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka RiwayatPeranService
- */
 public interface RiwayatPeranService extends Remote {
   public List<RiwayatPeran> getByIdPengguna(int idPengguna) throws RemoteException; 
   public boolean insert(RiwayatPeran riwayatPeran) throws RemoteException;

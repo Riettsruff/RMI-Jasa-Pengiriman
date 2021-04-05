@@ -9,9 +9,6 @@ import jasa_pengiriman.model.Pengguna;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-/**
- * Sebagai antarmuka AuthService
- */
 public interface AuthService extends Remote {
   public Pengguna login(String email, String password) throws RemoteException;
 }

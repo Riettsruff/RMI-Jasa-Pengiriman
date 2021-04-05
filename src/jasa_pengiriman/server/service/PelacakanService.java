@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka PelacakanService
- */
 public interface PelacakanService extends Remote {
   public List<Pelacakan> getAll() throws RemoteException;
   public List<Pelacakan> getByNoResi(String noResi) throws RemoteException;

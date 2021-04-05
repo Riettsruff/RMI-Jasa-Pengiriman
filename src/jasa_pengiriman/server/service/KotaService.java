@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka KotaService
- */
 public interface KotaService extends Remote {
   public List<Kota> getAll() throws RemoteException;
   public List<Kota> getByIdProvinsi(int idProvinsi) throws RemoteException;

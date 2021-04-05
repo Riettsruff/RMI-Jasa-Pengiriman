@@ -16,15 +16,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk Biaya
- */
 public class BiayaDao {
   
-  /**
-   * Untuk generate seluruh Biaya
-   * @return List
-   */
   public static List<Biaya> getAll() {
     List<Biaya> biayaList = new ArrayList<Biaya>();
     
@@ -67,12 +60,6 @@ public class BiayaDao {
     return biayaList;
   }
   
-  /**
-   * Untuk generate Biaya berdasarkan Route
-   * @param idKotaAsal
-   * @param idKotaTujuan
-   * @return Biaya
-   */
   public static Biaya getByRoute(int idKotaAsal, int idKotaTujuan) {
     try {
       String table = "biaya";
@@ -108,11 +95,6 @@ public class BiayaDao {
     return null;
   }
   
-  /**
-   * Untuk menangani proses insert Biaya
-   * @param biaya
-   * @return boolean
-   */
   public static boolean insert(Biaya biaya) {
     try {
       String table = "biaya";
@@ -131,11 +113,6 @@ public class BiayaDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses update Biaya
-   * @param biaya
-   * @return boolean
-   */
   public static boolean update(Biaya biaya) {
     try {
       String table = "biaya";
@@ -157,11 +134,6 @@ public class BiayaDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses delete Biaya berdasarkan idBiaya
-   * @param idBiaya
-   * @return boolean
-   */
   public static boolean deleteByIdBiaya(int idBiaya) {
     try {
       String table = "biaya";

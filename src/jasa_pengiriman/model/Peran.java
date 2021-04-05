@@ -7,9 +7,6 @@ package jasa_pengiriman.model;
 
 import java.io.Serializable;
 
-/**
- * Sebagai Model untuk Peran
- */
 public class Peran implements Serializable {
   private int idPeran;
   private String namaPeran;

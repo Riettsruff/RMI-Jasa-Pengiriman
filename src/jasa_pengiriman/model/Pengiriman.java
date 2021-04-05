@@ -8,9 +8,6 @@ package jasa_pengiriman.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-/**
- * Sebagai Model untuk Pengiriman
- */
 public class Pengiriman implements Serializable {
   private String noResi, isiBarang, namaPenerima, alamatPenerima, noHpPenerima;
   private Cabang cabangPengirim;

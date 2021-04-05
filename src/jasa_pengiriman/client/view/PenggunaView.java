@@ -119,7 +119,7 @@ public class PenggunaView extends javax.swing.JFrame {
           rowsData[i][5] = cabang.toString() != null ? cabang : "Tidak diketahui";
           rowsData[i][6] = penggunaList.get(i).getPassword();
           rowsData[i][7] = 
-            terakhirLogin.toString() != null 
+            terakhirLogin != null 
               ? DateFormat.dateToString(DateFormat.timestampToDate(terakhirLogin), "dd-MM-yyyy HH:mm:ss")
               : "Belum pernah";
         }
@@ -508,6 +508,9 @@ public class PenggunaView extends javax.swing.JFrame {
           initPenggunaTableData();
           
           try {
+            int lastIdPengguna = penggunaService.getMaxIdPengguna();
+            pengguna.setIdPengguna(lastIdPengguna);
+            
             RiwayatPeran riwayatPeran = new RiwayatPeran();
             riwayatPeran.setIdRiwayatPeran(Types.NULL);
             riwayatPeran.setPengguna(pengguna);

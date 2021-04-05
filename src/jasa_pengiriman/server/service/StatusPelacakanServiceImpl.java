@@ -12,18 +12,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-/**
- * Mengimplementasi StatusPelacakanService
- */
 public class StatusPelacakanServiceImpl extends UnicastRemoteObject implements StatusPelacakanService, Serializable {
 
   public StatusPelacakanServiceImpl() throws RemoteException {}
   
-  /**
-   * Mengembalikan hasil dari generate seluruh StatusPelacakan
-   * @return
-   * @throws RemoteException 
-   */
   @Override
   public List<StatusPelacakan> getAll() throws RemoteException {
     return StatusPelacakanDao.getAll();

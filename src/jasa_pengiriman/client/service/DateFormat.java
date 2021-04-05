@@ -10,27 +10,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Untuk penanganan format Date
- */
 public class DateFormat {
   
-  /**
-   * Untuk mengkonversi tipe Date menjadi String dan disesuaikan dengan format yang diperlukan
-   * @param date
-   * @param format
-   * @return String
-   */
   public static String dateToString(Date date, String format) {
     return new SimpleDateFormat(format).format(date);
   }
   
-  /**
-   * Untuk mengkonversi tipe String menjadi Date dan disesuaikan dengan format Datenya
-   * @param date
-   * @param format
-   * @return Date
-   */
   public static Date stringToDate(String date, String format) {
     try {
       return new SimpleDateFormat(format).parse(date);
@@ -39,20 +24,10 @@ public class DateFormat {
     }
   }
   
-  /**
-   * Untuk mengkonversi tipe Timestamp menjadi Date
-   * @param timestamp
-   * @return Date
-   */
   public static Date timestampToDate(Timestamp timestamp) {
     return new Date(timestamp.getTime());
   }
   
-  /**
-   * Untuk mengkonversi tipe Date menjadi Timestamp
-   * @param date
-   * @return Timestamp
-   */
   public static Timestamp dateToTimestamp(Date date) {
     return new Timestamp(date.getTime());
   }

@@ -17,15 +17,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk Pengiriman
- */
 public class PengirimanDao {
   
-  /**
-   * Untuk generate seluruh Pengiriman
-   * @return List
-   */
   public static List<Pengiriman> getAll() {
     List<Pengiriman> pengirimanList = new ArrayList<Pengiriman>();
     
@@ -79,11 +72,6 @@ public class PengirimanDao {
     return pengirimanList;
   }
   
-  /**
-   * Untuk generate Pengiriman berdasarkan noResi
-   * @param noResi
-   * @return Pengiriman
-   */
   public static Pengiriman getByNoResi(String noResi) {
     try {
       String table = "pengiriman";
@@ -110,12 +98,7 @@ public class PengirimanDao {
     
     return null;
   }
-  
-  /**
-   * Untuk menangani proses insert Pengiriman
-   * @param pengiriman
-   * @return boolean
-   */
+
   public static boolean insert(Pengiriman pengiriman) {
     try {
       String table = "pengiriman";
@@ -139,12 +122,7 @@ public class PengirimanDao {
     
     return false;
   }
-  
-  /**
-   * Untuk menangani proses update Pengiriman
-   * @param pengiriman
-   * @return boolean
-   */
+
   public static boolean update(Pengiriman pengiriman) {
     try {
       String table = "pengiriman";
@@ -171,11 +149,6 @@ public class PengirimanDao {
     return false;
   }
   
-  /**
-   * Untuk menangani proses delete Pengiriman berdasarkan noResi
-   * @param noResi
-   * @return boolean
-   */
   public static boolean deleteByNoResi(String noResi) {
     try {
       String table = "pengiriman";

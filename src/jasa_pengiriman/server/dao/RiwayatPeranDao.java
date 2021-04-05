@@ -17,16 +17,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Sebagai DAO untuk RiwayatPeran
- */
 public class RiwayatPeranDao {
   
-  /**
-   * Untuk generate seluruh RiwayatPeran berdasarkan idPengguna
-   * @param idPengguna
-   * @return List
-   */
   public static List<RiwayatPeran> getByIdPengguna(int idPengguna) {
     List<RiwayatPeran> riwayatPeranList = new ArrayList<RiwayatPeran>();
     
@@ -57,12 +49,8 @@ public class RiwayatPeranDao {
     return riwayatPeranList;
   }
   
-  /**
-   * Untuk menangani proses insert RiwayatPeran
-   * @param riwayatPeran
-   * @return boolean
-   */
   public static boolean insert(RiwayatPeran riwayatPeran) {
+    
     try {
       String table = "riwayat_peran";
       String[] values = {

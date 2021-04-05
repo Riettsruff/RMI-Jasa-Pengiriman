@@ -10,9 +10,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-/**
- * Sebagai antarmuka CabangService
- */
 public interface CabangService extends Remote {
   public List<Cabang> getAll() throws RemoteException;
   public List<Cabang> getByIdKota(int idKota) throws RemoteException;
